@@ -1,0 +1,1960 @@
+</script>
+
+<script>
+/* ============================================================
+   MASTER GRAMMAR APP — ENGINE
+   Every widget is resolved *within its own sub-topic stack*.
+   No page-global widget IDs — 49 sub-topics share this DOM.
+   ============================================================ */
+(function(){
+'use strict';
+
+const STORE = 'cbse_fr_master_';
+const ls = {
+  get(k, d){ try { const v = localStorage.getItem(STORE+k); return v === null ? d : v; } catch(e){ return d; } },
+  set(k, v){ try { localStorage.setItem(STORE+k, v); } catch(e){} },
+  getJSON(k, d){ try { return JSON.parse(localStorage.getItem(STORE+k)) ?? d; } catch(e){ return d; } },
+  setJSON(k, v){ try { localStorage.setItem(STORE+k, JSON.stringify(v)); } catch(e){} },
+  del(k){ try { localStorage.removeItem(STORE+k); } catch(e){} }
+};
+
+/* Accent-insensitive comparison — "etudiions" must match "étudiions". */
+const norm = s => (s||'').trim().toLowerCase()
+  .normalize("NFD").replace(new RegExp("[\u0300-\u036f]","g"),"")
+  .replace(/[’']/g, "'")
+  .replace(/\s+/g,' ');
+
+const $  = (sel, root) => (root||document).querySelector(sel);
+const $$ = (sel, root) => Array.from((root||document).querySelectorAll(sel));
+
+/* ---------------- Reveal ---------------- */
+const Deck = new Reveal({
+  // We sync the URL ourselves (guarded). Reveal's own hash handling calls
+  // history.replaceState, which throws a SecurityError on sandboxed/data: URLs
+  // and rejects the init promise, taking the whole app down with it.
+  hash: false,
+  // Without this Reveal measures <body> (it stamps .reveal-viewport there) and
+  // sizes slides to the full window, so cards run underneath the sidebar.
+  // Embedded mode makes it measure its own container instead.
+  embedded: true,
+  controls: false,
+  progress: false,
+  center: false,
+  transition: 'slide',
+  backgroundTransition: 'none',
+  width: '100%',
+  height: '100%',
+  margin: 0,
+  minScale: 1,
+  maxScale: 1,
+  keyboard: true,
+  viewDistance: 2,        // 440 slides — never render them all at once
+  mobileViewDistance: 1,
+  fragmentInURL: false
+});
+window.Deck = Deck;
+
+/* ---------------- Sound (muted by default) ---------------- */
+let soundOn = ls.get('sound','0') === '1';
+let audioCtx = null;
+function playSound(type){
+  if (!soundOn) return;
+  try{
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    const t = audioCtx.currentTime;
+    if (type === 'correct'){
+      [523.25, 659.25, 783.99, 1046.50].forEach((f,i)=>{
+        const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+        o.connect(g); g.connect(audioCtx.destination); o.type='sine';
+        o.frequency.setValueAtTime(f, t + i*0.06);
+        g.gain.setValueAtTime(0.12, t + i*0.06);
+        g.gain.linearRampToValueAtTime(0.01, t + i*0.06 + 0.15);
+        o.start(t + i*0.06); o.stop(t + i*0.06 + 0.15);
+      });
+      return;
+    }
+    const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+    o.connect(g); g.connect(audioCtx.destination);
+    if (type === 'wrong'){
+      o.type='sawtooth'; o.frequency.setValueAtTime(140,t);
+      o.frequency.linearRampToValueAtTime(90, t+0.2);
+      g.gain.setValueAtTime(0.15,t); g.gain.linearRampToValueAtTime(0.01,t+0.2);
+      o.start(); o.stop(t+0.2);
+    } else if (type === 'slide'){
+      o.type='triangle'; o.frequency.setValueAtTime(220,t);
+      o.frequency.exponentialRampToValueAtTime(550, t+0.15);
+      g.gain.setValueAtTime(0.08,t); g.gain.linearRampToValueAtTime(0.01,t+0.15);
+      o.start(); o.stop(t+0.15);
+    } else { // pop / flip
+      o.type='sine'; o.frequency.setValueAtTime(450,t);
+      o.frequency.exponentialRampToValueAtTime(900, t+0.08);
+      g.gain.setValueAtTime(0.1,t); g.gain.linearRampToValueAtTime(0.01,t+0.08);
+      o.start(); o.stop(t+0.08);
+    }
+  }catch(e){}
+}
+function refreshSoundBtn(){
+  const b = $('#soundBtn');
+  b.textContent = soundOn ? '🔊' : '🔇';
+  b.classList.toggle('is-on', soundOn);
+  b.title = soundOn ? 'Mute sound' : 'Turn sound on';
+}
+
+/* ---------------- Toast ---------------- */
+let toastTimer = null;
+function showToast(msg){
+  const t = $('#toastNotification');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=> t.classList.remove('show'), 2200);
+}
+
+/* ---------------- Topic model, built from the DOM ---------------- */
+/* Each horizontal <section> is one sub-topic stack carrying
+   data-topic, data-topic-name, data-sub. Verticals are its 8 steps. */
+const stacks = $$('#slidesRoot > section');
+const topics = [];      // { key, name, indices:[h...], slideCount }
+const topicByKey = {};
+stacks.forEach((sec, h) => {
+  const key = sec.dataset.topic || 'divers';
+  if (!topicByKey[key]){
+    topicByKey[key] = { key, name: sec.dataset.topicName || key, indices: [], slideCount: 0 };
+    topics.push(topicByKey[key]);
+  }
+  const t = topicByKey[key];
+  t.indices.push(h);
+  t.slideCount += Math.max(1, sec.querySelectorAll(':scope > section').length);
+});
+
+function stackAt(h){ return stacks[h]; }
+function topicOf(h){ return topicByKey[(stackAt(h)?.dataset.topic) || 'divers']; }
+
+/* ---------------- Progress ---------------- */
+let visited = ls.getJSON('visited', {});   // { topicKey: { "h.v": 1 } }
+function markVisited(h, v){
+  const t = topicOf(h); if (!t) return;
+  if (!visited[t.key]) visited[t.key] = {};
+  const k = h + '.' + v;
+  if (!visited[t.key][k]){
+    visited[t.key][k] = 1;
+    ls.setJSON('visited', visited);
+    renderTopicMenu();
+  }
+}
+function topicPct(t){
+  const seen = Object.keys(visited[t.key] || {}).length;
+  return Math.min(100, Math.round(seen / Math.max(1, t.slideCount) * 100));
+}
+
+/* ---------------- Topic menu ---------------- */
+function renderTopicMenu(){
+  const menu = $('#topicMenu');
+  menu.innerHTML = '';
+  /* La Lettre is reached from the toolbar “Letters” button and the sidebar, so it
+     is redundant here. MENU_HIDE only filters this dropdown — the topic, its
+     slides and every other entry point are untouched. Numbering below uses the
+     filtered index, so the remaining items renumber automatically. */
+  const MENU_HIDE = { lettre: 1, messages: 1 };
+  topics.filter(t => !MENU_HIDE[t.key]).forEach((t, i) => {
+    const b = document.createElement('button');
+    b.className = 'topic-menu-item';
+    b.innerHTML = `<span class="tm-num">${i+1}</span><span>${t.name}</span><span class="tm-pct">${topicPct(t)}%</span>`;
+    b.addEventListener('click', () => {
+      Deck.slide(t.indices[0], 0);
+      menu.classList.remove('open');
+    });
+    menu.appendChild(b);
+  });
+}
+
+/* ---------------- Sidebar ---------------- */
+/* Sidebar accordion state. null = follow the current slide; a string = the user
+   explicitly opened that chapter/letter; '' = the user explicitly closed it. */
+const sbOpen = { group: null, item: null };
+/* Sidebar step labels: English for every topic EXCEPT La Lettre, whose steps
+   are already English. Lookup normalises apostrophes (’ vs ') because the two
+   forms are mixed across the content files. */
+const SB_STEP_EN = {"Description":"Description","Formation":"How to Form","Exceptions":"Exceptions","Pièges":"Common Mistakes","Exemples":"Examples","En contexte":"In Context","Pratique QCM":"MCQ Practice","Pratique — à compléter":"Fill-in-the-blanks Practice","Usages":"Usage","Mémo visuel":"Visual Memory Aid","En application":"In Practice","Galerie visuelle":"Visual Gallery","Tableau de référence":"Reference Table","Examen CBSE":"CBSE Exam","Check-list":"Checklist","Cartes mémoire":"Flashcards","Bienvenue":"Welcome","Les 8 étapes":"The 8 Steps","Les 3 groupes":"The 3 Groups","La ligne du temps":"Timeline","Laboratoire de conjugaison":"Conjugation Lab","Examen CBSE — tous les temps":"CBSE Exam — All Tenses","Check-list de l’examen":"Exam Checklist","Arbre de décision":"Decision Tree","Pourquoi mélanger":"Why Mix Them","Identifier le sujet":"Identify the Topic","Mélange 1 — QCM":"Mixed 1 — MCQ","Mélange 2 — à compléter":"Mixed 2 — Fill in the Blanks","Les pièges les plus coûteux":"The Costliest Traps","Stratégie de l’examen":"Exam Strategy","Bonne chance":"Good Luck","Usages · La routine":"Usage: Daily Routine","Usages · Maintenant":"Usage: Happening Now","Usages · Vérités générales":"Usage: General Truths","Usages · Les instructions":"Usage: Instructions","Usages · Conseils & invitations":"Usage: Advice & Invitations","Usages · La description":"Usage: Description & Background","Usages · L’habitude passée":"Usage: Past Habits","Usages · L’action interrompue":"Usage: Interrupted Action","Usages · L’événement terminé":"Usage: A Completed Event","Usages · La suite d’actions":"Usage: A Sequence of Actions","Usages · Le résultat présent":"Usage: Present Result","Usages · Le passé du passé":"Usage: The Past Before the Past","Usages · Le regret & l’explication":"Usage: Regret & Explanation","Usages · Projets & prédictions":"Usage: Plans & Predictions","Usages · Promesses & conseils":"Usage: Promises & Advice","Usages · Après quand & dès que":"Usage: After quand & dès que","Usages · Fini avant un moment futur":"Usage: Finished Before a Future Moment","Usages · La supposition":"Usage: Supposition","Usages · La politesse":"Usage: Politeness","Usages · L’hypothèse":"Usage: Hypotheses","Usages · Conseils & nouvelles":"Usage: Advice & News","Usages · La routine quotidienne":"Usage: Daily Routine","Usages · Le sens réciproque":"Usage: Reciprocal Meaning","Usages · Volonté & Désir":"Usage: Will & Desire","Usages · L’Émotion":"Usage: Emotion","Usages · La Nécessité":"Usage: Necessity","Usages · Doute & Négation":"Usage: Doubt & Negation","Usages · Les conjonctions déclencheurs":"Usage: Trigger Conjunctions","Usages · Refuser & démentir":"Usage: Refusing & Denying","Usages · La fréquence zéro":"Usage: Never — Zero Frequency","Usages · Ce qui a changé":"Usage: What Has Changed","Usages · Zéro chose":"Usage: Nothing — Zero Things","Usages · Zéro personne":"Usage: Nobody — Zero People","Usages · La restriction":"Usage: Only — Restriction","Usages · Refuser deux choses":"Usage: Refusing Two Things","Usages · Éviter la répétition":"Usage: Avoiding Repetition","Usages · À qui on parle":"Usage: Who You Speak To","Usages · Le lieu où l’on va":"Usage: Where You Go","Usages · Les quantités":"Usage: Quantities","Usages · Insister & après une préposition":"Usage: Emphasis & After a Preposition","Usages · Deux pronoms ensemble":"Usage: Two Pronouns Together","Usages · Décrire qui fait l’action":"Usage: Describing Who Acts","Usages · Décrire ce qu’on subit":"Usage: Describing What Receives","Usages · Le lieu et le moment":"Usage: Place & Time","Usages · Quand le verbe demande DE":"Usage: When the Verb Needs DE","Usages · Après une préposition":"Usage: After a Preposition","Usages · Rapporter une affirmation":"Usage: Reporting a Statement","Usages · Rapporter une question":"Usage: Reporting a Question","Usages · Rapporter un ordre":"Usage: Reporting an Order","Usages · Quand le verbe introducteur est au passé":"Usage: When the Reporting Verb Is Past","Usages · Les repères de temps changent":"Usage: Time Markers Change","Usages · La question passe-partout":"Usage: The All-Purpose Question","Usages · Le registre formel":"Usage: The Formal Register","Usages · Une personne ou une chose":"Usage: A Person or a Thing","Usages · Demander les circonstances":"Usage: Asking About Circumstances","Usages · Choisir dans un ensemble":"Usage: Choosing From a Set","Usages · Demander une quantité":"Usage: Asking How Many","Usages · Présenter ce qui est à soi":"Usage: Saying What Is Yours","Usages · Comparer sans répéter":"Usage: Comparing Without Repeating","Usages · Montrer du doigt":"Usage: Pointing at Things","Usages · Celui de, celui qui":"Usage: celui de, celui qui","Usages · Celui-ci ou celui-là":"Usage: celui-ci or celui-là"};
+const sbNorm = s => String(s || '').replace(/[’ʼ`]/g, "'");
+const SB_STEP_LOOKUP = {};
+Object.keys(SB_STEP_EN).forEach(k => { SB_STEP_LOOKUP[sbNorm(k)] = SB_STEP_EN[k]; });
+function stepLabel(sec, st, v){
+  const raw = st.dataset.step || ('Step ' + (v + 1));
+  if (sec.dataset.topic === 'lettre') return raw;
+  return SB_STEP_LOOKUP[sbNorm(raw)] || raw;
+}
+function renderSidebar(){
+  const sb = $('#sidebar');
+  const idx = Deck.getIndices();
+  const t = topicOf(idx.h);
+  if (!t){ sb.innerHTML = ''; return; }
+
+  let html = `<div class="sb-title">${t.name}</div>`;
+  t.indices.forEach(h => {
+    const sec = stackAt(h);
+    const label = sec.dataset.sub || sec.dataset.topicName || 'Section';
+    const active = (h === idx.h);
+    html += `<button class="sb-item${active ? ' active' : ''}" data-h="${h}" data-v="0">${label}</button>`;
+    if (!active) return;
+
+    const steps = $$(':scope > section', sec);
+    const grouped = steps.some(s => s.dataset.group);
+
+    /* Flat list — every stack except Model Letters. Unchanged behaviour. */
+    if (!grouped){
+      steps.forEach((st, v) => {
+        const nm = stepLabel(sec, st, v);
+        html += `<button class="sb-item step${v === idx.v ? ' active' : ''}" data-h="${h}" data-v="${v}">${v+1}. ${nm}</button>`;
+      });
+      return;
+    }
+
+    /* Accordion — Chapter > Letter > parts. Model Letters is one stack of 68
+       vertical slides, which as a flat list is 68 unusable rows. */
+    const cur = steps[idx.v] || {};
+    const curGroup = (cur.dataset || {}).group || null;
+    const curItem  = (cur.dataset || {}).item  || null;
+    const openGroup = sbOpen.group !== null ? sbOpen.group : curGroup;
+    const openItem  = sbOpen.item  !== null ? sbOpen.item  : curItem;
+
+    const groups = [];
+    steps.forEach((st, v) => {
+      const g = st.dataset.group || 'Autres';
+      const it = st.dataset.item || '';
+      let G = groups.find(x => x.name === g);
+      if (!G){ G = { name: g, items: [] }; groups.push(G); }
+      let I = G.items.find(x => x.name === it);
+      if (!I){ I = { name: it, steps: [] }; G.items.push(I); }
+      I.steps.push({ v, name: st.dataset.step || ('Step ' + (v+1)) });
+    });
+
+    groups.forEach(G => {
+      const gOpen = (G.name === openGroup);
+      html += `<button class="sb-item sb-group${gOpen ? ' open' : ''}${G.name === curGroup ? ' here' : ''}" data-group="${G.name}">${G.name}</button>`;
+      if (!gOpen) return;
+      G.items.forEach(I => {
+        const iOpen = (I.name === openItem);
+        html += `<button class="sb-item sb-group sb-sub${iOpen ? ' open' : ''}${I.name === curItem ? ' here' : ''}" data-group="${G.name}" data-item="${I.name}">${I.name}</button>`;
+        if (!iOpen) return;
+        I.steps.forEach(s => {
+          // drop the "Ch 3 — " prefix; the chapter is already the row above
+          const nm = s.name.replace(/^.*?\u2014\s*/, '');
+          html += `<button class="sb-item step part${s.v === idx.v ? ' active' : ''}" data-h="${h}" data-v="${s.v}">${nm}</button>`;
+        });
+      });
+    });
+  });
+  html += `<div class="sb-divider"></div><div class="sb-title">Progress — ${topicPct(t)}%</div>`;
+  sb.innerHTML = html;
+
+  /* Only rows with a data-v navigate. Chapter and letter rows share the .sb-item
+     class purely for styling, so this selector is what keeps them inert. */
+  $$('.sb-item[data-v]', sb).forEach(b => b.addEventListener('click', () => {
+    Deck.slide(parseInt(b.dataset.h,10), parseInt(b.dataset.v,10));
+  }));
+  /* Toggle rows only open/close. They must NOT move the deck — a toggle that also
+     jumped the slide would make the accordion unusable during a live lesson. */
+  $$('.sb-group', sb).forEach(b => b.addEventListener('click', () => {
+    if (b.dataset.item){
+      sbOpen.group = b.dataset.group;
+      sbOpen.item = (sbOpen.item === b.dataset.item) ? '' : b.dataset.item;
+    } else {
+      sbOpen.group = (sbOpen.group === b.dataset.group) ? '' : b.dataset.group;
+      sbOpen.item = null;
+    }
+    renderSidebar();
+  }));
+}
+
+/* ---------------- HUD ---------------- */
+function updateHud(){
+  const idx = Deck.getIndices();
+  const sec = stackAt(idx.h);
+  if (!sec) return;
+  const t = topicOf(idx.h);
+  const steps = sec.querySelectorAll(':scope > section').length || 1;
+  const sub = sec.dataset.sub || '';
+  const stepName = (sec.querySelectorAll(':scope > section')[idx.v]?.dataset.step) || '';
+
+  $('#slideCounter').textContent =
+    `${t ? t.name : ''}${sub ? ' · ' + sub : ''} · ${idx.v+1}/${steps}${stepName ? ' — ' + stepName : ''}`;
+
+  $('#prevBtn').disabled = (idx.h === 0 && idx.v === 0);
+  $('#nextBtn').disabled = Deck.isLastSlide();
+  $('#topicProgress').style.width = (Deck.getProgress()*100).toFixed(1) + '%';
+
+  markVisited(idx.h, idx.v);
+  renderSidebar();
+}
+
+/* ---------------- Themes ---------------- */
+const DARK = ['theme-slate','theme-cyber'];
+function applyTheme(name){
+  // classList, never body.className — that used to wipe editing-active / mode-*
+  Array.from(document.body.classList)
+    .filter(c => c.startsWith('theme-'))
+    .forEach(c => document.body.classList.remove(c));
+  document.body.classList.add(name);
+  ls.set('theme', name);
+  const sel = $('#themeSelect'); if (sel) sel.value = name;
+  $('#lightBtn').textContent = DARK.includes(name) ? '🌙' : '☀️';
+}
+function toggleLight(){
+  const cur = Array.from(document.body.classList).find(c => c.startsWith('theme-')) || 'theme-slate';
+  if (DARK.includes(cur)) applyTheme(ls.get('lightTheme','theme-classic'));
+  else { ls.set('lightTheme', cur); applyTheme(ls.get('darkTheme','theme-slate')); }
+}
+
+/* ---------------- Teacher / Student mode ---------------- */
+function applyMode(mode){
+  document.body.classList.remove('mode-teacher','mode-student');
+  document.body.classList.add(mode);
+  ls.set('mode', mode);
+  const b = $('#modeBtn');
+  b.textContent = mode === 'mode-teacher' ? '👩‍🏫 Teacher' : '🎓 Student';
+  b.classList.toggle('is-on', mode === 'mode-student');
+  // Teacher mode: questions stay visible so the class answers aloud, but nothing auto-grades.
+  const teaching = (mode === 'mode-teacher');
+  $$('.quiz-container').forEach(c => {
+    $$('.option-btn', c).forEach(x => { if (!x.dataset.locked) x.disabled = teaching; });
+    $$('.fib-input',  c).forEach(x => { x.disabled = teaching; });
+  });
+}
+function toggleMode(){
+  applyMode(document.body.classList.contains('mode-teacher') ? 'mode-student' : 'mode-teacher');
+}
+
+/* ---------------- Quiz + fill-in-the-blank, scoped per container ---------------- */
+function initQuizContainer(container){
+  const mcqRows = $$('.question-row', container).filter(r => r.querySelector('.option-btn'));
+  const fibs    = $$('.fib-input', container);
+  const total   = mcqRows.length + fibs.length;
+  if (!total) return;
+
+  let answered = 0, score = 0;
+  const fill  = $('.quiz-progress-fill', container);
+  const disp  = $('.score-display', container);
+
+  function paint(){
+    if (fill) fill.style.width = (answered/total*100) + '%';
+    if (disp) disp.textContent = `Score : ${score} / ${total}`;
+    if (answered === total && score/total >= 0.7){
+      setTimeout(()=>{ burstConfetti(); burstFireworks(); showToast(`🎉 Well done! ${score} / ${total}`); }, 350);
+    }
+  }
+
+  mcqRows.forEach(row => {
+    const correct = row.dataset.answer || '';
+    const btns = $$('.option-btn', row);
+    btns.forEach(btn => btn.addEventListener('click', () => {
+      if (row.classList.contains('answered') || btn.disabled) return;
+      row.classList.add('answered'); answered++;
+      const ok = norm(btn.textContent) === norm(correct);
+      if (ok){ btn.classList.add('correct'); score++; playSound('correct'); burstFireworks(); burstConfetti(); }
+      else {
+        btn.classList.add('wrong'); playSound('wrong');
+        btns.forEach(b => { if (norm(b.textContent) === norm(correct)) b.classList.add('correct'); });
+      }
+      btns.forEach(b => { b.disabled = true; b.dataset.locked = '1'; });
+      paint();
+    }));
+  });
+
+  fibs.forEach(inp => {
+    const verdict = inp.parentElement.querySelector('.fib-verdict');
+    function check(){
+      if (inp.dataset.done || inp.disabled) return;
+      const accepted = (inp.dataset.answer || '').split('|').map(norm);
+      const ok = accepted.includes(norm(inp.value));
+      inp.dataset.done = '1'; inp.classList.add(ok ? 'correct' : 'wrong');
+      answered++; if (ok) score++;
+      if (verdict){
+        verdict.className = 'fib-verdict ' + (ok ? 'ok' : 'no');
+        verdict.textContent = ok ? '✓' : '✗ ' + (inp.dataset.answer||'').split('|')[0];
+      }
+      playSound(ok ? 'correct' : 'wrong');
+      if (ok) burstConfetti();
+      paint();
+    }
+    inp.addEventListener('keydown', e => { if (e.key === 'Enter'){ e.preventDefault(); check(); } });
+    inp.addEventListener('focus', () => { container.dataset.lastInput = fibs.indexOf(inp); });
+    inp._check = check;
+  });
+
+  const checkBtn = $('.fib-check', container);
+  if (checkBtn) checkBtn.addEventListener('click', () => fibs.forEach(i => i._check && i._check()));
+
+  const revealBtn = $('.reveal-answers', container);
+  if (revealBtn) revealBtn.addEventListener('click', () => {
+    mcqRows.forEach(row => {
+      const correct = row.dataset.answer || '';
+      $$('.option-btn', row).forEach(b => { if (norm(b.textContent) === norm(correct)) b.classList.add('correct'); });
+    });
+    fibs.forEach(inp => {
+      const v = inp.parentElement.querySelector('.fib-verdict');
+      if (v){ v.className = 'fib-verdict ok'; v.textContent = '→ ' + (inp.dataset.answer||'').split('|')[0]; }
+    });
+  });
+
+  const retry = $('.retry-btn', container);
+  if (retry) retry.addEventListener('click', () => {
+    answered = 0; score = 0;
+    const teaching = document.body.classList.contains('mode-teacher');
+    mcqRows.forEach(row => {
+      row.classList.remove('answered');
+      $$('.option-btn', row).forEach(b => {
+        b.classList.remove('correct','wrong'); delete b.dataset.locked; b.disabled = teaching;
+      });
+    });
+    fibs.forEach(inp => {
+      delete inp.dataset.done; inp.value = ''; inp.classList.remove('correct','wrong');
+      const v = inp.parentElement.querySelector('.fib-verdict'); if (v){ v.textContent=''; v.className='fib-verdict'; }
+    });
+    paint();
+  });
+
+  // Accent helper — students on laptops cannot type é è ê à ç
+  $$('.accent-key', container).forEach(k => k.addEventListener('click', () => {
+    const i = parseInt(container.dataset.lastInput || '0', 10);
+    const inp = fibs[i]; if (!inp || inp.disabled) return;
+    const s = inp.selectionStart ?? inp.value.length, e = inp.selectionEnd ?? s;
+    inp.value = inp.value.slice(0,s) + k.textContent + inp.value.slice(e);
+    inp.focus(); inp.setSelectionRange(s+1, s+1);
+  }));
+
+  paint();
+}
+
+/* ---------------- Flip cards (delegated) + spaced repetition ---------------- */
+let known = ls.getJSON('known', {});
+function cardKey(card){
+  const st = card.closest('section[data-sub]');
+  return (st ? st.dataset.sub : '?') + '::' + ($('.flip-card-front', card)?.textContent || '').trim().slice(0,40);
+}
+function initFlipCards(){
+  $$('.flip-card').forEach(c => { if (known[cardKey(c)]) c.classList.add('known'); });
+}
+document.addEventListener('click', e => {
+  const mark = e.target.closest('.fc-mark');
+  if (mark){
+    e.stopPropagation();
+    const card = mark.closest('.flip-card'); const k = cardKey(card);
+    if (mark.dataset.mark === 'known'){ known[k] = 1; card.classList.add('known'); }
+    else { delete known[k]; card.classList.remove('known'); }
+    ls.setJSON('known', known);
+    return;
+  }
+  const card = e.target.closest('.flip-card');
+  if (card){ card.classList.toggle('flipped'); playSound('flip'); }
+});
+
+/* ---------------- Formula lab, scoped by data attributes ---------------- */
+function initLabs(){
+  $$('.formula-lab').forEach(lab => {
+    const data = JSON.parse(lab.dataset.lab || '{}');
+    const pronouns = JSON.parse(lab.dataset.pronouns || '[]');
+    const tbody = $('.lab-body', lab);
+    const stemEl = $('.lab-stem', lab);
+    const verbEl = $('.lab-verb', lab);
+    const eqEl   = $('.lab-eq', lab);
+    let verb = Object.keys(data)[0];
+    let tense = verb ? Object.keys(data[verb]).filter(k => k !== 'stem')[0] : null;
+
+    function render(){
+      if (!verb || !tense || !data[verb]) return;
+      const forms = data[verb][tense] || [];
+      if (verbEl) verbEl.textContent = verb;
+      if (stemEl) stemEl.textContent = data[verb].stem || '—';
+      if (eqEl)   eqEl.textContent   = (pronouns[0] || '') + ' ' + (forms[0] || '');
+      if (tbody){
+        tbody.innerHTML = '';
+        forms.forEach((f, i) => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `<td><strong>${pronouns[i] || ''}</strong></td><td class="key-form">${f}</td>`;
+          tbody.appendChild(tr);
+        });
+      }
+      $$('.verb-select-btn', lab).forEach(b => b.classList.toggle('is-on', b.dataset.verb === verb));
+      $$('.tense-select-btn', lab).forEach(b => b.classList.toggle('is-on', b.dataset.tense === tense));
+    }
+    $$('.verb-select-btn', lab).forEach(b => b.addEventListener('click', () => {
+      verb = b.dataset.verb;
+      if (!data[verb][tense]) tense = Object.keys(data[verb]).filter(k => k !== 'stem')[0];
+      playSound('pop'); render();
+    }));
+    $$('.tense-select-btn', lab).forEach(b => b.addEventListener('click', () => {
+      tense = b.dataset.tense; playSound('pop'); render();
+    }));
+    render();
+  });
+}
+
+/* ---------------- Search ---------------- */
+let searchIndex = [];
+function buildSearchIndex(){
+  stacks.forEach((sec, h) => {
+    const topic = sec.dataset.topicName || '';
+    const sub   = sec.dataset.sub || '';
+    $$(':scope > section', sec).forEach((st, v) => {
+      const step = st.dataset.step || '';
+      const bits = [];
+      $$('h1,h2,h3,.highlight,.example-text,.key-form,.q-text', st).forEach(el => bits.push(el.textContent));
+      searchIndex.push({ h, v, topic, sub, step, hay: norm(topic+' '+sub+' '+step+' '+bits.join(' ')) });
+    });
+  });
+
+  /* LETTERDATA search — the module collapses ~100 former slides into one, so its
+     topics are indexed explicitly or letter content becomes unfindable. */
+  try{
+    if (typeof LETTERDATA !== 'undefined'){
+      const mod = stacks.findIndex(x => x.dataset.sub === 'Le module');
+      if (mod >= 0){
+        LETTERDATA.forEach(g => g.topics.forEach(t => {
+          const bits = [t.en.title, t.fr.title, g.group, t.lecon || ''];
+          if (t.letter){ bits.push(t.letter.fr.paras.join(' '), t.prompt.fr); }
+          else if (t.fr.paras){ bits.push(t.fr.paras.join(' ')); }
+          (t.bank||[]).forEach(b => bits.push(b[0]));
+          (t.vocab||[]).forEach(b => bits.push(b[0]));
+          searchIndex.push({ h: mod, v: 0, topic: 'La Lettre (Section B)', sub: g.group,
+                             step: t.en.title, hay: norm(bits.join(' ')) });
+        }));
+      }
+    }
+  }catch(e){ console.warn('Letter search index:', e); }
+}
+function runSearch(q){
+  const box = $('#searchResults');
+  const nq = norm(q);
+  if (!nq){ box.innerHTML = '<div class="search-empty">Tapez pour rechercher…</div>'; return; }
+  const hits = searchIndex.filter(e => e.hay.includes(nq)).slice(0, 40);
+  if (!hits.length){ box.innerHTML = '<div class="search-empty">Aucun résultat</div>'; return; }
+  box.innerHTML = hits.map((e,i) =>
+    `<button class="search-hit${i===0?' sel':''}" data-h="${e.h}" data-v="${e.v}">
+       <span class="sh-path">${e.topic} › ${e.sub}</span>${e.step}
+     </button>`).join('');
+  $$('.search-hit', box).forEach(b => b.addEventListener('click', () => {
+    Deck.slide(parseInt(b.dataset.h,10), parseInt(b.dataset.v,10));
+    $('#searchModal').classList.remove('open');
+  }));
+}
+function openSearch(){
+  $('#searchModal').classList.add('open');
+  const i = $('#searchInput'); i.value = ''; runSearch(''); setTimeout(()=>i.focus(), 30);
+}
+
+/* ---------------- Print one topic as a handout ---------------- */
+function printTopic(){
+  const t = topicOf(Deck.getIndices().h);
+  if (!t) return;
+  t.indices.forEach(h => stacks[h].classList.add('print-target'));
+  document.body.classList.add('printing-topic');
+  showToast('🖨️ Preparing worksheet…');
+  setTimeout(() => window.print(), 250);
+}
+function printBook(){
+  document.body.classList.add('printing-book');
+  showToast('📚 Preparing complete workbook…');
+  setTimeout(() => window.print(), 250);
+}
+window.addEventListener('afterprint', () => {
+  document.body.classList.remove('printing-topic');
+  document.body.classList.remove('printing-book');
+  $$('.print-target').forEach(s => s.classList.remove('print-target'));
+  Deck.layout();
+});
+
+/* ---------------- Live edit ---------------- */
+function setLiveEdit(on){
+  document.body.classList.toggle('editing-active', on);
+  $$('.editable-field').forEach(el => el.setAttribute('contenteditable', on ? 'true' : 'false'));
+}
+function currentCard(){
+  const s = Deck.getCurrentSlide();
+  return s ? s.querySelector('.slide-card') : null;
+}
+function addElement(kind){
+  const card = currentCard(); if (!card) return;
+  let el;
+  if (kind === 'badge'){
+    el = document.createElement('span'); el.className = 'highlight editable-field'; el.textContent = 'new word';
+  } else if (kind === 'bullet'){
+    el = document.createElement('p'); el.className = 'editable-field'; el.textContent = '• New rule — click to edit…';
+  } else {
+    el = document.createElement('div');
+    el.className = 'box ' + (kind === 'gold' ? 'gold' : 'blue') + ' content-box editable-field';
+    el.textContent = kind === 'gold' ? 'New example — click to edit…' : 'New note — click to edit…';
+  }
+  el.contentEditable = 'true';
+  card.appendChild(el);
+  showToast('➕ Element added');
+}
+function saveEdits(){
+  const edits = {};
+  $$('#slidesRoot section[data-slide-id]').forEach(s => {
+    const card = s.querySelector('.slide-card');
+    if (card) edits[s.dataset.slideId] = card.innerHTML;
+  });
+  ls.setJSON('slide_edits', edits);
+  showToast('✅ Text saved');
+}
+function restoreEdits(){
+  const edits = ls.getJSON('slide_edits', null);
+  if (!edits) return;
+  Object.keys(edits).forEach(id => {
+    const card = document.querySelector(`section[data-slide-id="${CSS.escape(id)}"] .slide-card`);
+    if (card) card.innerHTML = edits[id];
+  });
+}
+
+/* ---------------- Canvas FX ---------------- */
+const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const ambC = $('#ambientParticlesCanvas'), ambX = ambC.getContext('2d');
+const fwC  = $('#fireworksCanvas'),        fwX  = fwC.getContext('2d');
+const cfC  = $('#confettiCanvas'),         cfX  = cfC.getContext('2d');
+let amb = [], fw = [], cf = [], fxRunning = false;
+
+function sizeCanvases(){
+  [ambC, fwC, cfC].forEach(c => { c.width = window.innerWidth; c.height = window.innerHeight; });
+}
+/* In embedded mode Reveal does NOT re-layout on window resize, so slides keep
+   their old width when the projector/window changes. Drive it ourselves. */
+let layoutTimer = null;
+function relayout(){
+  clearTimeout(layoutTimer);
+  layoutTimer = setTimeout(() => { try { Deck.layout(); } catch(e){} try { refitLetters(); } catch(e){} }, 80);
+}
+window.addEventListener('resize', () => { sizeCanvases(); relayout(); });
+document.addEventListener('fullscreenchange', relayout);
+/* The reliable trigger: fires whenever the deck's own box changes — window
+   resize, sidebar toggle, fullscreen, or the <1024px media query flipping —
+   without relying on a window resize event actually being delivered. */
+if (window.ResizeObserver){
+  new ResizeObserver(relayout).observe(document.querySelector('.reveal'));
+}
+sizeCanvases();
+for (let i=0;i<40;i++) amb.push({
+  x:Math.random()*window.innerWidth, y:Math.random()*window.innerHeight,
+  r:Math.random()*2+1, vx:(Math.random()-.5)*.3, vy:(Math.random()-.5)*.3
+});
+function themeColors(){
+  const cs = getComputedStyle(document.body);
+  return ['--heading-color','--crimson','--gold','--green','--purple']
+    .map(v => cs.getPropertyValue(v).trim() || '#002395');
+}
+function burstConfetti(){
+  if (reduced) return;
+  const cols = themeColors();
+  for (let i=0;i<60;i++) cf.push({
+    x:window.innerWidth/2, y:window.innerHeight/2,
+    vx:(Math.random()-.5)*10, vy:(Math.random()-1.2)*10,
+    size:Math.random()*6+4, color:cols[(Math.random()*cols.length)|0], life:100
+  });
+  startFX();
+}
+function burstFireworks(){
+  if (reduced) return;
+  const cols = themeColors();
+  const cx = window.innerWidth/2, cy = window.innerHeight/2.5;
+  for (let i=0;i<50;i++){
+    const a = (Math.PI*2*i)/50, sp = Math.random()*5+3;
+    fw.push({ x:cx, y:cy, vx:Math.cos(a)*sp, vy:Math.sin(a)*sp, color:cols[(Math.random()*cols.length)|0], life:60 });
+  }
+  startFX();
+}
+function frame(){
+  if (!fxRunning) return;
+  ambX.clearRect(0,0,ambC.width,ambC.height);
+  ambX.fillStyle = getComputedStyle(document.body).getPropertyValue('--particle-color') || 'rgba(0,35,149,.3)';
+  amb.forEach(p => {
+    p.x+=p.vx; p.y+=p.vy;
+    if (p.x<0||p.x>ambC.width) p.vx*=-1;
+    if (p.y<0||p.y>ambC.height) p.vy*=-1;
+    ambX.beginPath(); ambX.arc(p.x,p.y,p.r,0,Math.PI*2); ambX.fill();
+  });
+  fwX.clearRect(0,0,fwC.width,fwC.height);
+  fw = fw.filter(p => p.life>0);
+  fw.forEach(p => {
+    p.x+=p.vx; p.y+=p.vy; p.vy+=.08; p.life--;
+    fwX.globalAlpha = Math.max(p.life/60,0); fwX.fillStyle = p.color;
+    fwX.beginPath(); fwX.arc(p.x,p.y,2.5,0,Math.PI*2); fwX.fill(); fwX.globalAlpha = 1;
+  });
+  cfX.clearRect(0,0,cfC.width,cfC.height);
+  cf = cf.filter(p => p.life>0);
+  cf.forEach(p => {
+    p.x+=p.vx; p.y+=p.vy; p.vy+=.25; p.life--;
+    cfX.fillStyle = p.color; cfX.fillRect(p.x,p.y,p.size,p.size);
+  });
+  requestAnimationFrame(frame);
+}
+function startFX(){ if (!fxRunning && !reduced){ fxRunning = true; requestAnimationFrame(frame); } }
+function stopFX(){ fxRunning = false; }
+document.addEventListener('visibilitychange', () => document.hidden ? stopFX() : startFX());
+
+/* ================================================================
+   PHASE-1 ADDITIONS (all additive; guarded; no existing logic touched)
+   ================================================================ */
+
+/* ---------------- Class rosters (edit these freely) ---------------- */
+const ROSTERS = {
+  '10E': ['Abdul Abid Ansari','Abel Thanickal Aluckal Ajo','Abiya Elizebeth Jijo','Acsa Kallarackal Joshy','Adnan Siddique','Adriel Antony','Aksa Jose','Akshita Jyothish','Alby Abraham Regi','Alesha Cherian Chathanattu','Alfred Paul Sunil','Andriya Ezabel Roy','Angelin Gibi','Annet Maria Biju','Anushka Shibin','Athen Binil Skaria','Baiden Paul George','Diya Ann Shiju','Elvis Kurian Johny','Fida Rashid Palliparambil','George Mathew','Glifsho Refson Teshy Frashans','Helen Jomon','Janoah Reji','Johan Koshy Shaji','Jomel Tom Renji','Juwan Anoop','Kevin Jinu Eapen','Liya Laiju','Muhammed Shaheen Shah','Nivin Tom Mathew','Raima Remesh','Rubil Anna Koshy','Serra Ann Shibu','Shaun Luby John','Steffin Geo Sunil','Trisha Tom','Vaishnavi Predheep Nair'],
+  '10J': ['Abel Binu','Aevin Paul Shabu','Aida Sunny','Alexa Aleya Philip','Alvin Anil Chacko','Amala Susan Philip','Anika Binil','Anjika Mariya Sijo','Ankitha Arun Ravi','Anna Mariya Benoy','Bebiya Ann Basil','Danny Thankachan Tenson','Elen Abraham','Evan Mathew Sabu','Geevu Sam Francis','Hayden Quadros','Hefzibah Mathew','Hema Priya Ravana','Jacob Ajo','Jaswinth Karthikeyan','Jesbiya Jaison','Johan Joji','Joshua Varghese Prajeesh','Joshua Viju Job','Joveline Elias','Kaviya Varshini','Keziah Sunil Thomas','Kripa Sara George','Linson Mathew Varghese','Marvel Maneesh','Mebin Roy','Mishab Bin Yasir','Rayan Thomas Chacko','Rehan Nishad','Riya George','Rohan Roy','Ron Koshy Binu','Sherwin Biju Kallaparambil']
+};
+
+/* ---------------- Pick-a-Student randomizer ---------------- */
+let pickTimer = null, pickCurrentClass = null;
+function openPick(){ $('#pickStudentModal').classList.add('open'); showPickClasses(); }
+function closePick(){ clearInterval(pickTimer); $('#pickStudentModal').classList.remove('open'); }
+function showPickClasses(){
+  clearInterval(pickTimer);
+  $('#pickClassRow').style.display = '';
+  $('#pickStage').hidden = true;
+}
+function spinPick(cls){
+  pickCurrentClass = cls;
+  const roster = ROSTERS[cls] || [];
+  if (!roster.length) return;
+  $('#pickClassRow').style.display = 'none';
+  $('#pickStage').hidden = false;
+  $('#pickSub').textContent = `Class ${cls} · ${roster.length} students`;
+  const nameEl = $('#pickName');
+  nameEl.classList.remove('landed'); nameEl.classList.add('spinning');
+  clearInterval(pickTimer);
+  const started = Date.now();
+  pickTimer = setInterval(() => {
+    nameEl.textContent = roster[(Math.random() * roster.length) | 0];
+    if (Date.now() - started >= 1500){
+      clearInterval(pickTimer);
+      const chosen = roster[(Math.random() * roster.length) | 0];
+      nameEl.textContent = chosen;
+      nameEl.classList.remove('spinning'); nameEl.classList.add('landed');
+      try { burstConfetti(); } catch(e){}
+      playSound('correct');
+    }
+  }, 70);
+}
+
+/* ---------------- Projector / fullscreen mode ---------------- */
+function isFs(){ return !!document.fullscreenElement; }
+function setProjector(on){
+  document.body.classList.toggle('projector-mode', on);
+  try { refitLetters(); } catch(e){}
+  ls.set('projector', on ? '1' : '0');
+  try { Deck.layout(); } catch(e){}
+  setTimeout(() => { try { Deck.layout(); } catch(e){} }, 260);
+}
+function toggleProjector(){
+  const on = !document.body.classList.contains('projector-mode');
+  setProjector(on);
+  if (on && !isFs()){ document.documentElement.requestFullscreen && document.documentElement.requestFullscreen().catch(()=>{}); }
+  if (!on && isFs()){ document.exitFullscreen && document.exitFullscreen(); }
+}
+document.addEventListener('fullscreenchange', () => {
+  // Leaving fullscreen via Esc should also drop projector mode
+  if (!isFs() && document.body.classList.contains('projector-mode')) setProjector(false);
+});
+
+/* ---------------- Click-to-hear French (Web Speech; offline-capable) ---------------- */
+const speechOK = ('speechSynthesis' in window) && ('SpeechSynthesisUtterance' in window);
+let frVoice = null;
+function pickFrenchVoice(){
+  if (!speechOK) return;
+  const vs = speechSynthesis.getVoices() || [];
+  frVoice = vs.find(v => /fr-FR/i.test(v.lang)) || vs.find(v => /^fr/i.test(v.lang)) || null;
+}
+if (speechOK){ pickFrenchVoice(); speechSynthesis.onvoiceschanged = pickFrenchVoice; }
+function speakFrench(text, btn){
+  if (!speechOK || !text) return;
+  try {
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = 'fr-FR'; u.rate = 0.92; if (frVoice) u.voice = frVoice;
+    if (btn){ btn.classList.add('speaking'); u.onend = u.onerror = () => btn.classList.remove('speaking'); }
+    speechSynthesis.speak(u);
+  } catch(e){}
+}
+/* Strip glosses / arrows so only the French is read aloud */
+function frenchTextOf(el){
+  const clone = el.cloneNode(true);
+  clone.querySelectorAll('.gloss, .q-tag, .audio-btn').forEach(n => n.remove());
+  return (clone.textContent || '').replace(/→.*$/,'').replace(/\s+/g,' ').trim();
+}
+/* Add a small 🔊 button to every French example, once */
+function injectAudioButtons(){
+  if (!speechOK) return;
+  $$('.example-text, .tl-d-ex').forEach(el => {
+    if (el.dataset.audio) return;
+    el.dataset.audio = '1';
+    const b = document.createElement('button');
+    b.className = 'audio-btn'; b.type = 'button'; b.title = 'Hear it in French'; b.textContent = '🔊';
+    b.addEventListener('click', ev => { ev.stopPropagation(); speakFrench(frenchTextOf(el), b); });
+    el.appendChild(b);
+  });
+}
+
+/* ---------------- Interactive Tense Timeline ---------------- */
+function initTimeline(){
+  const hero = $('.tl-hero'); if (!hero) return;
+  let data = {};
+  try { data = JSON.parse(hero.dataset.tl || '{}'); } catch(e){ console.warn('Timeline data parse failed', e); return; }
+  let verb = Object.keys(data)[0]; if (!verb) return;
+  const detail = $('.tl-detail', hero);
+
+  function renderNodes(){
+    const set = data[verb] || {};
+    $$('.tl-node', hero).forEach(node => {
+      const k = node.dataset.tense; const d = set[k]; if (!d) return;
+      const fEl = $('.tl-formula', node); if (fEl) fEl.textContent = d.formula;
+      const eEl = $('.tl-ex', node); if (eEl) eEl.textContent = d.ex;
+    });
+    // moods also carry per-verb example text on their button title
+    $$('.tl-mood', hero).forEach(m => { const d = set[m.dataset.tense]; if (d) m.title = d.ex + ' — ' + d.gloss; });
+  }
+  function showDetail(k){
+    const d = (data[verb] || {})[k]; if (!d || !detail) return;
+    $$('.tl-node', hero).forEach(n => n.classList.toggle('active', n.dataset.tense === k));
+    detail.innerHTML =
+      `<h3>${d.fr} <span style="color:var(--text-muted);font-weight:600;font-size:.75em;">(${d.en})</span></h3>` +
+      `<span class="tl-formula" style="font-size:.8rem;">${d.formula}</span>` +
+      `<p class="tl-d-ex">${d.ex}</p>` +
+      `<span class="gloss">${d.gloss}</span>`;
+    injectAudioButtons();
+  }
+  $$('.tl-node', hero).forEach(node => node.addEventListener('click', () => showDetail(node.dataset.tense)));
+  $$('.tl-verb-btn', hero).forEach(b => b.addEventListener('click', () => {
+    verb = b.dataset.verb;
+    $$('.tl-verb-btn', hero).forEach(x => x.classList.toggle('is-on', x === b));
+    renderNodes();
+    const active = $('.tl-node.active', hero) || $('.tl-node', hero);
+    if (active) showDetail(active.dataset.tense);
+    playSound('pop');
+  }));
+  $$('.tl-mood', hero).forEach(m => m.addEventListener('click', () => {
+    m.classList.toggle('active');
+    const k = m.dataset.tense;
+    if (m.classList.contains('active')) showDetail(k);
+  }));
+  renderNodes();
+  const first = $('.tl-node', hero);
+  if (first) showDetail(first.dataset.tense);
+  /* Optional GSAP flourish (the pure-CSS layout is already complete without it).
+     Three rules here, each guarding a way the nodes could end up invisible:
+       1. RUN ONCE. This is called from initTimeline AND from boot(). gsap.from()
+          infers its END value from the element's current opacity, so a second
+          call landing mid-tween would record end-opacity ~0 and animate 0 -> 0,
+          leaving every tense permanently faint.
+       2. fromTo with an EXPLICIT opacity:1 end — never inferred — plus
+          clearProps so the inline style is removed and CSS governs afterwards.
+       3. If anything throws, strip the inline styles rather than leaving the
+          nodes hidden. A missing flourish is fine; invisible text is not. */
+  let tlAnimated = false;
+  const tlReveal = () => $$('.tl-node', hero).forEach(n => { n.style.opacity = ''; n.style.transform = ''; });
+  window.__enhanceTimeline = () => {
+    if (typeof gsap === 'undefined' || tlAnimated) return;
+    tlAnimated = true;
+    const nodes = $$('.tl-node', hero);
+    if (!nodes.length) return;
+    try {
+      gsap.fromTo(nodes,
+        { y: 24, opacity: 0 },
+        { y: 0, opacity: 1, duration: .5, stagger: .06, ease: 'back.out(1.6)', clearProps: 'opacity,transform' });
+    } catch(e){ tlReveal(); }
+    /* last-resort net: whatever happened above, the text must be readable */
+    setTimeout(tlReveal, 1500);
+  };
+  if (typeof gsap !== 'undefined') window.__enhanceTimeline();
+}
+
+/* ================================================================
+   CONJUGATION LAB — curated dataset, stem/ending highlighting, drill
+   ================================================================ */
+const CJ_PRON = ['je','tu','il/elle','nous','vous','ils/elles'];
+const CJ_IMP_PRON = ['(tu)','(nous)','(vous)'];
+// Full 10-tense order used by the all-tenses card
+const CJ_ALL_TENSES = [
+  ['present','Présent','I do'],['pc','Passé Composé','I did / have done'],
+  ['imparfait','Imparfait','I was doing / used to'],['pqp','Plus-que-parfait','I had done'],
+  ['futur','Futur Simple','I will do'],['futurAnt','Futur Antérieur','I will have done'],
+  ['cond','Conditionnel Présent','I would do'],['condPasse','Conditionnel Passé','I would have done'],
+  ['subj','Subjonctif Présent','(that) I do'],['imperatif','Impératif','Do!']
+];
+const CJ_TENSES = [['present','Présent'],['imparfait','Imparfait'],['pc','Passé Composé'],['futur','Futur Simple'],['cond','Conditionnel'],['subj','Subjonctif']];
+const CJ_FAMS = [['all','All'],['reg-er','Regular -ER'],['reg-ir','Regular -IR (finir)'],['partir','-IR like partir'],['reg-re','Regular -RE'],['prendre','Prendre family'],['venir','Venir / Tenir'],['boot','Boot verbs'],['essential','Essential irregulars']];
+const CJ_ENDINGS = {
+  present:['issons','issez','issent','ons','ent','ez','es','x','s','t','e'],
+  imparfait:['aient','ions','iez','ais','ait'],
+  futur:['ont','ons','ez','ai','as','a'],
+  cond:['aient','ions','iez','ais','ait'],
+  subj:['ions','iez','ent','es','e'],
+  imperatif:['issons','issez','ons','ez','es','e','s']
+};
+const CONJ = {
+  parler:{inf:'parler',en:'to speak',group:1,fam:'reg-er',present:['parle','parles','parle','parlons','parlez','parlent'],imparfait:['parlais','parlais','parlait','parlions','parliez','parlaient'],pc:['ai parlé','as parlé','a parlé','avons parlé','avez parlé','ont parlé'],futur:['parlerai','parleras','parlera','parlerons','parlerez','parleront'],cond:['parlerais','parlerais','parlerait','parlerions','parleriez','parleraient'],subj:['parle','parles','parle','parlions','parliez','parlent']},
+  manger:{inf:'manger',en:'to eat',group:1,fam:'reg-er',present:['mange','manges','mange','mangeons','mangez','mangent'],imparfait:['mangeais','mangeais','mangeait','mangions','mangiez','mangeaient'],pc:['ai mangé','as mangé','a mangé','avons mangé','avez mangé','ont mangé'],futur:['mangerai','mangeras','mangera','mangerons','mangerez','mangeront'],cond:['mangerais','mangerais','mangerait','mangerions','mangeriez','mangeraient'],subj:['mange','manges','mange','mangions','mangiez','mangent']},
+  acheter:{inf:'acheter',en:'to buy',group:1,fam:'reg-er',present:['achète','achètes','achète','achetons','achetez','achètent'],imparfait:['achetais','achetais','achetait','achetions','achetiez','achetaient'],pc:['ai acheté','as acheté','a acheté','avons acheté','avez acheté','ont acheté'],futur:['achèterai','achèteras','achètera','achèterons','achèterez','achèteront'],cond:['achèterais','achèterais','achèterait','achèterions','achèteriez','achèteraient'],subj:['achète','achètes','achète','achetions','achetiez','achètent']},
+  appeler:{inf:'appeler',en:'to call',group:1,fam:'reg-er',present:['appelle','appelles','appelle','appelons','appelez','appellent'],imparfait:['appelais','appelais','appelait','appelions','appeliez','appelaient'],pc:['ai appelé','as appelé','a appelé','avons appelé','avez appelé','ont appelé'],futur:['appellerai','appelleras','appellera','appellerons','appellerez','appelleront'],cond:['appellerais','appellerais','appellerait','appellerions','appelleriez','appelleraient'],subj:['appelle','appelles','appelle','appelions','appeliez','appellent']},
+  finir:{inf:'finir',en:'to finish',group:2,fam:'reg-ir',present:['finis','finis','finit','finissons','finissez','finissent'],imparfait:['finissais','finissais','finissait','finissions','finissiez','finissaient'],pc:['ai fini','as fini','a fini','avons fini','avez fini','ont fini'],futur:['finirai','finiras','finira','finirons','finirez','finiront'],cond:['finirais','finirais','finirait','finirions','finiriez','finiraient'],subj:['finisse','finisses','finisse','finissions','finissiez','finissent']},
+  choisir:{inf:'choisir',en:'to choose',group:2,fam:'reg-ir',present:['choisis','choisis','choisit','choisissons','choisissez','choisissent'],imparfait:['choisissais','choisissais','choisissait','choisissions','choisissiez','choisissaient'],pc:['ai choisi','as choisi','a choisi','avons choisi','avez choisi','ont choisi'],futur:['choisirai','choisiras','choisira','choisirons','choisirez','choisiront'],cond:['choisirais','choisirais','choisirait','choisirions','choisiriez','choisiraient'],subj:['choisisse','choisisses','choisisse','choisissions','choisissiez','choisissent']},
+  partir:{inf:'partir',en:'to leave',group:3,fam:'partir',present:['pars','pars','part','partons','partez','partent'],imparfait:['partais','partais','partait','partions','partiez','partaient'],pc:['suis parti(e)','es parti(e)','est parti(e)','sommes parti(e)s','êtes parti(e)(s)','sont parti(e)s'],futur:['partirai','partiras','partira','partirons','partirez','partiront'],cond:['partirais','partirais','partirait','partirions','partiriez','partiraient'],subj:['parte','partes','parte','partions','partiez','partent']},
+  dormir:{inf:'dormir',en:'to sleep',group:3,fam:'partir',present:['dors','dors','dort','dormons','dormez','dorment'],imparfait:['dormais','dormais','dormait','dormions','dormiez','dormaient'],pc:['ai dormi','as dormi','a dormi','avons dormi','avez dormi','ont dormi'],futur:['dormirai','dormiras','dormira','dormirons','dormirez','dormiront'],cond:['dormirais','dormirais','dormirait','dormirions','dormiriez','dormiraient'],subj:['dorme','dormes','dorme','dormions','dormiez','dorment']},
+  vendre:{inf:'vendre',en:'to sell',group:3,fam:'reg-re',present:['vends','vends','vend','vendons','vendez','vendent'],imparfait:['vendais','vendais','vendait','vendions','vendiez','vendaient'],pc:['ai vendu','as vendu','a vendu','avons vendu','avez vendu','ont vendu'],futur:['vendrai','vendras','vendra','vendrons','vendrez','vendront'],cond:['vendrais','vendrais','vendrait','vendrions','vendriez','vendraient'],subj:['vende','vendes','vende','vendions','vendiez','vendent']},
+  attendre:{inf:'attendre',en:'to wait',group:3,fam:'reg-re',present:['attends','attends','attend','attendons','attendez','attendent'],imparfait:['attendais','attendais','attendait','attendions','attendiez','attendaient'],pc:['ai attendu','as attendu','a attendu','avons attendu','avez attendu','ont attendu'],futur:['attendrai','attendras','attendra','attendrons','attendrez','attendront'],cond:['attendrais','attendrais','attendrait','attendrions','attendriez','attendraient'],subj:['attende','attendes','attende','attendions','attendiez','attendent']},
+  prendre:{inf:'prendre',en:'to take',group:3,fam:'prendre',present:['prends','prends','prend','prenons','prenez','prennent'],imparfait:['prenais','prenais','prenait','prenions','preniez','prenaient'],pc:['ai pris','as pris','a pris','avons pris','avez pris','ont pris'],futur:['prendrai','prendras','prendra','prendrons','prendrez','prendront'],cond:['prendrais','prendrais','prendrait','prendrions','prendriez','prendraient'],subj:['prenne','prennes','prenne','prenions','preniez','prennent']},
+  comprendre:{inf:'comprendre',en:'to understand',group:3,fam:'prendre',present:['comprends','comprends','comprend','comprenons','comprenez','comprennent'],imparfait:['comprenais','comprenais','comprenait','comprenions','compreniez','comprenaient'],pc:['ai compris','as compris','a compris','avons compris','avez compris','ont compris'],futur:['comprendrai','comprendras','comprendra','comprendrons','comprendrez','comprendront'],cond:['comprendrais','comprendrais','comprendrait','comprendrions','comprendriez','comprendraient'],subj:['comprenne','comprennes','comprenne','comprenions','compreniez','comprennent']},
+  venir:{inf:'venir',en:'to come',group:3,fam:'venir',present:['viens','viens','vient','venons','venez','viennent'],imparfait:['venais','venais','venait','venions','veniez','venaient'],pc:['suis venu(e)','es venu(e)','est venu(e)','sommes venu(e)s','êtes venu(e)(s)','sont venu(e)s'],futur:['viendrai','viendras','viendra','viendrons','viendrez','viendront'],cond:['viendrais','viendrais','viendrait','viendrions','viendriez','viendraient'],subj:['vienne','viennes','vienne','venions','veniez','viennent']},
+  tenir:{inf:'tenir',en:'to hold',group:3,fam:'venir',present:['tiens','tiens','tient','tenons','tenez','tiennent'],imparfait:['tenais','tenais','tenait','tenions','teniez','tenaient'],pc:['ai tenu','as tenu','a tenu','avons tenu','avez tenu','ont tenu'],futur:['tiendrai','tiendras','tiendra','tiendrons','tiendrez','tiendront'],cond:['tiendrais','tiendrais','tiendrait','tiendrions','tiendriez','tiendraient'],subj:['tienne','tiennes','tienne','tenions','teniez','tiennent']},
+  être:{inf:'être',en:'to be',group:3,fam:'essential',present:['suis','es','est','sommes','êtes','sont'],imparfait:['étais','étais','était','étions','étiez','étaient'],pc:['ai été','as été','a été','avons été','avez été','ont été'],futur:['serai','seras','sera','serons','serez','seront'],cond:['serais','serais','serait','serions','seriez','seraient'],subj:['sois','sois','soit','soyons','soyez','soient']},
+  avoir:{inf:'avoir',en:'to have',group:3,fam:'essential',present:['ai','as','a','avons','avez','ont'],imparfait:['avais','avais','avait','avions','aviez','avaient'],pc:['ai eu','as eu','a eu','avons eu','avez eu','ont eu'],futur:['aurai','auras','aura','aurons','aurez','auront'],cond:['aurais','aurais','aurait','aurions','auriez','auraient'],subj:['aie','aies','ait','ayons','ayez','aient']},
+  aller:{inf:'aller',en:'to go',group:3,fam:'essential',present:['vais','vas','va','allons','allez','vont'],imparfait:['allais','allais','allait','allions','alliez','allaient'],pc:['suis allé(e)','es allé(e)','est allé(e)','sommes allé(e)s','êtes allé(e)(s)','sont allé(e)s'],futur:['irai','iras','ira','irons','irez','iront'],cond:['irais','irais','irait','irions','iriez','iraient'],subj:['aille','ailles','aille','allions','alliez','aillent']},
+  faire:{inf:'faire',en:'to do / make',group:3,fam:'essential',present:['fais','fais','fait','faisons','faites','font'],imparfait:['faisais','faisais','faisait','faisions','faisiez','faisaient'],pc:['ai fait','as fait','a fait','avons fait','avez fait','ont fait'],futur:['ferai','feras','fera','ferons','ferez','feront'],cond:['ferais','ferais','ferait','ferions','feriez','feraient'],subj:['fasse','fasses','fasse','fassions','fassiez','fassent']},
+  voir:{inf:'voir',en:'to see',group:3,fam:'essential',present:['vois','vois','voit','voyons','voyez','voient'],imparfait:['voyais','voyais','voyait','voyions','voyiez','voyaient'],pc:['ai vu','as vu','a vu','avons vu','avez vu','ont vu'],futur:['verrai','verras','verra','verrons','verrez','verront'],cond:['verrais','verrais','verrait','verrions','verriez','verraient'],subj:['voie','voies','voie','voyions','voyiez','voient']},
+  boire:{inf:'boire',en:'to drink',group:3,fam:'boot',present:['bois','bois','boit','buvons','buvez','boivent'],imparfait:['buvais','buvais','buvait','buvions','buviez','buvaient'],pc:['ai bu','as bu','a bu','avons bu','avez bu','ont bu'],futur:['boirai','boiras','boira','boirons','boirez','boiront'],cond:['boirais','boirais','boirait','boirions','boiriez','boiraient'],subj:['boive','boives','boive','buvions','buviez','boivent']},
+  devoir:{inf:'devoir',en:'to have to',group:3,fam:'boot',present:['dois','dois','doit','devons','devez','doivent'],imparfait:['devais','devais','devait','devions','deviez','devaient'],pc:['ai dû','as dû','a dû','avons dû','avez dû','ont dû'],futur:['devrai','devras','devra','devrons','devrez','devront'],cond:['devrais','devrais','devrait','devrions','devriez','devraient'],subj:['doive','doives','doive','devions','deviez','doivent']},
+  pouvoir:{inf:'pouvoir',en:'to be able to',group:3,fam:'boot',present:['peux','peux','peut','pouvons','pouvez','peuvent'],imparfait:['pouvais','pouvais','pouvait','pouvions','pouviez','pouvaient'],pc:['ai pu','as pu','a pu','avons pu','avez pu','ont pu'],futur:['pourrai','pourras','pourra','pourrons','pourrez','pourront'],cond:['pourrais','pourrais','pourrait','pourrions','pourriez','pourraient'],subj:['puisse','puisses','puisse','puissions','puissiez','puissent']},
+  vouloir:{inf:'vouloir',en:'to want',group:3,fam:'boot',present:['veux','veux','veut','voulons','voulez','veulent'],imparfait:['voulais','voulais','voulait','voulions','vouliez','voulaient'],pc:['ai voulu','as voulu','a voulu','avons voulu','avez voulu','ont voulu'],futur:['voudrai','voudras','voudra','voudrons','voudrez','voudront'],cond:['voudrais','voudrais','voudrait','voudrions','voudriez','voudraient'],subj:['veuille','veuilles','veuille','voulions','vouliez','veuillent']}
+};
+const CJ_COMPOUND = ['pc', 'pqp', 'futurAnt', 'condPasse'];
+function cjSplit(form, tense){
+  // compound tenses show auxiliary + participle whole — the ending sits on the auxiliary
+  if (CJ_COMPOUND.indexOf(tense) >= 0) return [form, ''];
+  const ends = CJ_ENDINGS[tense] || [];
+  for (const e of ends){ if (form.length > e.length && form.endsWith(e)) return [form.slice(0, -e.length), e]; }
+  for (const e of ends){ if (form.endsWith(e)) return [form.slice(0, -e.length), e]; }
+  return [form, ''];
+}
+function cjPron(pron, form){
+  if (pron === 'je' && /^[aeiouâàéèêhîïôœù]/i.test(form)) return "j'";
+  return pron + ' ';
+}
+function famLabel(id){ const f = CJ_FAMS.find(x => x[0] === id); return f ? f[1] : id; }
+
+/* ---- the all-tenses card — shared by the Lab and the Family Navigator ---- */
+function cjRenderAllTenses(v, head, grid, hidden){
+  if (!head || !grid) return;
+  hidden = hidden || {};
+  if (!v){ head.innerHTML = ''; grid.innerHTML = ''; return; }
+  head.innerHTML =
+    `<span class="cj-inf">${v.inf}</span><span class="cj-en">${v.en}</span>` +
+    `<span class="cj-tag">Group ${v.group}</span>` +
+    `<span class="cj-tag" style="background:var(--heading-color)">${famLabel(v.fam)}</span>` +
+    (v.model && v.model !== '—' ? `<span class="cj-tag" style="background:var(--purple)">model: ${v.model}</span>` : '');
+
+  grid.innerHTML = '';
+  CJ_ALL_TENSES.forEach(([id, label, gloss]) => {
+    const forms = v.t[id];
+    if (!forms || !forms.length) return;
+    const blk = document.createElement('div');
+    blk.className = 'cj-block'; blk.dataset.t = id;
+    if (hidden[id]) blk.style.display = 'none';
+    const isImp = (id === 'imperatif');
+    const rows = forms.map((f, i) => {
+      if (!f) return `<tr><td>${isImp ? CJ_IMP_PRON[i] : CJ_PRON[i]}</td><td style="color:var(--text-muted)">—</td></tr>`;
+      const [stem, end] = cjSplit(f, id);
+      const who = isImp ? CJ_IMP_PRON[i] : cjPron(CJ_PRON[i], f);
+      return `<tr><td>${who}</td><td><span class="cj-stem">${stem}</span><span class="cj-end">${end}</span></td></tr>`;
+    }).join('');
+    blk.innerHTML = `<div class="cj-block-h">${label}<span>${gloss}</span></div>` +
+                    `<table class="cj-table"><tbody>${rows}</tbody></table>`;
+    grid.appendChild(blk);
+  });
+}
+
+
+function initConjLab(container){
+  if (!container) return;
+  // Prefer the full 500-verb dataset; fall back to the curated table if absent.
+  const DATA = (typeof VERBS500 !== 'undefined' && VERBS500) ? VERBS500 : null;
+  const src = DATA || CONJ;
+  const isFull = !!DATA;
+  const LIST_CAP = 60;                       // never paint 500 buttons at once
+
+  let fam = 'all', verb = isFull ? 'parler' : 'parler', search = '', hidden = {};
+  let vfamFilter = null;   // fine sub-family filter set by the Family Navigator
+  const famsWrap  = $('.cj-fams', container),  tensesWrap = $('.cj-tenses', container),
+        listWrap  = $('.cj-verblist', container), head = $('.cj-head', container),
+        grid      = $('.cj-allgrid', container), countEl = $('.cj-count', container),
+        searchInput = $('.cj-search', container);
+
+  const rec = k => {                          // normalise both shapes to one
+    const v = src[k]; if (!v) return null;
+    return isFull ? v : { inf: v.inf, en: v.en, group: v.group, fam: v.fam, model: '—', t: v };
+  };
+
+  /* ---- family chips ---- */
+  CJ_FAMS.forEach(([id, label]) => {
+    const b = document.createElement('button');
+    b.className = 'cj-fam-btn' + (id === 'all' ? ' is-on' : ''); b.dataset.fam = id; b.textContent = label;
+    b.addEventListener('click', () => {
+      fam = id; $$('.cj-fam-btn', container).forEach(x => x.classList.toggle('is-on', x === b)); renderList();
+    });
+    famsWrap.appendChild(b);
+  });
+
+  /* ---- tense chips now SHOW/HIDE blocks (all are visible by default) ---- */
+  CJ_ALL_TENSES.forEach(([id, label]) => {
+    const b = document.createElement('button');
+    b.className = 'cj-tense-btn is-on'; b.dataset.ctense = id; b.textContent = label;
+    b.addEventListener('click', () => {
+      hidden[id] = !hidden[id];
+      b.classList.toggle('is-on', !hidden[id]);
+      const blk = $('.cj-block[data-t="' + id + '"]', container);
+      if (blk) blk.style.display = hidden[id] ? 'none' : '';
+      playSound('pop');
+    });
+    tensesWrap.appendChild(b);
+  });
+
+  /* ---- search, debounced (500 verbs) ---- */
+  let sTimer = null;
+  if (searchInput) searchInput.addEventListener('input', () => {
+    clearTimeout(sTimer);
+    sTimer = setTimeout(() => { search = norm(searchInput.value); renderList(); }, 160);
+  });
+
+  function matches(k){
+    const v = rec(k); if (!v) return false;
+    if (fam !== 'all' && v.fam !== fam) return false;
+    if (vfamFilter && !vfamFilter(v)) return false;
+    if (!search) return true;
+    return norm(v.inf).includes(search) || norm(v.en).includes(search);
+  }
+
+  function renderList(){
+    const all = Object.keys(src).filter(matches);
+    listWrap.innerHTML = '';
+    if (!all.length){
+      listWrap.innerHTML = '<span style="color:var(--text-muted);font-size:.85rem;padding:4px;">No verb matches — try another spelling.</span>';
+      if (countEl) countEl.textContent = '0 verbs';
+      return;
+    }
+    if (!all.includes(verb)) verb = all[0];
+    const shown = all.slice(0, LIST_CAP);
+    shown.forEach(k => {
+      const b = document.createElement('button');
+      b.className = 'cj-verb-btn' + (k === verb ? ' is-on' : ''); b.dataset.verb = k; b.textContent = rec(k).inf;
+      b.addEventListener('click', () => {
+        verb = k; $$('.cj-verb-btn', container).forEach(x => x.classList.toggle('is-on', x === b));
+        renderCard(); playSound('pop');
+      });
+      listWrap.appendChild(b);
+    });
+    if (countEl) countEl.textContent = all.length + ' verb' + (all.length > 1 ? 's' : '') +
+      (all.length > LIST_CAP ? ' — showing first ' + LIST_CAP + ', keep typing to narrow' : '');
+    renderCard();
+  }
+
+  /* ---- the all-tenses card (shared renderer) ---- */
+  function renderCard(){ cjRenderAllTenses(rec(verb), head, grid, hidden); }
+
+  /* additive hook: the Family Navigator sets a fine sub-family filter.
+     Lives on the element, not on window, so 112 widgets stay independent. */
+  container.__setVFam = function(subId){
+    const sub = (typeof vfSubById === "function") ? vfSubById(subId) : null;
+    vfamFilter = sub ? sub.rule : null;
+    fam = "all";
+    $$(".cj-fam-btn", container).forEach(function(x){ x.classList.toggle("is-on", x.dataset.fam === "all"); });
+    if (searchInput) searchInput.value = "";
+    search = "";
+    renderList();
+  };
+
+  renderList();
+}
+
+/* ---------------- CBSE Speed Drill ---------------- */
+const DRILL = [
+  {q:'<span class="clue">Hier</span>, elle _____ (finir) le projet.', a:'a fini'},
+  {q:'<span class="clue">Demain</span>, je _____ (aller) à Paris.', a:'irai'},
+  {q:'<span class="clue">Tous les jours</span>, nous _____ (prendre) le bus.', a:'prenons'},
+  {q:'<span class="clue">Quand j’étais jeune</span>, je _____ (jouer) au tennis.', a:'jouais'},
+  {q:'<span class="clue">En ce moment</span>, il _____ (dormir).', a:'dort'},
+  {q:'<span class="clue">Si tu venais</span>, tu _____ (voir) le match.', a:'verrais'},
+  {q:'<span class="clue">Il faut que</span> tu _____ (être) courageux.', a:'sois'},
+  {q:'<span class="clue">La semaine prochaine</span>, ils _____ (partir) en vacances.', a:'partiront'},
+  {q:'<span class="clue">Autrefois</span>, les gens _____ (écrire) des lettres.', a:'écrivaient'},
+  {q:'<span class="clue">Dès qu’</span>il _____ (arriver), nous mangerons.', a:'arrivera'},
+  {q:'<span class="clue">Maintenant</span>, vous _____ (comprendre) la règle.', a:'comprenez'},
+  {q:'<span class="clue">Bien qu’</span>il _____ (avoir) tort, il continue.', a:'ait'}
+];
+function initSpeedDrill(container){
+  if (!container) return;
+  const setup = $('.drill-setup', container), play = $('.drill-play', container), done = $('.drill-done', container);
+  const qEl = $('.drill-q', container), inp = $('.drill-input', container), fb = $('.drill-feedback', container);
+  const idxEl = $('.drill-idx', container), scoreEl = $('.drill-score', container), totEl = $('.drill-tot', container),
+        timeEl = $('.drill-time', container), finalEl = $('.drill-final', container);
+  let order = [], pos = 0, score = 0, timerOn = false, tId = null, left = 0;
+  if (totEl) totEl.textContent = DRILL.length;
+
+  function clearTimer(){ if (tId){ clearInterval(tId); tId = null; } if (timeEl) timeEl.textContent = ''; }
+  function startTimer(){
+    if (!timerOn) return;
+    left = 30; if (timeEl) timeEl.textContent = '⏱ ' + left + 's';
+    clearTimer();
+    tId = setInterval(() => {
+      left--; if (timeEl) timeEl.textContent = '⏱ ' + left + 's';
+      if (left <= 0){ clearTimer(); judge(true); }
+    }, 1000);
+  }
+  function show(){
+    const item = DRILL[order[pos]];
+    if (idxEl) idxEl.textContent = pos + 1;
+    if (qEl) qEl.innerHTML = item.q;
+    if (inp){ inp.value = ''; inp.className = 'drill-input'; inp.disabled = false; setTimeout(() => inp.focus(), 30); }
+    if (fb){ fb.textContent = ''; fb.className = 'drill-feedback'; }
+    startTimer();
+  }
+  function judge(timeout){
+    const item = DRILL[order[pos]];
+    if (inp.disabled) return;
+    clearTimer();
+    const accepted = item.a.split('|').map(norm);
+    const ok = !timeout && accepted.includes(norm(inp.value));
+    inp.disabled = true; inp.classList.add(ok ? 'correct' : 'wrong');
+    if (ok){ score++; if (scoreEl) scoreEl.textContent = score; fb.className = 'drill-feedback ok'; fb.textContent = '✓ Correct'; playSound('correct'); }
+    else { fb.className = 'drill-feedback no'; fb.textContent = (timeout ? '⏱ Time! ' : '✗ ') + 'Answer: ' + item.a.split('|')[0]; playSound('wrong'); }
+    setTimeout(next, 950);
+  }
+  function next(){
+    pos++;
+    if (pos >= order.length){ finish(); return; }
+    show();
+  }
+  function finish(){
+    clearTimer();
+    play.hidden = true; done.hidden = false;
+    const pct = Math.round(score / DRILL.length * 100);
+    if (finalEl) finalEl.innerHTML = `<div style="font-size:2rem;font-weight:900;color:var(--heading-color);">${score} / ${DRILL.length}</div><div class="gloss">${pct}% correct</div>`;
+    if (score / DRILL.length >= 0.7){ try { burstConfetti(); burstFireworks(); } catch(e){} }
+  }
+  function start(){
+    order = DRILL.map((_, i) => i);
+    for (let i = order.length - 1; i > 0; i--){ const j = (Math.random() * (i + 1)) | 0; [order[i], order[j]] = [order[j], order[i]]; }
+    pos = 0; score = 0; if (scoreEl) scoreEl.textContent = '0';
+    setup.hidden = true; done.hidden = true; play.hidden = false;
+    const cb = $('.drill-timer-cb', container); timerOn = !!(cb && cb.checked);
+    show();
+  }
+  const startBtn = $('.drill-start', container); if (startBtn) startBtn.addEventListener('click', start);
+  const restartBtn = $('.drill-restart', container); if (restartBtn) restartBtn.addEventListener('click', () => { done.hidden = true; setup.hidden = false; });
+  const submitBtn = $('.drill-submit', container); if (submitBtn) submitBtn.addEventListener('click', () => judge(false));
+  if (inp) inp.addEventListener('keydown', e => { if (e.key === 'Enter'){ e.preventDefault(); judge(false); } });
+}
+
+/* ---------------- Progressive-enhancement hooks ---------------- */
+window.__gsapReady = () => { if (window.__enhanceTimeline) window.__enhanceTimeline(); };
+window.__lucideReady = () => { try { if (window.lucide) lucide.createIcons(); } catch(e){} };
+
+/* ---------------- Step-reveal hint (how many reveals remain) ---------------- */
+function updateStepHint(){
+  const el = $('#stepHint'); if (!el) return;
+  const cur = Deck.getCurrentSlide(); if (!cur){ el.classList.remove('show'); return; }
+  const frags = $$('.fragment', cur);
+  const shown = frags.filter(f => f.classList.contains('visible')).length;
+  const remaining = frags.length - shown;
+  if (remaining > 0){
+    el.textContent = `▸ ${remaining} more reveal${remaining>1?'s':''} on this slide (press → / Space)`;
+    el.classList.add('show');
+    clearTimeout(el._t); el._t = setTimeout(() => el.classList.remove('show'), 1600);
+  } else {
+    el.classList.remove('show');
+  }
+}
+
+/* ---------------- Wiring ---------------- */
+function toggleFullscreen(){
+  if (!document.fullscreenElement) document.documentElement.requestFullscreen().catch(()=>{});
+  else if (document.exitFullscreen) document.exitFullscreen();
+}
+
+$('#prevBtn').onclick = () => Deck.prev();
+$('#nextBtn').onclick = () => Deck.next();
+$('#fsBtn').onclick = toggleFullscreen;
+$('#topicMenuBtn').onclick = e => { e.stopPropagation(); $('#topicMenu').classList.toggle('open'); };
+$('#searchBtn').onclick = openSearch;
+$('#modeBtn').onclick = toggleMode;
+$('#lightBtn').onclick = toggleLight;
+$('#printBtn').onclick = printTopic;
+$('#sidebarBtn').onclick = () => { document.body.classList.toggle('sidebar-hidden'); setTimeout(()=>Deck.layout(), 320); };
+$('#shortcutsBtn').onclick = e => { e.stopPropagation(); $('#shortcutsModal').classList.toggle('open'); };
+$('#settingsBtn').onclick = e => { e.stopPropagation(); $('#settingsPanel').classList.toggle('open'); };
+
+/* ---- top bar: Letters shortcut + hamburger utility menu ---- */
+if ($('#lettersBtn')) $('#lettersBtn').onclick = () => {
+  const t = topicByKey['lettre'];
+  if (t && t.indices && t.indices.length) Deck.slide(t.indices[0], 0);
+};
+if ($('#messagesBtn')) $('#messagesBtn').onclick = () => {
+  const t = topicByKey['messages'];
+  if (t && t.indices && t.indices.length) Deck.slide(t.indices[0], 0);
+};
+if ($('#utilBtn')) $('#utilBtn').onclick = e => {
+  e.stopPropagation();
+  const m = $('#utilMenu');
+  const open = m.classList.toggle('open');
+  $('#utilBtn').setAttribute('aria-expanded', open ? 'true' : 'false');
+};
+/* these are one-shot actions, so close the menu once one is used */
+$$('#utilMenu .util-item').forEach(b => b.addEventListener('click', () => {
+  setTimeout(() => {
+    $('#utilMenu').classList.remove('open');
+    $('#utilBtn').setAttribute('aria-expanded', 'false');
+  }, 0);
+}));
+document.addEventListener('click', e => {
+  if (!e.target.closest('#utilMenu') && !e.target.closest('#utilBtn')){
+    const m = $('#utilMenu');
+    if (m) m.classList.remove('open');
+    const b = $('#utilBtn');
+    if (b) b.setAttribute('aria-expanded', 'false');
+  }
+});
+$('#soundBtn').onclick = () => { soundOn = !soundOn; ls.set('sound', soundOn ? '1':'0'); refreshSoundBtn(); playSound('pop'); };
+
+/* Clue-word Hint toggle (delegated; used by Révision Mixte) */
+document.addEventListener('click', e => {
+  const hb = e.target.closest('.hint-btn'); if (!hb) return;
+  e.stopPropagation();
+  const row = hb.closest('.question-row'); if (!row) return;
+  const box = row.querySelector('.hint-box'); if (!box) return;
+  box.hidden = !box.hidden;
+  hb.textContent = box.hidden ? '💡 Hint' : '🙈 Hide';
+});
+
+/* Phase-1 button wiring (guarded so missing elements never throw) */
+(function wirePhase1(){
+  const on = (id, fn, ev='click') => { const el = $('#'+id); if (el) el.addEventListener(ev, fn); };
+  on('pickStudentBtn', e => { e.stopPropagation(); openPick(); });
+  on('pickCloseBtn', closePick);
+  on('pickAgainBtn', () => spinPick(pickCurrentClass));
+  on('pickBackBtn', showPickClasses);
+  $$('#pickClassRow .pick-class-btn').forEach(b => b.addEventListener('click', () => spinPick(b.dataset.class)));
+  on('projectorBtn', toggleProjector);
+  on('projectorBtn2', toggleProjector);
+  on('printTopicBtn2', printTopic);
+  on('printBookBtn', printBook);
+})();
+
+$('#themeSelect').onchange = e => applyTheme(e.target.value);
+$('#fontFamilySelect').onchange = e => {
+  document.documentElement.style.setProperty('--custom-font-family', e.target.value);
+  ls.set('font_family', e.target.value);
+};
+$('#fontSizeSelect').onchange = e => {
+  document.documentElement.style.setProperty('--custom-font-scale', e.target.value);
+  ls.set('font_scale', e.target.value); Deck.layout();
+};
+$('#textColorSelect').onchange = e => {
+  if (e.target.value){ document.documentElement.style.setProperty('--custom-text-color', e.target.value); ls.set('text_color', e.target.value); }
+  else { document.documentElement.style.removeProperty('--custom-text-color'); ls.del('text_color'); }
+};
+$('#liveEditToggle').onchange = e => setLiveEdit(e.target.checked);
+$('#saveEditsBtn').onclick = saveEdits;
+$$('#settingsPanel [data-add]').forEach(b => b.addEventListener('click', () => addElement(b.dataset.add)));
+$('#resetBtn').onclick = () => {
+  ['theme','font_family','font_scale','text_color','slide_edits','visited','known','mode','sound','lightTheme','darkTheme']
+    .forEach(k => ls.del(k));
+  location.reload();
+};
+$('#searchInput').addEventListener('input', e => runSearch(e.target.value));
+$('#searchInput').addEventListener('keydown', e => {
+  if (e.key === 'Escape') $('#searchModal').classList.remove('open');
+  if (e.key === 'Enter'){ const f = $('.search-hit', $('#searchResults')); if (f) f.click(); }
+});
+document.addEventListener('click', e => {
+  if (!e.target.closest('#topicMenu') && !e.target.closest('#topicMenuBtn')) $('#topicMenu').classList.remove('open');
+  if (!e.target.closest('#settingsPanel') && !e.target.closest('#settingsBtn')) $('#settingsPanel').classList.remove('open');
+  if (!e.target.closest('#shortcutsModal') && !e.target.closest('#shortcutsBtn')) $('#shortcutsModal').classList.remove('open');
+  if (!e.target.closest('.search-modal') && !e.target.closest('#searchBtn')) $('#searchModal').classList.remove('open');
+  // Click the dark backdrop of the pick modal (but not its card) to close
+  if (e.target.id === 'pickStudentModal') closePick();
+});
+
+document.addEventListener('keydown', e => {
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k'){ e.preventDefault(); openSearch(); return; }
+  if (e.key === 'Escape' && $('#pickStudentModal').classList.contains('open')){ closePick(); return; }
+  if (document.activeElement && (document.activeElement.isContentEditable ||
+      document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'SELECT')) return;
+  const k = e.key.toLowerCase();
+  if (k === 'f') toggleFullscreen();
+  else if (k === 'p'){ e.preventDefault(); toggleProjector(); }
+  else if (k === 's') $('#settingsPanel').classList.toggle('open');
+  else if (k === 't') toggleMode();
+  else if (k === 'l') toggleLight();
+  else if (k === 'e'){ const cb = $('#liveEditToggle'); cb.checked = !cb.checked; setLiveEdit(cb.checked); }
+  else if (e.key === '?') $('#shortcutsModal').classList.toggle('open');
+});
+
+/* ---------------- Boot ---------------- */
+/* Default theme is French Tricolor Classic, a LIGHT theme (DARK = slate, cyber).
+   Installs from before this change have theme-slate saved, which would mask the new
+   default, so a one-time migration moves them across. Any choice made after that is
+   respected — this does not keep overriding the teacher. */
+if (ls.get('defaults', '') !== 'v2-classic'){ ls.del('theme'); ls.set('defaults', 'v2-classic'); }
+applyTheme(ls.get('theme','theme-classic'));
+applyMode(ls.get('mode','mode-teacher'));
+refreshSoundBtn();
+const ff = ls.get('font_family'); if (ff){ document.documentElement.style.setProperty('--custom-font-family', ff); $('#fontFamilySelect').value = ff; }
+const fs = ls.get('font_scale'); if (fs){ document.documentElement.style.setProperty('--custom-font-scale', fs); $('#fontSizeSelect').value = fs; }
+const tc = ls.get('text_color'); if (tc){ document.documentElement.style.setProperty('--custom-text-color', tc); $('#textColorSelect').value = tc; }
+
+/* Deep links, guarded — works on file:// and http://, no-ops when sandboxed. */
+function syncHash(){
+  const i = Deck.getIndices();
+  try { history.replaceState(null, '', '#/' + i.h + '/' + i.v); } catch(e){}
+}
+function restoreFromHash(){
+  try {
+    const m = /^#\/(\d+)(?:\/(\d+))?/.exec(location.hash || '');
+    if (m) Deck.slide(parseInt(m[1],10), parseInt(m[2] || '0',10));
+  } catch(e){}
+}
+
+let booted = false;
+
+/* ============ DRAG & DROP IMAGE OVERLAY (teaching aid) ============
+   Drop any local image onto the running deck to show it full-screen to the class.
+   Deliberately NOT persisted: it is transient, and stashing arbitrary dropped
+   images in localStorage would blow the quota during a long lesson. */
+function initDropOverlay(){
+  const overlay = $("#dropOverlay"), img = $("#dropImage"),
+        hint = $("#dropHint"), closeBtn = $("#dropClose");
+  if (!overlay || !img || !hint) return;
+  let url = null, depth = 0;
+
+  const clearUrl = () => { if (url){ try { URL.revokeObjectURL(url); } catch(e){} url = null; } };
+  const hide = () => { overlay.classList.remove("on"); img.removeAttribute("src"); clearUrl(); };
+  const showHint = on => { depth = on ? depth : 0; hint.classList.toggle("on", on); };
+
+  const show = file => {
+    if (!file || String(file.type || "").indexOf("image/") !== 0) { showToast("⚠️ That file is not an image"); return; }
+    clearUrl();
+    url = URL.createObjectURL(file);
+    img.src = url;
+    overlay.classList.add("on");
+    showToast("🖼️ Image shown — click or press Esc to close");
+  };
+
+  /* every handler preventDefault()s: without it the browser navigates away from
+     the deck to the dropped file, which would wreck a live lesson. */
+  window.addEventListener("dragenter", e => { e.preventDefault(); depth++; showHint(true); });
+  window.addEventListener("dragover",  e => { e.preventDefault(); });
+  window.addEventListener("dragleave", e => { e.preventDefault(); if (--depth <= 0) showHint(false); });
+  window.addEventListener("drop", e => {
+    e.preventDefault(); showHint(false);
+    const f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+    show(f);
+  });
+
+  overlay.addEventListener("click", hide);
+  if (closeBtn) closeBtn.addEventListener("click", e => { e.stopPropagation(); hide(); });
+  document.addEventListener("keydown", e => { if (e.key === "Escape" && overlay.classList.contains("on")) hide(); });
+}
+
+/* ============================================================
+   VERB FAMILY NAVIGATOR  (cj-nav-1)
+   4 ending-based tabs -> 19 sub-families -> every verb, all 10 tenses.
+   The rule() predicates are the SINGLE SOURCE OF TRUTH: they drive both
+   the navigator's bucketing and the Lab's fine filter, so the two can
+   never disagree. check-vfam.js extracts this block and tests it.
+   ============================================================ */
+function vfInf(v){ return String(v && v.inf || '').toLowerCase(); }
+function vfPres(v){ return String(v && v.t && v.t.present && v.t.present[0] || '').toLowerCase(); }
+function vfModel(v){ return String(v && v.model || ''); }
+function vfIn(v, list){ return list.indexOf(vfModel(v)) !== -1; }
+function vfEnds(v, suffix){ const s = vfInf(v); return s.slice(-suffix.length) === suffix; }
+
+/* -ER sub-buckets are decided from the ACTUAL conjugated form, not the model
+   label: the dataset's ELER model mixes epeler/geler/renouveler (accent shift,
+   "je gele") with nothing that doubles, while APPELER/JETER really do double.
+   Reading the form makes this self-correcting. */
+function vfErDoubles(v){
+  const p = vfPres(v), i = vfInf(v);
+  return (p.indexOf('ll') !== -1 && i.indexOf('ll') === -1) ||
+         (p.indexOf('tt') !== -1 && i.indexOf('tt') === -1);
+}
+function vfErAccent(v){
+  return vfPres(v).indexOf('è') !== -1 && vfInf(v).indexOf('è') === -1;
+}
+function vfIsRegEr(v){ return v && v.fam === 'reg-er'; }   /* excludes aller (fam: essential) */
+
+const VF_M = {
+  irReg:      ['IR'],
+  irLikeEr:   ['VRIR','FRIR','CUEILLIR'],
+  irPartir:   ['TIR','DORMIR','SERVIR','BOUILLIR'],
+  irVenir:    ['ENIR'],
+  irAutres:   ['COURIR','ÉRIR','FUIR','HAÏR','MOURIR'],
+  reReg:      ['DRE'],
+  rePrendre:  ['PRENDRE'],
+  reMettre:   ['METTRE'],
+  reConn:     ['AÎTRE','NAÎTRE'],
+  reUire:     ['UIRE'],
+  reIndre:    ['EINDRE','AINDRE','OINDRE'],
+  reAutres:   ['BATTRE','VAINCRE','SOUDRE','URE','COUDRE','DIRE','ÉCRIRE','LIRE','SUIVRE','RIRE','VIVRE','CROIRE','DÉPLAIRE'],
+  irrPiliers: ['ÊTRE','AVOIR','ALLER','FAIRE'],
+  irrOir:     ['CEVOIR','DEVOIR','POUVOIR','SAVOIR','VOULOIR','VOIR','BOIRE',"(s')ASSEOIR"],
+  irrImp:     ['FALLOIR','PLEUVOIR','NEIGER']
+};
+
+const VFAM = [
+  { id:'er', label:'-ER', hint:'the biggest group', sub:[
+    { id:'er-std', label:'Standard -ER', model:'parler',
+      rule:v => vfIsRegEr(v) && !vfIn(v,['GER','CER','YER','ENVOYER']) && !vfErDoubles(v) && !vfErAccent(v),
+      endings:['-e','-es','-e','-ons','-ez','-ent'],
+      rule_en:'No stem change at all. Drop the -er and add the endings.',
+      demo:'je parle · nous parlons' },
+    { id:'er-gercer', label:'-ger &amp; -cer', model:'manger / commencer',
+      rule:v => vfIsRegEr(v) && vfIn(v,['GER','CER']),
+      endings:['-e','-es','-e','<b>-ons</b>','-ez','-ent'],
+      rule_en:'The soft sound has to survive before O: -ger keeps its <b>e</b>, -cer takes a <b>cedilla</b> — but only in the NOUS form.',
+      demo:'nous man<b>ge</b>ons · nous commençons' },
+    { id:'er-yer', label:'-yer', model:'payer / nettoyer',
+      rule:v => vfIsRegEr(v) && vfIn(v,['YER','ENVOYER']),
+      endings:['-e','-es','-e','-ons','-ez','-ent'],
+      rule_en:'The <b>y</b> becomes <b>i</b> before a silent e — so everywhere except nous and vous.',
+      demo:'je nettoie · nous netto<b>y</b>ons' },
+    { id:'er-accent', label:'e / é → è', model:'acheter / préférer',
+      rule:v => vfIsRegEr(v) && !vfIn(v,['GER','CER','YER','ENVOYER']) && !vfErDoubles(v) && vfErAccent(v),
+      endings:['-e','-es','-e','-ons','-ez','-ent'],
+      rule_en:'The accent flips to <b>è</b> when the next syllable is silent — once again, nous and vous escape it.',
+      demo:'j’achète · nous achetons' },
+    { id:'er-double', label:'-eler / -eter', model:'appeler / jeter',
+      rule:v => vfIsRegEr(v) && !vfIn(v,['GER','CER','YER','ENVOYER']) && vfErDoubles(v),
+      endings:['-e','-es','-e','-ons','-ez','-ent'],
+      rule_en:'The consonant <b>doubles</b> (ll / tt) before a silent e. Careful: <i>geler</i> and <i>épeler</i> take an accent instead, not a double consonant.',
+      demo:'j’appe<b>ll</b>e · nous appelons' }
+  ]},
+
+  { id:'ir', label:'-IR', hint:'four behaviours', sub:[
+    { id:'ir-reg', label:'Réguliers (-iss-)', model:'finir',
+      rule:v => vfIn(v, VF_M.irReg),
+      endings:['-is','-is','-it','-<b>iss</b>ons','-<b>iss</b>ez','-<b>iss</b>ent'],
+      rule_en:'The true 2nd group: it inserts <b>-iss-</b> in all three plural persons.',
+      demo:'je finis · nous fin<b>iss</b>ons' },
+    { id:'ir-likeer', label:'Comme -ER', model:'ouvrir / offrir',
+      rule:v => vfIn(v, VF_M.irLikeEr),
+      endings:['-e','-es','-e','-ons','-ez','-ent'],
+      rule_en:'They end in -ir but take the <b>1st-group</b> endings instead.',
+      demo:'j’ouvr<b>e</b> — never « j’ouvris » in the present' },
+    { id:'ir-partir', label:'Famille Partir / Sortir', model:'partir',
+      rule:v => vfIn(v, VF_M.irPartir),
+      endings:['-s','-s','-t','-ons','-ez','-ent'],
+      rule_en:'No -iss- here. The <b>last consonant of the stem drops</b> in the singular.',
+      demo:'je par<b>s</b> · nous par<b>t</b>ons' },
+    { id:'ir-venir', label:'Famille Venir / Tenir', model:'venir',
+      rule:v => vfIn(v, VF_M.irVenir),
+      endings:['-s','-s','-t','-ons','-ez','-<b>nent</b>'],
+      rule_en:'The stem becomes <b>ien-</b> in the singular and in the 3rd person plural; the future stem is an irregular <b>viendr-</b>.',
+      demo:'je viens · nous venons · ils vien<b>nent</b>' },
+    { id:'ir-autres', label:'Autres en -ir', model:'courir / mourir',
+      rule:v => vfIn(v, VF_M.irAutres),
+      endings:['-s','-s','-t','-ons','-ez','-ent'],
+      rule_en:'Small families of their own: courir, mourir, fuir, haïr, acquérir.',
+      demo:'je cours · je meurs · je fuis' }
+  ]},
+
+  { id:'re', label:'-RE', hint:'seven models', sub:[
+    { id:'re-reg', label:'Réguliers (-d-)', model:'vendre',
+      rule:v => vfIn(v, VF_M.reReg),
+      endings:['-s','-s','<b>—</b>','-ons','-ez','-ent'],
+      rule_en:'The regular 3rd group: in the 3rd person singular there is <b>no ending at all</b>.',
+      demo:'il ven<b>d</b> · nous vendons' },
+    { id:'re-prendre', label:'Famille Prendre', model:'prendre',
+      rule:v => vfIn(v, VF_M.rePrendre),
+      endings:['-s','-s','<b>—</b>','-ons','-ez','-<b>nent</b>'],
+      rule_en:'The <b>d</b> drops in the plural, and the <b>n doubles</b> in the 3rd person plural.',
+      demo:'nous pre<b>n</b>ons · ils pren<b>n</b>ent' },
+    { id:'re-mettre', label:'Famille Mettre', model:'mettre',
+      rule:v => vfIn(v, VF_M.reMettre),
+      endings:['-s','-s','-<b>t</b>','-ons','-ez','-ent'],
+      rule_en:'One <b>t</b> in the singular, both return in the plural.',
+      demo:'je me<b>t</b>s · nous me<b>tt</b>ons' },
+    { id:'re-conn', label:'Famille Connaître', model:'connaître',
+      rule:v => vfIn(v, VF_M.reConn),
+      endings:['-s','-s','-<b>î</b>t','-<b>ss</b>ons','-<b>ss</b>ez','-<b>ss</b>ent'],
+      rule_en:'A circumflex on the <b>î</b> before a <b>t</b>, and <b>-ss-</b> in the plural.',
+      demo:'il conna<b>î</b>t · nous connai<b>ss</b>ons' },
+    { id:'re-uire', label:'Famille -uire', model:'conduire',
+      rule:v => vfIn(v, VF_M.reUire),
+      endings:['-s','-s','-t','-<b>is</b>ons','-<b>is</b>ez','-<b>is</b>ent'],
+      rule_en:'The stem takes <b>-is-</b> in the plural.',
+      demo:'je condui<b>s</b> · nous condu<b>is</b>ons' },
+    { id:'re-indre', label:'Famille -indre', model:'peindre / craindre',
+      rule:v => vfIn(v, VF_M.reIndre),
+      endings:['-s','-s','-t','-<b>gn</b>ons','-<b>gn</b>ez','-<b>gn</b>ent'],
+      rule_en:'The <b>d</b> disappears and the stem takes <b>gn</b> in the plural.',
+      demo:'je pein<b>s</b> · nous pei<b>gn</b>ons' },
+    { id:'re-autres', label:'Autres en -re', model:'dire / écrire / vivre',
+      rule:v => vfIn(v, VF_M.reAutres),
+      endings:['-s','-s','-t','-ons','-ez','-ent'],
+      rule_en:'One-off models, each learned on its own: dire, écrire, lire, vivre, suivre, battre, vaincre, croire…',
+      demo:'vous <b>dites</b> · nous écrivons' }
+  ]},
+
+  { id:'irr', label:'Irréguliers', hint:'learn these by heart', sub:[
+    { id:'irr-piliers', label:'Les 4 piliers', model:'être · avoir · aller · faire',
+      rule:v => vfIn(v, VF_M.irrPiliers),
+      endings:['—','—','—','—','—','—'],
+      rule_en:'No pattern at all. These are the four most frequent verbs in French, and they double as <b>auxiliaries</b>.',
+      demo:'je suis · j’ai · je vais · je fais' },
+    { id:'irr-oir', label:'-oir / verbes bottes', model:'pouvoir · vouloir · devoir',
+      rule:v => vfIn(v, VF_M.irrOir),
+      endings:['-x / -s','-x / -s','-t','-ons','-ez','-ent'],
+      rule_en:'🥾 <b>Why “boot verbs”?</b> Write the six forms in a column and draw a line round the ones sharing the irregular stem: je / tu / il and ils sit <b>inside</b>, while nous and vous fall <b>outside</b>. The shape looks like a boot.',
+      demo:'je <b>peu</b>x · nous <b>pouv</b>ons · ils <b>peuv</b>ent' },
+    { id:'irr-imp', label:'Impersonnels', model:'falloir · pleuvoir',
+      rule:v => vfIn(v, VF_M.irrImp),
+      endings:['—','—','il …','—','—','—'],
+      rule_en:'These exist only in the <b>3rd person singular</b>. There is no “je” form.',
+      demo:'il faut · il pleut' },
+    /* SAFETY NET — matches nothing by rule; it only ever receives verbs that fit
+       no other family (e.g. if the dataset is regenerated with a new model).
+       Such a verb stays reachable instead of silently disappearing, and the chip
+       hides itself when empty. check-vfam.js asserts it IS empty today. */
+    { id:'irr-autres', label:'Autres', model:'—',
+      rule:() => false,
+      endings:['—','—','—','—','—','—'],
+      rule_en:'Verbs that match no known family — open them in the Lab to see their full conjugation.',
+      demo:'—' }
+  ]}
+];
+const VF_FALLBACK = 'irr-autres';
+
+/* first matching sub-family, scanning tabs in order; null = orphan */
+function vfBucketOf(v){
+  for (let i = 0; i < VFAM.length; i++){
+    const t = VFAM[i];
+    for (let j = 0; j < t.sub.length; j++){
+      try { if (t.sub[j].rule(v)) return { tab:t.id, sub:t.sub[j].id }; } catch(e){}
+    }
+  }
+  return { tab:'irr', sub:VF_FALLBACK };   /* never null — an unmatched verb stays reachable */
+}
+function vfSubById(id){
+  for (let i = 0; i < VFAM.length; i++){
+    const s = VFAM[i].sub.filter(x => x.id === id);
+    if (s.length) return s[0];
+  }
+  return null;
+}
+
+function initVerbFamilies(container){
+  if (!container) return;
+  const DATA = (typeof VERBS500 !== 'undefined' && VERBS500) ? VERBS500 : null;
+  const src = DATA || CONJ;
+  const isFull = !!DATA;
+  const rec = k => {
+    const v = src[k]; if (!v) return null;
+    return isFull ? v : { inf:v.inf, en:v.en, group:v.group, fam:v.fam, model:'—', t:v };
+  };
+
+  const tabsWrap = $('.vfam-tabs', container),
+        subsWrap = $('.vfam-subs', container),
+        panel    = $('.vfam-panel', container);
+  /* Fail loudly-but-gracefully: a silent `return` here is what makes a slide look
+     blank with no clue why, so say so on the slide itself. */
+  if (!tabsWrap || !subsWrap || !panel){
+    container.innerHTML = '<p class="vfam-empty">Navigator markup incomplete — expected .vfam-tabs, .vfam-subs and .vfam-panel.</p>';
+    console.warn('initVerbFamilies: missing', !tabsWrap ? '.vfam-tabs' : '', !subsWrap ? '.vfam-subs' : '', !panel ? '.vfam-panel' : '');
+    return;
+  }
+
+  /* bucket every verb once, at init */
+  const buckets = {};
+  VFAM.forEach(t => t.sub.forEach(s => { buckets[s.id] = []; }));
+  Object.keys(src).forEach(k => {
+    const b = vfBucketOf(rec(k));
+    if (b && buckets[b.sub]) buckets[b.sub].push(k);
+  });
+  const tabCount = t => t.sub.reduce((n, s) => n + buckets[s.id].length, 0);
+
+  let curTab = VFAM[0], curSub = null, curVerb = null, search = '';
+
+  /* ---- tabs ---- */
+  VFAM.forEach(t => {
+    const b = document.createElement('button');
+    b.className = 'vfam-tab' + (t === VFAM[0] ? ' is-on' : '');
+    b.dataset.vtab = t.id;
+    b.innerHTML = '<span class="vfam-tab-l">' + t.label + '</span>' +
+                  '<span class="vfam-tab-n">' + tabCount(t) + ' verbs</span>';
+    b.addEventListener('click', () => {
+      curTab = t; curSub = null; curVerb = null; search = '';
+      $$('.vfam-tab', container).forEach(x => x.classList.toggle('is-on', x === b));
+      renderSubs(); try { playSound('pop'); } catch(e){}
+    });
+    tabsWrap.appendChild(b);
+  });
+
+  /* ---- sub-family chips ---- */
+  function renderSubs(){
+    subsWrap.innerHTML = '';
+    curTab.sub.forEach(s => {
+      if (!buckets[s.id].length) return;      /* an empty family renders no dead chip */
+      const b = document.createElement('button');
+      b.className = 'vfam-chip' + (curSub && curSub.id === s.id ? ' is-on' : '');
+      b.dataset.vsub = s.id;
+      b.innerHTML = s.label + '<span class="vfam-chip-n">' + buckets[s.id].length + '</span>';
+      b.addEventListener('click', () => {
+        curSub = s; curVerb = null; search = '';
+        $$('.vfam-chip', container).forEach(x => x.classList.toggle('is-on', x === b));
+        renderPanel(); try { playSound('pop'); } catch(e){}
+      });
+      subsWrap.appendChild(b);
+    });
+    panel.innerHTML = '<p class="vfam-empty">Choose a family above to see its pattern and its verbs.</p>';
+  }
+
+  /* ---- panel: pattern card + every verb + inline 10-tense conjugation ---- */
+  function renderPanel(){
+    if (!curSub) return;
+    const s = curSub, list = buckets[s.id];
+    panel.innerHTML =
+      '<div class="vfam-card">' +
+        '<div class="vfam-endings">' +
+          '<div class="vfam-end-h">Present — model: <b>' + s.model + '</b></div>' +
+          CJ_PRON.map((p, i) => '<div class="vfam-end-r"><span>' + p + '</span><b>' + (s.endings[i] || '—') + '</b></div>').join('') +
+        '</div>' +
+        '<div class="vfam-rule"><p>' + s.rule_en + '</p><p class="vfam-demo">' + s.demo + '</p>' +
+          '<button class="vfam-open" type="button">Open in the Lab →</button></div>' +
+      '</div>' +
+      '<div class="vfam-listbar">' +
+        '<input class="vfam-search" type="text" autocomplete="off" placeholder="Search within the ' + list.length + ' verbs…">' +
+        '<span class="vfam-count gloss"></span>' +
+      '</div>' +
+      '<div class="vfam-verbs"></div>' +
+      '<div class="vfam-conj"><div class="cj-head"></div><div class="cj-allgrid"></div></div>';
+
+    const si = $('.vfam-search', panel);
+    let tmr = null;
+    si.addEventListener('input', () => {
+      clearTimeout(tmr);
+      tmr = setTimeout(() => { search = norm(si.value); renderVerbs(); }, 160);
+    });
+    $('.vfam-open', panel).addEventListener('click', () => openInLab(s.id));
+    renderVerbs();
+  }
+
+  function renderVerbs(){
+    const wrap = $('.vfam-verbs', panel), cnt = $('.vfam-count', panel);
+    if (!wrap) return;
+    const all = buckets[curSub.id].filter(k => {
+      if (!search) return true;
+      const v = rec(k);
+      return norm(v.inf).indexOf(search) !== -1 || norm(v.en).indexOf(search) !== -1;
+    });
+    wrap.innerHTML = '';
+    if (!all.length){
+      wrap.innerHTML = '<span class="vfam-empty">No verb matches.</span>';
+      if (cnt) cnt.textContent = '0 / ' + buckets[curSub.id].length;
+      return;
+    }
+    all.forEach(k => {
+      const b = document.createElement('button');
+      b.className = 'vfam-verb' + (k === curVerb ? ' is-on' : '');
+      b.dataset.vverb = k;
+      b.textContent = rec(k).inf;
+      b.addEventListener('click', () => {
+        curVerb = k;
+        $$('.vfam-verb', panel).forEach(x => x.classList.toggle('is-on', x === b));
+        showConj(k); try { playSound('pop'); } catch(e){}
+      });
+      wrap.appendChild(b);
+    });
+    if (cnt) cnt.textContent = all.length + ' / ' + buckets[curSub.id].length + ' verbs';
+    if (!curVerb || all.indexOf(curVerb) === -1){ curVerb = all[0]; $$('.vfam-verb', panel)[0].classList.add('is-on'); }
+    showConj(curVerb);
+  }
+
+  /* all 10 tenses, rendered by the SAME function the Lab uses */
+  function showConj(k){
+    const box = $('.vfam-conj', panel);
+    if (!box) return;
+    cjRenderAllTenses(rec(k), $('.cj-head', box), $('.cj-allgrid', box), {});
+  }
+
+  function openInLab(subId){
+    const lab = $('.conjlab');
+    const sec = lab ? lab.closest('section[data-slide-id]') : null;
+    if (sec){
+      try {
+        const idx = Deck.getIndices(sec);
+        Deck.slide(idx.h, idx.v || 0);
+      } catch(e){
+        const stacks = $$('#slidesRoot > section');
+        for (let h = 0; h < stacks.length; h++){
+          const vs = $$(':scope > section', stacks[h]);
+          for (let v = 0; v < vs.length; v++) if (vs[v] === sec) { try { Deck.slide(h, v); } catch(e2){} }
+        }
+      }
+    }
+    if (lab && typeof lab.__setVFam === 'function') lab.__setVFam(subId);
+  }
+
+  renderSubs();
+}
+
+/* ============================================================
+   NOMINALISATION — card motion
+   The vocabulary cards are Reveal FRAGMENTS, so Reveal owns their opacity.
+   This animates TRANSFORM ONLY. That is deliberate: the timeline bug in this
+   file (see __enhanceTimeline) came from a tween touching opacity and winning
+   a fight it should never have been in. If GSAP is absent, reduced motion is
+   requested, or the tween throws, the card is simply there — never faint.
+   ============================================================ */
+function nomCardPop(el){
+  if (!el || !el.classList || !el.classList.contains('nom-cell')) return;
+  if (!el.closest('section[data-slide-id^="nom-v"]')) return;
+  if (el.dataset.nomPopped === '1') return;      // per-card guard: re-showing a
+  el.dataset.nomPopped = '1';                    // fragment must not re-animate
+  if (reduced || typeof gsap === 'undefined') return;
+  const settle = () => { el.style.transform = ''; };
+  try {
+    gsap.fromTo(el,
+      { y: 16, scale: 0.94 },
+      { y: 0, scale: 1, duration: 0.32, ease: 'back.out(1.7)', clearProps: 'transform' });
+  } catch (e) { settle(); }
+  setTimeout(settle, 1200);                      // last-resort net, as with the timeline
+}
+/* ============================================================
+   MODEL LETTERS — the FR/EN toggle
+   State is global (body.letter-en) but the button is repeated on every letter
+   slide, so all of them are kept in sync. The click handler is DELEGATED, like
+   the flip cards, because viewDistance:2 means most letter slides are not in
+   the DOM at boot.
+   ============================================================ */
+const LETTER_FS_FLOOR = 0.86;   // vh — the runtime refit will not go below this
+
+/* The baked --let-fs-en assumes a 1276px-wide column at 100% font scale. A
+   narrower window, or the 115/130% setting, can still overflow — and .let-slide
+   is overflow:hidden, so an overflow would CLIP rather than scroll. Measure the
+   real box and step down until it fits. */
+function refitLetters(){
+  /* Two-way fit, current slide only. Shrinking prevents overflow; GROWING is
+     what makes projector mode actually fill the screen instead of leaving the
+     bottom half empty. Solved arithmetically (<=5 reflows) — an earlier version
+     stepped 30 times per paper and janked badly. */
+  const cur = typeof Deck !== 'undefined' && Deck.getCurrentSlide ? Deck.getCurrentSlide() : null;
+  const paper = cur && $('.let-paper', cur);
+  if (!paper) return;
+  const card = paper.closest('.slide-card');
+  if (!card || !paper.offsetParent) return;
+
+  /* The baked values live in the element's own style attribute, so cache them
+     before anything overwrites them — removeProperty() would destroy them. */
+  if (!paper.dataset.bakedFs){
+    paper.dataset.bakedFs   = paper.style.getPropertyValue('--let-fs').trim()    || '1.9vh';
+    paper.dataset.bakedFsEn = paper.style.getPropertyValue('--let-fs-en').trim() || '1.4vh';
+  }
+  const en    = document.body.classList.contains('letter-en');
+  const proj  = document.body.classList.contains('projector-mode');
+  const prop  = en ? '--let-fs-en' : '--let-fs';
+  const baked = parseFloat(en ? paper.dataset.bakedFsEn : paper.dataset.bakedFs) || (en ? 1.4 : 1.9);
+
+  paper.style.setProperty('--let-fs',    paper.dataset.bakedFs);
+  paper.style.setProperty('--let-fs-en', paper.dataset.bakedFsEn);
+  card.style.removeProperty('overflow-y');
+
+  let fs = baked;
+  const over = card.scrollHeight - card.clientHeight;
+
+  if (over > 1){
+    /* too tall — height scales roughly with font size, so one ratio gets close */
+    fs = Math.max(LETTER_FS_FLOOR, +(baked * (card.clientHeight / card.scrollHeight) * 0.97).toFixed(3));
+    paper.style.setProperty(prop, fs + 'vh');
+    for (let i = 0; i < 2 && fs > LETTER_FS_FLOOR; i++){
+      if (card.scrollHeight <= card.clientHeight + 1) break;
+      fs = Math.max(LETTER_FS_FLOOR, +(fs * 0.93).toFixed(3));
+      paper.style.setProperty(prop, fs + 'vh');
+    }
+  } else if (proj){
+    /* Projector mode only: grow to fill. Deliberately not done in normal mode,
+       where the baked size is the designed one and the sidebar/topbar are up. */
+    const used = card.scrollHeight / card.clientHeight;
+    if (used < 0.92){
+      const CEIL = baked * 2.2;                       // a 3-line letter must not become absurd
+      fs = Math.min(CEIL, +(baked * (1 / used) * 0.94).toFixed(3));
+      paper.style.setProperty(prop, fs + 'vh');
+      /* step back if the grow overshot */
+      for (let i = 0; i < 3 && card.scrollHeight > card.clientHeight + 1; i++){
+        fs = +(fs * 0.94).toFixed(3);
+        paper.style.setProperty(prop, fs + 'vh');
+      }
+    }
+  }
+
+  /* Still too tall means the window is genuinely too short for this letter.
+     Scrolling beats clipping — .let-slide is overflow:hidden, which would
+     silently swallow the end of the letter. */
+  if (card.scrollHeight > card.clientHeight + 1) card.style.overflowY = 'auto';
+  paper.dataset.refit = (fs === baked ? 'baked ' : '') + fs;
+}
+
+function syncLetterToggles(on){
+  $$('.let-toggle').forEach(b => {
+    b.setAttribute('aria-pressed', on ? 'true' : 'false');
+    b.textContent = on ? '✓ English on' : 'Show English';
+  });
+}
+
+function initLetterToggle(){
+  let on = ls.get('letter_en', '0') === '1';
+  document.body.classList.toggle('letter-en', on);
+  syncLetterToggles(on);
+  refitLetters();
+
+  /* delegated — works for letter slides rendered later by viewDistance */
+  document.addEventListener('click', e => {
+    const btn = e.target.closest('.let-toggle');
+    if (!btn) return;
+    e.stopPropagation();
+    on = !document.body.classList.contains('letter-en');
+    document.body.classList.toggle('letter-en', on);
+    ls.set('letter_en', on ? '1' : '0');
+    syncLetterToggles(on);
+    refitLetters();
+  });
+
+  /* a slide entering the DOM, or a resize/font-scale change, needs re-measuring */
+  Deck.on('slidechanged', () => { syncLetterToggles(document.body.classList.contains('letter-en')); refitLetters(); });
+}
+
+
+/* ---- Les Messages: the Build-the-Message widget ----
+   The other three Messages widgets are pure CSS (:checked siblings). This one needs
+   ordering logic, so it lives here. If it never runs, the chips and the empty list are
+   still readable — the slide degrades to a static exercise rather than breaking. */
+function initMsgBuilder(box){
+  if (!box || box.dataset.msgBuilt === "1") return;
+  box.dataset.msgBuilt = "1";
+  const pool  = box.querySelector(".msg-build-pool");
+  const slots = box.querySelector(".msg-build-slots");
+  const note  = box.querySelector(".msg-build-msg");
+  if (!pool || !slots || !note) return;
+  const chips = Array.prototype.slice.call(pool.querySelectorAll(".msg-chip"));
+  const total = chips.length;
+  const placed = [];
+
+  function verdict(){
+    if (placed.length < total){ note.textContent = ""; note.className = "msg-build-msg"; return; }
+    let wrong = 0;
+    Array.prototype.slice.call(slots.children).forEach((li, i) => {
+      const ok = placed[i] === String(i + 1);
+      li.className = ok ? "ok" : "no";
+      if (!ok) wrong++;
+    });
+    if (wrong === 0){
+      note.textContent = "Correct — that is the CBSE order. Date, salutation, message, closing, name.";
+      note.className = "msg-build-msg ok";
+    } else {
+      note.textContent = wrong + (wrong === 1 ? " line is" : " lines are") +
+        " out of place. The date always goes first and the name always goes last.";
+      note.className = "msg-build-msg no";
+    }
+  }
+
+  chips.forEach(chip => {
+    chip.addEventListener("click", () => {
+      if (chip.classList.contains("used")) return;
+      chip.classList.add("used");
+      placed.push(chip.dataset.k);
+      const li = document.createElement("li");
+      li.innerHTML = chip.innerHTML;
+      slots.appendChild(li);
+      if (typeof gsap !== "undefined" && !reduced){
+        try { gsap.fromTo(li, { y: 10, opacity: 0 },
+          { y: 0, opacity: 1, duration: .26, ease: "back.out(1.7)", clearProps: "transform,opacity" }); }
+        catch(e){ li.style.opacity = ""; }
+      }
+      verdict();
+    });
+  });
+
+  const reset = document.createElement("button");
+  reset.type = "button";
+  reset.className = "msg-chip";
+  reset.textContent = "↺  Start again";
+  reset.addEventListener("click", () => {
+    placed.length = 0;
+    slots.innerHTML = "";
+    note.textContent = "";
+    note.className = "msg-build-msg";
+    chips.forEach(c => c.classList.remove("used"));
+  });
+  box.appendChild(reset);
+}
+
+/* ============================================================
+   MESSAGES — the English toggle
+   Its own class and its own body flag. body.letter-en belongs to La Lettre and
+   flipping it here would change letter slides too. Delegated, like the letter
+   toggle and the flip cards, because viewDistance:2 keeps most message slides
+   out of the DOM at boot.
+   ============================================================ */
+function syncMsgToggles(on){
+  $$('.msg-toggle').forEach(b => {
+    b.setAttribute('aria-pressed', on ? 'true' : 'false');
+    b.textContent = on ? '\u2713 English on' : 'Show English';
+  });
+}
+
+function initMsgToggle(){
+  let on = ls.get('messages_en', '0') === '1';
+  document.body.classList.toggle('messages-en', on);
+  syncMsgToggles(on);
+
+  document.addEventListener('click', ev => {
+    const btn = ev.target.closest('.msg-toggle');
+    if (!btn) return;
+    ev.stopPropagation();
+    on = !document.body.classList.contains('messages-en');
+    document.body.classList.toggle('messages-en', on);
+    ls.set('messages_en', on ? '1' : '0');
+    syncMsgToggles(on);
+  });
+
+  Deck.on('slidechanged', () => syncMsgToggles(document.body.classList.contains('messages-en')));
+}
+function boot(){
+  if (booted) return; booted = true;
+  restoreEdits();
+  $$('.quiz-container').forEach(initQuizContainer);
+  initFlipCards();
+  initLabs();
+  buildSearchIndex();
+  renderTopicMenu();
+  applyMode(ls.get('mode','mode-teacher'));   // re-apply: enables/disables the widgets just wired
+  restoreFromHash();
+  updateHud();
+  startFX();
+  /* Phase-1 / Phase-2 module init (each guarded: a failure can never abort boot) */
+  try { initTimeline(); } catch(e){ console.warn('Timeline init:', e); }
+  try { $$('.conjlab').forEach(initConjLab); } catch(e){ console.warn('ConjLab init:', e); }
+  try { $$('.drill').forEach(initSpeedDrill); } catch(e){ console.warn('Drill init:', e); }
+  try { initDropOverlay(); } catch(e){ console.warn('Drop overlay init:', e); }
+  try { $$('.vfam').forEach(initVerbFamilies); } catch(e){ console.warn('VerbFamilies init:', e); }
+  try { initLetterToggle(); } catch(e){ console.warn('Letter toggle init:', e); }
+  try { initMsgToggle(); } catch(e){ console.warn('Msg toggle init:', e); }
+  try { $$('.msg-build').forEach(initMsgBuilder); } catch(e){ console.warn('MsgBuilder init:', e); }
+  injectAudioButtons();
+  if (ls.get('projector','0') === '1') setProjector(true);
+  if (window.lucide) { try { lucide.createIcons(); } catch(e){} }
+  if (typeof gsap !== 'undefined' && window.__enhanceTimeline) window.__enhanceTimeline();
+  /* Reveal's first internal layout can run before the shell's inset is applied,
+     leaving slides sized to the whole window. Force one once styles have settled,
+     and again when the Google Fonts land and change text metrics. */
+  requestAnimationFrame(() => { try { Deck.layout(); } catch(e){} });
+  if (document.fonts && document.fonts.ready){
+    document.fonts.ready.then(() => { try { Deck.layout(); } catch(e){} });
+  }
+  Deck.on('slidechanged', () => { updateHud(); syncHash(); playSound('slide'); injectAudioButtons(); });
+  Deck.on('fragmentshown', ev => { updateHud(); updateStepHint(); if (ev && ev.fragment) nomCardPop(ev.fragment); });
+  Deck.on('fragmenthidden', () => { updateHud(); updateStepHint(); });
+}
+
+/* Boot even if Reveal's init promise rejects — the deck itself still renders,
+   and losing the whole UI to a History API restriction is not acceptable. */
+Deck.initialize().then(boot).catch(err => { console.warn('Reveal init warning:', err); boot(); });
+
+})();
+</script>
+</body>
+</html>

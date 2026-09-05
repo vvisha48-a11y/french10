@@ -1,0 +1,138 @@
+      <!-- ==================================================================
+           HERO TOPIC 0 — INTERACTIVE TIMELINE OF FRENCH TENSES
+           (inserted first; new data-topic, additive to the engine)
+           =================================================================== -->
+      <section data-topic="timeline" data-topic-name="Timeline of Tenses" data-sub="Interactive Timeline">
+
+        <!-- SLIDE 1 — the interactive timeline -->
+        <section data-slide-id="tl-hero-1" data-step="Interactive Timeline">
+          <div class="slide-card">
+            <div class="flag-stripe"></div>
+            <h2 class="editable-field">🕐 The French Tenses on One Timeline</h2>
+            <p class="editable-field" style="margin-bottom:6px;">Pick a verb, then click any tense to see how it works. Past → Present → Future, left to right. <strong>Conditional</strong> and <strong>Subjunctive</strong> are moods, shown above.</p>
+
+            <div class="tl-hero" data-tl='{
+              "manger": {
+                "pqp":{"fr":"Plus-que-parfait","en":"had eaten","formula":"avais + mangé","ex":"J&#39;avais mangé","gloss":"I had eaten (before another past action)"},
+                "pc":{"fr":"Passé Composé","en":"ate / have eaten","formula":"ai + mangé","ex":"J&#39;ai mangé","gloss":"I ate / I have eaten (a finished action)"},
+                "imp":{"fr":"Imparfait","en":"was eating / used to eat","formula":"radical + -ais","ex":"Je mangeais","gloss":"I was eating / I used to eat (background, habit)"},
+                "passeRecent":{"fr":"Passé Récent","en":"have just eaten","formula":"venir de + manger","ex":"Je viens de manger","gloss":"I have just eaten (a moment ago)"},
+                "present":{"fr":"Présent","en":"eat / am eating","formula":"radical + -e","ex":"Je mange","gloss":"I eat / I am eating (now, habit, general truth)"},
+                "futurProche":{"fr":"Futur Proche","en":"am going to eat","formula":"vais + manger","ex":"Je vais manger","gloss":"I am going to eat (soon, already decided)"},
+                "futurSimple":{"fr":"Futur Simple","en":"will eat","formula":"manger + -ai","ex":"Je mangerai","gloss":"I will eat (later, a plan or prediction)"},
+                "futurAnterieur":{"fr":"Futur Antérieur","en":"will have eaten","formula":"aurai + mangé","ex":"J&#39;aurai mangé","gloss":"I will have eaten (finished before another future action)"},
+                "conditionnel":{"fr":"Conditionnel","en":"would eat","formula":"manger + -ais","ex":"Je mangerais","gloss":"I would eat (a wish, a hypothesis, politeness)"},
+                "subjonctif":{"fr":"Subjonctif","en":"(that) I eat","formula":"que + subjonctif","ex":"que je mange","gloss":"…that I eat (after il faut que, vouloir que, bien que)"}
+              },
+              "partir": {
+                "pqp":{"fr":"Plus-que-parfait","en":"had left","formula":"étais + parti(e)","ex":"J&#39;étais parti(e)","gloss":"I had left (before another past action)"},
+                "pc":{"fr":"Passé Composé","en":"left / have left","formula":"suis + parti(e)","ex":"Je suis parti(e)","gloss":"I left / I have left — partir takes être"},
+                "imp":{"fr":"Imparfait","en":"was leaving / used to leave","formula":"radical + -ais","ex":"Je partais","gloss":"I was leaving / I used to leave (background, habit)"},
+                "passeRecent":{"fr":"Passé Récent","en":"have just left","formula":"venir de + partir","ex":"Je viens de partir","gloss":"I have just left (a moment ago)"},
+                "present":{"fr":"Présent","en":"leave / am leaving","formula":"irregular -s","ex":"Je pars","gloss":"I leave / I am leaving (now, habit)"},
+                "futurProche":{"fr":"Futur Proche","en":"am going to leave","formula":"vais + partir","ex":"Je vais partir","gloss":"I am going to leave (soon, already decided)"},
+                "futurSimple":{"fr":"Futur Simple","en":"will leave","formula":"partir + -ai","ex":"Je partirai","gloss":"I will leave (later, a plan or prediction)"},
+                "futurAnterieur":{"fr":"Futur Antérieur","en":"will have left","formula":"serai + parti(e)","ex":"Je serai parti(e)","gloss":"I will have left (finished before another future action)"},
+                "conditionnel":{"fr":"Conditionnel","en":"would leave","formula":"partir + -ais","ex":"Je partirais","gloss":"I would leave (a wish, a hypothesis, politeness)"},
+                "subjonctif":{"fr":"Subjonctif","en":"(that) I leave","formula":"que + subjonctif","ex":"que je parte","gloss":"…that I leave (after il faut que, vouloir que, bien que)"}
+              }
+            }'>
+              <div class="tl-toolbar">
+                <span style="font-weight:700; color:var(--text-muted); font-size:.9rem;">Sample verb:</span>
+                <button class="tl-verb-btn is-on" data-verb="manger">manger (to eat)</button>
+                <button class="tl-verb-btn" data-verb="partir">partir (to leave)</button>
+              </div>
+
+              <div class="tl-moods">
+                <button class="tl-mood cond" data-tense="conditionnel">☁️ Conditionnel — "would"</button>
+                <button class="tl-mood subj" data-tense="subjonctif">✨ Subjonctif — "(that) I…"</button>
+              </div>
+
+              <div class="tl-track-wrap">
+                <div class="tl-axis"></div>
+                <div class="tl-track">
+                  <div class="tl-node past" data-tense="pqp">
+                    <div class="tl-fr">Plus-que-parfait</div><div class="tl-en">had done</div>
+                    <span class="tl-formula">—</span><div class="tl-ex">—</div>
+                  </div>
+                  <span class="tl-arrow">➔</span>
+                  <div class="tl-node past" data-tense="pc">
+                    <div class="tl-fr">Passé Composé</div><div class="tl-en">did / have done</div>
+                    <span class="tl-formula">—</span><div class="tl-ex">—</div>
+                  </div>
+                  <div class="tl-node past" data-tense="imp">
+                    <div class="tl-fr">Imparfait</div><div class="tl-en">was doing / used to</div>
+                    <span class="tl-formula">—</span><div class="tl-ex">—</div>
+                  </div>
+                  <span class="tl-arrow">➔</span>
+                  <div class="tl-node past" data-tense="passeRecent">
+                    <div class="tl-fr">Passé Récent</div><div class="tl-en">have just done</div>
+                    <span class="tl-formula">—</span><div class="tl-ex">—</div>
+                  </div>
+                  <span class="tl-arrow">➔</span>
+                  <div class="tl-node present" data-tense="present">
+                    <div class="tl-fr">Présent</div><div class="tl-en">do / am doing</div>
+                    <span class="tl-formula">—</span><div class="tl-ex">—</div>
+                  </div>
+                  <span class="tl-arrow">➔</span>
+                  <div class="tl-node future" data-tense="futurProche">
+                    <div class="tl-fr">Futur Proche</div><div class="tl-en">am going to do</div>
+                    <span class="tl-formula">—</span><div class="tl-ex">—</div>
+                  </div>
+                  <span class="tl-arrow">➔</span>
+                  <div class="tl-node future" data-tense="futurSimple">
+                    <div class="tl-fr">Futur Simple</div><div class="tl-en">will do</div>
+                    <span class="tl-formula">—</span><div class="tl-ex">—</div>
+                  </div>
+                  <span class="tl-arrow">➔</span>
+                  <div class="tl-node future" data-tense="futurAnterieur">
+                    <div class="tl-fr">Futur Antérieur</div><div class="tl-en">will have done</div>
+                    <span class="tl-formula">—</span><div class="tl-ex">—</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="tl-detail">
+                <h3>Click a tense above 👆</h3>
+                <p class="gloss">Each card shows the formation formula and a sample sentence. Use the 🔊 button to hear the French.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- SLIDE 2 — always-works at-a-glance summary (offline-safe fallback + revision) -->
+        <section data-slide-id="tl-hero-2" data-step="Past · Present · Future">
+          <div class="slide-card">
+            <div class="flag-stripe"></div>
+            <h2 class="editable-field">⏳ Past · Present · Future — at a glance</h2>
+            <p class="editable-field gloss">The same nine tenses, grouped by time. This is your quick revision map.</p>
+            <div class="three-columns">
+              <div class="box blue content-box">
+                <h3 style="margin-top:0;">⏪ THE PAST</h3>
+                <p><span class="highlight hl-pronoun">Plus-que-parfait</span><br><span class="gloss">j'avais mangé — I had eaten</span></p>
+                <p><span class="highlight hl-aux">Imparfait</span><br><span class="gloss">je mangeais — I was eating / used to</span></p>
+                <p><span class="highlight hl-verb">Passé Composé</span><br><span class="gloss">j'ai mangé — I ate / have eaten</span></p>
+                <p><span class="highlight hl-verb">Passé Récent</span><br><span class="gloss">je viens de manger — I have just eaten</span></p>
+              </div>
+              <div class="box green content-box">
+                <h3 style="margin-top:0; color:var(--green);">⏺ THE PRESENT</h3>
+                <p><span class="highlight hl-verb">Présent</span><br><span class="gloss">je mange — I eat / am eating</span></p>
+                <p style="margin-top:14px;"><span class="highlight hl-pronoun">Conditionnel</span> <span class="gloss">(mood)</span><br><span class="gloss">je mangerais — I would eat</span></p>
+                <p><span class="highlight hl-gold" style="background:rgba(217,119,6,.16); color:var(--gold); border:1px solid var(--gold); padding:2px 9px; border-radius:7px; font-weight:800;">Subjonctif</span> <span class="gloss">(mood)</span><br><span class="gloss">que je mange — (that) I eat</span></p>
+              </div>
+              <div class="box gold content-box">
+                <h3 style="margin-top:0; color:var(--gold);">⏩ THE FUTURE</h3>
+                <p><span class="highlight hl-subject">Futur Proche</span><br><span class="gloss">je vais manger — I am going to eat</span></p>
+                <p><span class="highlight hl-subject">Futur Simple</span><br><span class="gloss">je mangerai — I will eat</span></p>
+                <p><span class="highlight hl-subject">Futur Antérieur</span><br><span class="gloss">j'aurai mangé — I will have eaten</span></p>
+              </div>
+            </div>
+            <div class="box gold content-box fragment">
+              <p class="editable-field">🔑 <strong>The one pattern that unlocks four tenses:</strong> the compound tenses are just
+                <span class="highlight hl-aux">auxiliary (être/avoir)</span> + <span class="highlight hl-verb">past participle</span>.
+                Change only the auxiliary's tense: présent → Passé Composé · imparfait → Plus-que-parfait · futur → Futur Antérieur.</p>
+            </div>
+            <p class="editable-field gloss">➡️ Press <kbd>→</kbd> to begin with <strong>Les Verbes</strong>, or open <strong>📚 Topics</strong> to jump anywhere.</p>
+          </div>
+        </section>
+      </section>

@@ -1,0 +1,1621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🇫🇷 CBSE Class 10 French Grammar Board Master — Interactive Presentation</title>
+  
+  <!-- Google Fonts: Outfit & Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Plus+Jakarta+Sans:ital,wght@0,400;0,600;0,700;0,800;1,400;1,600;1,700&display=swap" rel="stylesheet">
+  
+  <!-- Reveal.js CSS Base -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.css">
+  
+  <style>
+    /* ============================================================
+       DESIGN SYSTEM & CSS THEMES (6 CLASSROOM THEMES)
+       ============================================================ */
+    :root {
+      --custom-font-family: 'Plus Jakarta Sans', sans-serif;
+      --custom-heading-font: 'Outfit', sans-serif;
+      --custom-font-scale: 1;
+      --topbar-h: 54px;
+      --hud-h: 50px;
+    }
+
+    /* 1. Theme Classic (Crisp White High-Contrast Default) */
+    body.theme-classic {
+      --bg-gradient: #ffffff;
+      --card-bg: #ffffff;
+      --card-border: #cbd5e1;
+      --text-main: #0f172a;
+      --text-muted: #334155;
+      --heading-color: #002395;
+      --subheading-color: #ed2939;
+      --highlight-bg: #f0fdf4;
+      --highlight-border: #16a34a;
+      --highlight-text: #15803d;
+      --box-blue-bg: #f0f9ff;
+      --box-gold-bg: #fffbeb;
+      --box-gold-border: #fcd34d;
+      --hud-bg: rgba(15, 23, 42, 0.95);
+      --hud-text: #ffffff;
+      --green: #15803d;
+      --purple: #7e22ce;
+      --gold: #b45309;
+      --crimson: #ed2939;
+    }
+
+    /* 2. Theme Slate (Dark Navy Slate High-Contrast) */
+    body.theme-slate {
+      --bg-gradient: #0f172a;
+      --card-bg: #0f172a;
+      --card-border: rgba(255, 255, 255, 0.15);
+      --text-main: #f8fafc;
+      --text-muted: #cbd5e1;
+      --heading-color: #60a5fa;
+      --subheading-color: #f472b6;
+      --highlight-bg: #091322;
+      --highlight-border: #22c55e;
+      --highlight-text: #4ade80;
+      --box-blue-bg: #1e293b;
+      --box-gold-bg: rgba(251, 191, 36, 0.15);
+      --box-gold-border: rgba(251, 191, 36, 0.3);
+      --hud-bg: rgba(15, 23, 42, 0.95);
+      --hud-text: #ffffff;
+      --green: #4ade80;
+      --purple: #c084fc;
+      --gold: #fbbf24;
+      --crimson: #f43f5e;
+    }
+
+    /* 3. Theme Emerald (EdTech Fresh Green) */
+    body.theme-emerald {
+      --bg-gradient: #064e3b;
+      --card-bg: #064e3b;
+      --card-border: rgba(255, 255, 255, 0.18);
+      --text-main: #ecfdf5;
+      --text-muted: #a7f3d0;
+      --heading-color: #34d399;
+      --subheading-color: #fbbf24;
+      --highlight-bg: #022c22;
+      --highlight-border: #10b981;
+      --highlight-text: #6ee7b7;
+      --box-blue-bg: #047857;
+      --box-gold-bg: rgba(251, 191, 36, 0.15);
+      --box-gold-border: #f59e0b;
+      --hud-bg: rgba(6, 78, 59, 0.95);
+      --hud-text: #ffffff;
+      --green: #34d399;
+      --purple: #d8b4fe;
+      --gold: #fbbf24;
+      --crimson: #f87171;
+    }
+
+    /* 4. Theme Purple (Royal Purple) */
+    body.theme-purple {
+      --bg-gradient: #3b0764;
+      --card-bg: #3b0764;
+      --card-border: rgba(255, 255, 255, 0.18);
+      --text-main: #faf5ff;
+      --text-muted: #e9d5ff;
+      --heading-color: #c084fc;
+      --subheading-color: #f472b6;
+      --highlight-bg: #2e1065;
+      --highlight-border: #a855f7;
+      --highlight-text: #e9d5ff;
+      --box-blue-bg: #581c87;
+      --box-gold-bg: rgba(251, 191, 36, 0.15);
+      --box-gold-border: #f59e0b;
+      --hud-bg: rgba(59, 7, 100, 0.95);
+      --hud-text: #ffffff;
+      --green: #4ade80;
+      --purple: #c084fc;
+      --gold: #fbbf24;
+      --crimson: #fb7185;
+    }
+
+    /* Base Reset & Widescreen Fill */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      width: 100vw; height: 100vh;
+      overflow: hidden;
+      font-family: var(--custom-font-family);
+      background: var(--bg-gradient);
+      color: var(--text-main);
+    }
+
+    /* ============================================================
+       PERMANENT 100% VISIBLE NAVIGATION (TOPBAR & HUD)
+       ============================================================ */
+    header.topbar {
+      position: fixed !important;
+      top: 0 !important; left: 0 !important; right: 0 !important;
+      height: 54px !important;
+      z-index: 999999 !important;
+      display: flex !important; align-items: center !important;
+      padding: 0 16px !important; gap: 10px !important;
+      background: #0f172a !important;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.15) !important;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.4) !important;
+      opacity: 1 !important; visibility: visible !important;
+    }
+
+    .brand {
+      font-family: var(--custom-heading-font);
+      font-weight: 900; font-size: 1.05rem; color: #ffffff;
+      margin-right: 8px; white-space: nowrap;
+    }
+
+    .tb-btn {
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: #ffffff;
+      padding: 6px 12px; border-radius: 6px;
+      font-size: 0.85rem; font-weight: 700; cursor: pointer;
+      display: inline-flex; align-items: center; gap: 6px;
+      transition: all 0.2s ease;
+    }
+    .tb-btn:hover { background: rgba(255,255,255,0.2); transform: translateY(-1px); }
+
+    .tb-select {
+      background: #1e293b; border: 1px solid rgba(255,255,255,0.2);
+      color: #ffffff; padding: 6px 10px; border-radius: 6px;
+      font-size: 0.85rem; font-weight: 700; cursor: pointer;
+    }
+
+    .tb-spacer { flex: 1; }
+
+    /* Topic Menu Dropdown */
+    .topic-menu-wrap { position: relative; }
+    .topic-menu {
+      display: none; position: absolute; top: 100%; left: 0;
+      width: 320px; max-height: 480px; overflow-y: auto;
+      background: #0f172a; border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      z-index: 1000000; padding: 8px 0; margin-top: 4px;
+    }
+    .topic-menu.open { display: block; }
+    .topic-menu-item {
+      padding: 8px 16px; color: #cbd5e1; font-size: 0.88rem; font-weight: 600;
+      cursor: pointer; display: flex; justify-content: space-between; align-items: center;
+    }
+    .topic-menu-item:hover { background: #1e293b; color: #60a5fa; }
+
+    /* Bottom HUD Bar */
+    .hud {
+      position: fixed !important;
+      bottom: 12px !important; left: 50% !important;
+      transform: translateX(-50%) !important;
+      height: 46px !important; z-index: 999999 !important;
+      display: flex !important; align-items: center !important; gap: 12px !important;
+      background: rgba(15, 23, 42, 0.95) !important;
+      border: 1px solid rgba(255, 255, 255, 0.25) !important;
+      border-radius: 30px !important; padding: 6px 20px !important;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6) !important;
+      backdrop-filter: blur(12px) !important;
+      opacity: 1 !important; visibility: visible !important;
+    }
+    .nav-btn {
+      background: #1e293b; border: 1px solid rgba(255,255,255,0.2);
+      color: #ffffff; padding: 5px 14px; border-radius: 20px;
+      font-size: 0.85rem; font-weight: 800; cursor: pointer;
+    }
+    .nav-btn:hover { background: #3b82f6; }
+    .slide-counter { color: #60a5fa; font-weight: 800; font-size: 0.88rem; }
+
+    /* ============================================================
+       REVEAL SHELL & SLIDE CARD FIT (ZERO SIDE GAPS)
+       ============================================================ */
+    .reveal-shell {
+      position: fixed !important;
+      top: 54px !important; bottom: 60px !important;
+      left: 0 !important; right: 0 !important;
+      width: 100vw !important; height: calc(100vh - 114px) !important;
+      z-index: 100 !important; overflow: hidden !important;
+      background: var(--bg-gradient) !important;
+    }
+
+    .reveal { width: 100% !important; height: 100% !important; background: transparent !important; }
+
+    .slide-card {
+      position: relative !important;
+      width: 100% !important; max-width: 100% !important;
+      height: 100% !important; max-height: calc(100vh - 114px) !important;
+      margin: 0 !important; padding: 16px 36px 14px 36px !important;
+      box-sizing: border-box !important; overflow: hidden !important;
+      display: flex !important; flex-direction: column !important;
+      justify-content: flex-start !important;
+      background: var(--card-bg) !important; color: var(--text-main) !important;
+    }
+
+    /* Flag Ribbon Stripe */
+    .flag-stripe {
+      height: 4px; width: 100%;
+      background: linear-gradient(90deg, #002395 0%, #002395 33.3%, #ffffff 33.3%, #ffffff 66.6%, #ed2939 66.6%, #ed2939 100%);
+      margin-bottom: 8px; border-radius: 2px;
+    }
+
+    .step-ribbon {
+      display: inline-block; font-size: 0.8rem; font-weight: 800;
+      color: var(--subheading-color); text-transform: uppercase; letter-spacing: 0.5px;
+    }
+
+    .card-hero h2, h2.editable-field {
+      font-family: var(--custom-heading-font);
+      font-size: 2.1rem !important; font-weight: 900 !important;
+      color: var(--heading-color) !important; margin: 2px 0 6px 0 !important;
+      line-height: 1.2 !important;
+    }
+
+    .subtitle { font-size: 1.08rem !important; color: var(--text-muted) !important; margin-bottom: 10px !important; }
+
+    /* ============================================================
+       DEDICATED USAGES SUB-SLIDE GRID SYSTEM (BACK-BENCHER READABLE)
+       ============================================================ */
+    .usages-grid-dedicated {
+      display: grid !important;
+      grid-template-columns: repeat(3, 1fr) !important;
+      gap: 14px 18px !important; width: 100% !important;
+      flex: 1 !important; margin-top: 8px !important;
+      align-items: stretch !important;
+    }
+
+    .usage-card-item {
+      background: var(--card-bg) !important;
+      border: 1px solid var(--card-border) !important;
+      border-left: 6px solid var(--heading-color) !important;
+      border-radius: 10px !important; padding: 14px 16px !important;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.1) !important;
+      display: flex !important; flex-direction: column !important;
+      justify-content: space-between !important; height: 100% !important;
+      resize: both !important; overflow: auto !important;
+    }
+
+    .u-badge {
+      display: inline-block; font-size: 0.82rem; font-weight: 800;
+      padding: 3px 10px; border-radius: 14px; margin-bottom: 6px;
+      text-transform: uppercase; letter-spacing: 0.4px;
+    }
+
+    .u-title { font-size: 1.25rem; font-weight: 800; color: var(--text-main); margin: 0 0 6px 0; }
+    .u-desc { font-size: 1.02rem; color: var(--text-muted); line-height: 1.4; margin: 0 0 8px 0; flex: 1; }
+    .u-ex {
+      font-size: 1.1rem; font-style: italic; font-weight: 700;
+      color: var(--highlight-text, #15803d); background: var(--highlight-bg, #f0fdf4);
+      padding: 8px 12px; border-radius: 6px; border-left: 3px solid var(--green, #15803d);
+      margin-bottom: 6px;
+    }
+    .u-tip {
+      font-size: 0.88rem; font-weight: 700; color: var(--gold, #b45309);
+      background: var(--box-gold-bg, #fffbeb); padding: 4px 8px; border-radius: 4px;
+      border: 1px solid var(--box-gold-border, #fcd34d);
+    }
+
+    /* Table Formatting for 6-Row Verbs (-ER, -IR, -RE) */
+    table.conj-table { width: 100%; border-collapse: collapse; margin-top: 6px; }
+    table.conj-table td { padding: 4px 10px; font-size: 1.02rem; border-bottom: 1px solid var(--card-border); }
+    table.conj-table td.p-name { color: var(--text-muted); }
+    table.conj-table td.v-form { color: var(--heading-color); font-weight: 800; }
+
+    /* Formula Pipeline Box */
+    .formula-pipeline {
+      display: flex; align-items: center; justify-content: center; gap: 14px;
+      background: var(--box-blue-bg); border: 1px solid var(--card-border);
+      border-radius: 12px; padding: 14px 20px; margin: 10px 0;
+    }
+    .formula-step-box {
+      background: var(--card-bg); border: 2px solid var(--heading-color);
+      border-radius: 8px; padding: 10px 18px; text-align: center;
+    }
+    .formula-step-label { font-size: 0.95rem; font-weight: 800; color: var(--text-muted); }
+    .formula-step-val { font-size: 1.4rem; font-weight: 900; color: var(--heading-color); }
+    .formula-op { font-size: 1.5rem; font-weight: 900; color: var(--subheading-color); }
+
+    /* Light Content Hero Slides */
+    .slide-card.light-slide {
+      justify-content: center !important; align-items: center !important;
+      text-align: center !important; padding: 40px 60px !important;
+    }
+    .slide-card.light-slide .card-hero h2 { font-size: 3.2rem !important; }
+    .slide-card.light-slide .subtitle { font-size: 1.6rem !important; }
+    .slide-card.light-slide p { font-size: 1.55rem !important; }
+
+    /* Overlays & Modals */
+    #searchModalOverlay, #settingsPanel, #sidebar {
+      position: fixed; z-index: 1000000;
+    }
+    #searchModalOverlay {
+      display: none; top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(0,0,0,0.75); backdrop-filter: blur(5px);
+      justify-content: center; align-items: flex-start; padding-top: 80px;
+    }
+    #searchModalOverlay.show { display: flex; }
+    .search-card {
+      background: #0f172a; border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 12px; width: 600px; max-width: 90%; padding: 20px; color: #fff;
+    }
+    .search-input {
+      width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #3b82f6;
+      background: #1e293b; color: #fff; font-size: 1.1rem; margin-bottom: 14px;
+    }
+    .search-results { max-height: 360px; overflow-y: auto; }
+    .search-item {
+      padding: 10px 14px; border-bottom: 1px solid rgba(255,255,255,0.1); cursor: pointer;
+    }
+    .search-item:hover { background: #1e293b; color: #60a5fa; }
+
+    /* Settings Panel Overlay */
+    #settingsPanel {
+      display: none; top: 64px; right: 16px; width: 340px;
+      background: #0f172a; border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 12px; padding: 20px; color: #fff; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+    #settingsPanel.open { display: block; }
+    .settings-group { margin-bottom: 14px; }
+    .settings-group label { display: block; font-size: 0.9rem; font-weight: 700; margin-bottom: 6px; }
+
+    /* Sidebar Navigation Overlay */
+    #sidebar {
+      display: none; top: 54px; left: 0; width: 280px; height: calc(100vh - 54px);
+      background: #0f172a; border-right: 1px solid rgba(255,255,255,0.2);
+      padding: 16px; overflow-y: auto; color: #fff;
+    }
+    body.sidebar-open #sidebar { display: block; }
+
+    /* Print CSS strictly isolated */
+    @media print {
+      @page { size: A4 portrait; margin: 12mm; }
+      html, body { background: #fff !important; color: #000 !important; overflow: visible !important; height: auto !important; }
+      header.topbar, .hud, #searchModalOverlay, #settingsPanel, #sidebar { display: none !important; }
+      .reveal-shell, .reveal, .reveal .slides { position: static !important; width: 100% !important; height: auto !important; transform: none !important; }
+      .reveal .slides > section { display: block !important; position: static !important; opacity: 1 !important; page-break-after: always; width: 100% !important; margin-bottom: 30px !important; }
+      .reveal .slides > section > section { display: block !important; position: static !important; opacity: 1 !important; margin-bottom: 20px !important; }
+    }
+  </style>
+</head>
+<body class="theme-classic mode-teacher">
+
+<!-- ============ PERMANENT TOP BAR ============ -->
+<header class="topbar">
+  <span class="brand">🇫🇷 CBSE Class 10 French Grammar Board Master</span>
+
+  <div class="topic-menu-wrap">
+    <button class="tb-btn" id="topicMenuBtn" title="Choose a grammar topic">📚 Topics ▾</button>
+    <div class="topic-menu" id="topicMenu"></div>
+  </div>
+
+  <button class="tb-btn" id="searchBtn" title="Search a rule (Ctrl+K)">🔍 Search</button>
+
+  <select class="tb-select" id="classSelector" title="Select Class Section for Personalization">
+    <option value="all">Class: 10E & 10J (Mixed)</option>
+    <option value="10e">Class: 10E Only</option>
+    <option value="10j">Class: 10J Only</option>
+  </select>
+  
+  <button class="tb-btn" id="printTopicBtn" title="Print Handout (A4)">🖨️ Print A4</button>
+
+  <span class="tb-spacer"></span>
+
+  <button class="tb-btn" id="modeBtn" title="Switch Teacher / Student Mode (T)">👩‍🏫 Teacher</button>
+  <button class="tb-btn" id="lightBtn" title="Toggle Light / Dark Theme (L)">☀️ / 🌙</button>
+  <button class="tb-btn" id="soundBtn" title="Toggle Sound FX">🔇 Sound</button>
+  <button class="tb-btn" id="sidebarBtn" title="Table of Contents">📑 Menu</button>
+  <button class="tb-btn" id="settingsBtn" title="Customization Settings">⚙️</button>
+</header>
+
+<!-- ============ REVEAL SHELL PRESENTATION CONTAINER ============ -->
+<div class="reveal-shell">
+  <div class="reveal">
+    <div class="slides" id="slidesRoot">
+
+      <!-- ============ TOPIC 1: CONJUGAISON ENGINE & SPEED DRILL ============ -->
+      <section id="conjugaison-lab" data-topic="conjugaison-lab" data-topic-name="⚡ Conjugaison Engine & Speed Drill">
+        <section id="conjugaison-lab-1" data-step="Formule & Speed Drill">
+          <div class="slide-card">
+            <div class="flag-stripe"></div>
+            <div class="step-ribbon"><span class="sr-n">1</span> Formule &amp; Speed Drill</div>
+            <div class="card-hero">
+              <div class="badge" style="background:#002395;color:#fff;">⚡ 500+ Verbs &amp; 8 CBSE Tenses</div>
+              <h2>⚡ Master Conjugation Engine &amp; Conjugaison Lap</h2>
+              <p class="subtitle">Learn the 3-step conjugation formula &amp; test your speed in the 30s drill!</p>
+            </div>
+
+            <div class="formula-pipeline">
+              <div class="formula-step-box">
+                <div class="formula-step-label">Step 1 • Radical / Stem</div>
+                <div class="formula-step-val" id="fStem">parl-</div>
+              </div>
+              <div class="formula-op">+</div>
+              <div class="formula-step-box">
+                <div class="formula-step-label">Step 2 • Terminaison</div>
+                <div class="formula-step-val" id="fEnding" style="color:#ed2939;">-ons</div>
+              </div>
+              <div class="formula-op">=</div>
+              <div class="formula-step-box" style="border-color:#16a34a;">
+                <div class="formula-step-label">Step 3 • Forme Finale</div>
+                <div class="formula-step-val" id="fResult" style="color:#15803d;">parlons</div>
+              </div>
+            </div>
+
+            <div style="text-align:center;margin-top:16px;">
+              <button class="tb-btn" id="startLapGameBtn" style="background:#ed2939;color:#fff;font-size:1.1rem;padding:12px 24px;border-radius:10px;">🏁 Start 30s Conjugaison Lap Game</button>
+            </div>
+
+            <div id="lapGameBox" style="display:none;max-width:680px;margin:14px auto 0;background:#0f172a;border:2px solid #ed2939;border-radius:12px;padding:16px;color:#fff;">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+                <h3 style="color:#ed2939;margin:0;">🏁 Conjugaison Lap Speed Drill</h3>
+                <div>⏱️ Time: <span id="lapTimerEl">30</span>s | 🏆 Score: <span id="lapScoreEl">0</span></div>
+              </div>
+              <div id="lapPrompt" style="font-size:1.15rem;font-weight:700;margin-bottom:10px;">Conjuguez...</div>
+              <div style="display:flex;gap:10px;justify-content:center;">
+                <input type="text" id="lapInput" placeholder="Tapez la réponse ici..." style="padding:10px;border-radius:8px;border:1px solid #334155;background:#1e293b;color:#fff;font-size:1.05rem;width:240px;" />
+                <button id="submitLapBtn" style="padding:10px 18px;background:#ed2939;color:#fff;border:none;border-radius:8px;font-weight:800;cursor:pointer;">Valider ➔</button>
+              </div>
+              <div id="lapFeedback" style="margin-top:8px;font-size:0.9rem;font-weight:700;"></div>
+            </div>
+          </div>
+        </section>
+
+        <section id="conjugaison-lab-2" data-step="Matrice 8 Temps Explorer">
+          <div class="slide-card">
+            <div class="flag-stripe"></div>
+            <div class="step-ribbon"><span class="sr-n">2</span> Matrice 8 Temps</div>
+            <div class="card-hero">
+              <div class="badge" style="background:#002395;color:#fff;">🔍 500+ Verb Database</div>
+              <h2>500+ Verb Conjugation Matrix Explorer</h2>
+              <p class="subtitle">Select any French verb to view all 8 CBSE tenses + Impératif instantly.</p>
+            </div>
+            <div style="display:flex;gap:10px;justify-content:center;align-items:center;margin-bottom:10px;">
+              <select id="verbSelectDropdown" class="tb-select" style="font-size:1rem;padding:8px 16px;min-width:260px;"></select>
+            </div>
+            <div id="verbMatrixCard" style="display:grid;grid-template-columns:repeat(4, 1fr);gap:10px;padding:12px;background:var(--box-blue-bg);border-radius:8px;"></div>
+          </div>
+        </section>
+      </section>
+
+      <!-- ============ TOPIC 2: VISUAL TENSE TIMELINE ============ -->
+      <section id="tense-timeline" data-topic="tense-timeline" data-topic-name="⏳ Visual Tense Timeline">
+        <section id="tense-timeline-1" data-step="Chronologie des Temps">
+          <div class="slide-card">
+            <div class="flag-stripe"></div>
+            <div class="step-ribbon"><span class="sr-n">⏳</span> Timeline</div>
+            <div class="card-hero">
+              <h2>Chronologie Visuelle des Temps du Français</h2>
+              <p class="subtitle">Map all French tenses chronologically from Passé to Futur</p>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(5, 1fr);gap:12px;margin-top:16px;">
+              <div style="background:var(--box-blue-bg);border-left:4px solid #7e22ce;padding:14px;border-radius:8px;">
+                <h4 style="color:#7e22ce;">Plus-que-parfait</h4>
+                <p style="font-size:0.88rem;color:var(--text-muted);">Past of the past</p>
+                <div class="u-ex">"Rohan avait mangé."</div>
+              </div>
+              <div style="background:var(--box-blue-bg);border-left:4px solid #002395;padding:14px;border-radius:8px;">
+                <h4 style="color:#002395;">Imparfait / PC</h4>
+                <p style="font-size:0.88rem;color:var(--text-muted);">Past habit / event</p>
+                <div class="u-ex">"Diya est partie."</div>
+              </div>
+              <div style="background:var(--box-gold-bg);border-left:4px solid #b45309;padding:14px;border-radius:8px;">
+                <h4 style="color:#b45309;">Présent</h4>
+                <p style="font-size:0.88rem;color:var(--text-muted);">Current moment</p>
+                <div class="u-ex">"Aksa étudie."</div>
+              </div>
+              <div style="background:var(--box-blue-bg);border-left:4px solid #15803d;padding:14px;border-radius:8px;">
+                <h4 style="color:#15803d;">Futur Proche</h4>
+                <p style="font-size:0.88rem;color:var(--text-muted);">Immediate future</p>
+                <div class="u-ex">"Kevin va arriver."</div>
+              </div>
+              <div style="background:var(--box-blue-bg);border-left:4px solid #ed2939;padding:14px;border-radius:8px;">
+                <h4 style="color:#ed2939;">Futur Simple</h4>
+                <p style="font-size:0.88rem;color:var(--text-muted);">Distant future</p>
+                <div class="u-ex">"Trisha sera médecin."</div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <!-- ============ TOPIC 3: LE PRÉSENT ============ -->
+      <section id="le-present" data-topic="present" data-topic-name="Le Présent de l'Indicatif">
+        <section id="present-1" data-step="Description & Formule">
+          <div class="slide-card">
+            <div class="flag-stripe"></div>
+            <div class="step-ribbon"><span class="sr-n">1</span> Formation</div>
+            <div class="card-hero">
+              <h2>Le Présent — Radical + Terminaisons</h2>
+              <p class="subtitle">Expressing present habits, facts, and immediate future</p>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(3, 1fr);gap:16px;margin-top:10px;">
+              <div style="background:var(--box-blue-bg);border-left:4px solid #002395;padding:14px;border-radius:8px;">
+                <h4 style="color:#002395;">-ER (parler)</h4>
+                <table class="conj-table">
+                  <tr><td class="p-name">je</td><td class="v-form">parle</td></tr>
+                  <tr><td class="p-name">tu</td><td class="v-form">parles</td></tr>
+                  <tr><td class="p-name">il/elle</td><td class="v-form">parle</td></tr>
+                  <tr><td class="p-name">nous</td><td class="v-form">parlons</td></tr>
+                  <tr><td class="p-name">vous</td><td class="v-form">parlez</td></tr>
+                  <tr><td class="p-name">ils/elles</td><td class="v-form">parlent</td></tr>
+                </table>
+              </div>
+              <div style="background:var(--box-gold-bg);border-left:4px solid #b45309;padding:14px;border-radius:8px;">
+                <h4 style="color:#b45309;">-IR (finir)</h4>
+                <table class="conj-table">
+                  <tr><td class="p-name">je</td><td class="v-form">finis</td></tr>
+                  <tr><td class="p-name">tu</td><td class="v-form">finis</td></tr>
+                  <tr><td class="p-name">il/elle</td><td class="v-form">finit</td></tr>
+                  <tr><td class="p-name">nous</td><td class="v-form">finissons</td></tr>
+                  <tr><td class="p-name">vous</td><td class="v-form">finissez</td></tr>
+                  <tr><td class="p-name">ils/elles</td><td class="v-form">finissent</td></tr>
+                </table>
+              </div>
+              <div style="background:var(--box-blue-bg);border-left:4px solid #15803d;padding:14px;border-radius:8px;">
+                <h4 style="color:#15803d;">-RE (vendre)</h4>
+                <table class="conj-table">
+                  <tr><td class="p-name">je</td><td class="v-form">vends</td></tr>
+                  <tr><td class="p-name">tu</td><td class="v-form">vends</td></tr>
+                  <tr><td class="p-name">il/elle</td><td class="v-form">vend</td></tr>
+                  <tr><td class="p-name">nous</td><td class="v-form">vendons</td></tr>
+                  <tr><td class="p-name">vous</td><td class="v-form">vendez</td></tr>
+                  <tr><td class="p-name">ils/elles</td><td class="v-form">vendent</td></tr>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="present-usages-part1" data-step="Usages (1/2)">
+          <div class="slide-card">
+            <div class="flag-stripe"></div>
+            <div class="step-ribbon"><span class="sr-n">📌</span> Usages (1/2)</div>
+            <h2>📌 5 Key Usages of Le Présent (Part 1/2)</h2>
+            <p class="subtitle">Why and when do we use Le Présent in CBSE Class 10?</p>
+            <div class="usages-grid-dedicated">
+              <div class="usage-card-item">
+                <div class="u-badge" style="background:#00239522;color:#002395;">USAGE 1 • CURRENT ACTION</div>
+                <h4 class="u-title">Actions Happening Right Now</h4>
+                <p class="u-desc">Expresses habits, truths, or actions taking place at the present moment.</p>
+                <div class="u-ex">"Diya habite à Delhi et étudie le français."</div>
+                <div class="u-tip"><strong>CBSE Tip:</strong> Used for daily habits &amp; current states.</div>
+              </div>
+              <div class="usage-card-item">
+                <div class="u-badge" style="background:#ed293922;color:#ed2939;">USAGE 2 • NEAR FUTURE</div>
+                <h4 class="u-title">Scheduled Immediate Future</h4>
+                <p class="u-desc">Used with time words (demain, ce soir) for scheduled upcoming events.</p>
+                <div class="u-ex">"Kevin arrive demain à cinq heures."</div>
+                <div class="u-tip"><strong>CBSE Tip:</strong> Equivalent to 'is arriving tomorrow'.</div>
+              </div>
+              <div class="usage-card-item">
+                <div class="u-badge" style="background:#15803d22;color:#15803d;">USAGE 3 • GENERAL TRUTHS</div>
+                <h4 class="u-title">Scientific Facts &amp; Proverbs</h4>
+                <p class="u-desc">Describes universal truths, scientific facts, and permanent states.</p>
+                <div class="u-ex">"La Terre tourne autour du Soleil."</div>
+                <div class="u-tip"><strong>CBSE Tip:</strong> Always present tense for universal facts.</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="present-usages-part2" data-step="Usages (2/2)">
+          <div class="slide-card">
+            <div class="flag-stripe"></div>
+            <div class="step-ribbon"><span class="sr-n">📌</span> Usages (2/2)</div>
+            <h2>📌 5 Key Usages of Le Présent (Part 2/2)</h2>
+            <p class="subtitle">Why and when do we use Le Présent in CBSE Class 10?</p>
+            <div class="usages-grid-dedicated" style="grid-template-columns:repeat(2, 1fr) !important;">
+              <div class="usage-card-item">
+                <div class="u-badge" style="background:#b4530922;color:#b45309;">USAGE 4 • HISTORICAL PRESENT</div>
+                <h4 class="u-title">Vivid Narrative Storytelling</h4>
+                <p class="u-desc">Used in storytelling to make past events feel lively and immediate.</p>
+                <div class="u-ex">"Soudain, Trisha entre et raconte l'histoire..."</div>
+                <div class="u-tip"><strong>CBSE Tip:</strong> Makes French compositions (rédaction) dynamic.</div>
+              </div>
+              <div class="usage-card-item">
+                <div class="u-badge" style="background:#7e22ce22;color:#7e22ce;">USAGE 5 • RECENT PAST (DEPUIS)</div>
+                <h4 class="u-title">Action Started in Past &amp; Continuing</h4>
+                <p class="u-desc">Combined with depuis to show an action ongoing since a past time.</p>
+                <div class="u-ex">"Aksa apprend le français depuis deux ans."</div>
+                <div class="u-tip"><strong>CBSE Tip:</strong> Present tense + depuis = ongoing past action.</div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <!-- ============ TOPIC 4: L'IMPARFAIT ============ -->
+      <section id="limparfait" data-topic="imparfait" data-topic-name="L'Imparfait de l'Indicatif">
+        <section id="imparfait-1" data-step="Description & Formule">
+          <div class="slide-card">
+            <div class="flag-stripe"></div>
+            <div class="step-ribbon"><span class="sr-n">1</span> Formation</div>
+            <div class="card-hero">
+              <h2>L'Imparfait — Radical NOUS du Présent + Terminaisons</h2>
+              <p class="subtitle">Expressing past habits, descriptions, and ongoing background actions</p>
+            </div>
+            <div class="formula-pipeline">
+              <div class="formula-step-box">
+                <div class="formula-step-label">Nous du Présent</div>
+                <div class="formula-step-val">parlons</div>
+              </div>
+              <div class="formula-op">➜ Drop -ons</div>
+              <div class="formula-step-box">
+                <div class="formula-step-label">Radical Imparfait</div>
+                <div class="formula-step-val">parl-</div>
+              </div>
+              <div class="formula-op">+</div>
+              <div class="formula-step-box" style="border-color:#16a34a;">
+                <div class="formula-step-label">Terminaisons</div>
+                <div class="formula-step-val" style="color:#15803d;">-ais, -ais, -ait, -ions, -iez, -aient</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="imparfait-usages-part1" data-step="Usages (1/2)">
+          <div class="slide-card">
+            <div class="flag-stripe"></div>
+            <div class="step-ribbon"><span class="sr-n">📌</span> Usages (1/2)</div>
+            <h2>📌 Key Usages of L'Imparfait (Part 1/2)</h2>
+            <p class="subtitle">Past habits and background descriptions in CBSE Board Exams</p>
+            <div class="usages-grid-dedicated">
+              <div class="usage-card-item">
+                <div class="u-badge" style="background:#00239522;color:#002395;">USAGE 1 • PAST HABIT</div>
+                <h4 class="u-title">Repeated Past Actions</h4>
+                <p class="u-desc">Describes habits or routines in the past ('used to do').</p>
+                <div class="u-ex">"Quand Kevin était petit, il jouait au football."</div>
+                <div class="u-tip"><strong>CBSE Tip:</strong> Triggered by: toujours, tous les jours, autrefois.</div>
+              </div>
+              <div class="usage-card-item">
+                <div class="u-badge" style="background:#ed293922;color:#ed2939;">USAGE 2 • BACKGROUND DESCRIPTION</div>
+                <h4 class="u-title">Setting the Past Scene</h4>
+                <p class="u-desc">Describes weather, emotions, age, and physical appearances in the past.</p>
+                <div class="u-ex">"Il faisait beau et Diya avait dix ans."</div>
+                <div class="u-tip"><strong>CBSE Tip:</strong> Weather &amp; age in past = Imparfait!</div>
+              </div>
+              <div class="usage-card-item">
+                <div class="u-badge" style="background:#15803d22;color:#15803d;">USAGE 3 • INTERRUPTED ACTION</div>
+                <h4 class="u-title">Ongoing Past Action</h4>
+                <p class="u-desc">Describes an ongoing action interrupted by a sudden Passé Composé event.</p>
+                <div class="u-ex">"Pendant que Rohan dormait, le téléphone a sonné."</div>
+                <div class="u-tip"><strong>CBSE Tip:</strong> Ongoing = Imparfait, Interruption = PC!</div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <!-- ============ TOPIC 5: LE PASSÉ COMPOSÉ ============ -->
+      <section id="le-passe-compose" data-topic="passe-compose" data-topic-name="Le Passé Composé">
+        <section id="pc-1" data-step="Description & Auxiliary Rules">
+          <div class="slide-card">
+            <div class="flag-stripe"></div>
+            <div class="step-ribbon"><span class="sr-n">1</span> Formation</div>
+            <div class="card-hero">
+              <h2>Le Passé Composé — Avoir / Être + Participe Passé</h2>
+              <p class="subtitle">Completed single events in the past</p>
+            </div>
+            <div class="formula-pipeline">
+              <div class="formula-step-box">
+                <div class="formula-step-label">Auxiliaire (Présent)</div>
+                <div class="formula-step-val">ai / suis</div>
+              </div>
+              <div class="formula-op">+</div>
+              <div class="formula-step-box" style="border-color:#16a34a;">
+                <div class="formula-step-label">Participe Passé</div>
+                <div class="formula-step-val" style="color:#15803d;">parlé / parti(e)</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="pc-usages-part1" data-step="Usages (1/2)">
+          <div class="slide-card">
+            <div class="flag-stripe"></div>
+            <div class="step-ribbon"><span class="sr-n">📌</span> Usages (1/2)</div>
+            <h2>📌 Key Usages of Le Passé Composé (Part 1/2)</h2>
+            <p class="subtitle">Single events and completed past actions</p>
+            <div class="usages-grid-dedicated">
+              <div class="usage-card-item">
+                <div class="u-badge" style="background:#00239522;color:#002395;">USAGE 1 • COMPLETED EVENT</div>
+                <h4 class="u-title">Single Specific Event</h4>
+                <p class="u-desc">Expresses a completed action that happened at a specific time in the past.</p>
+                <div class="u-ex">"Hier, Aksa a réussi son examen de français."</div>
+                <div class="u-tip"><strong>CBSE Tip:</strong> Triggered by: hier, soudain, tout à coup.</div>
+              </div>
+              <div class="usage-card-item">
+                <div class="u-badge" style="background:#ed293922;color:#ed2939;">USAGE 2 • SUCCESSIVE EVENTS</div>
+                <h4 class="u-title">Series of Past Actions</h4>
+                <p class="u-desc">Describes a sequence of consecutive past events.</p>
+                <div class="u-ex">"Rohan s'est levé, a pris son petit-déjeuner et est parti."</div>
+                <div class="u-tip"><strong>CBSE Tip:</strong> Story sequence = Passé Composé.</div>
+              </div>
+              <div class="usage-card-item">
+                <div class="u-badge" style="background:#15803d22;color:#15803d;">USAGE 3 • LIMITED DURATION</div>
+                <h4 class="u-title">Action with Defined Duration</h4>
+                <p class="u-desc">Expresses an action with clear start and end time limits.</p>
+                <div class="u-ex">"Trisha a vécu à Paris pendant trois ans."</div>
+                <div class="u-tip"><strong>CBSE Tip:</strong> Action finished = Passé Composé!</div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <!-- ============ TOPIC 6: LE PLUS-QUE-PARFAIT ============ -->
+      <section id="le-plus-que-parfait" data-topic="plus-que-parfait" data-topic-name="Le Plus-que-parfait">
+        <section id="pqp-1" data-step="Description & Formule">
+          <div class="slide-card">
+            <div class="flag-stripe"></div>
+            <div class="step-ribbon"><span class="sr-n">6</span> Formation</div>
+            <div class="card-hero">
+              <h2>Le Plus-que-parfait — Imparfait d'Avoir/Être + Participe Passé</h2>
+              <p class="subtitle">Action completed prior to another past action ('had done')</p>
+            </div>
+            <div class="formula-pipeline">
+              <div class="formula-step-box">
+                <div class="formula-step-label">Auxiliaire (Imparfait)</div>
+                <div class="formula-step-val">avais / étais</div>
+              </div>
+              <div class="formula-op">+</div>
+              <div class="formula-step-box" style="border-color:#16a34a;">
+                <div class="formula-step-label">Participe Passé</div>
+                <div class="formula-step-val" style="color:#15803d;">mangé / parti(e)</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="pqp-usages" data-step="Usages & Applications">
+          <div class="slide-card">
+            <div class="flag-stripe"></div>
+            <div class="step-ribbon"><span class="sr-n">📌</span> Usages</div>
+            <h2>📌 Key Usages of Le Plus-que-parfait</h2>
+            <p class="subtitle">Sequence of tenses in past narratives</p>
+            <div class="usages-grid-dedicated" style="grid-template-columns:repeat(2, 1fr) !important;">
+              <div class="usage-card-item">
+                <div class="u-badge" style="background:#00239522;color:#002395;">USAGE 1 • ANTERIORITY IN PAST</div>
+                <h4 class="u-title">Past Action Before Another Past Action</h4>
+                <p class="u-desc">Expresses an action completed before another past event (Passé Composé/Imparfait).</p>
+                <div class="u-ex">"Quand Kevin est arrivé, Diya avait déjà fini ses devoirs."</div>
+                <div class="u-tip"><strong>CBSE Trigger:</strong> Triggers after quand, lorsque, dès que in past context.</div>
+              </div>
+              <div class="usage-card-item">
+                <div class="u-badge" style="background:#ed293922;color:#ed2939;">USAGE 2 • HYPOTHESIS WITH SI</div>
+                <h4 class="u-title">Unfulfilled Past Condition (Si + PQP)</h4>
+                <p class="u-desc">Used after 'si' to express regrets or unfulfilled past conditions.</p>
+                <div class="u-ex">"Si Rohan avait étudié, il aurait réussi l'examen."</div>
+                <div class="u-tip"><strong>CBSE Tip:</strong> Si + Plus-que-parfait ➔ Conditionnel Passé!</div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <!-- ============ TOPIC 7: LE FUTUR SIMPLE & FUTUR ANTÉRIEUR ============ -->
+      <section id="le-futur-simple-anterieur" data-topic="futur" data-topic-name="Le Futur Simple & Futur Antérieur">
+        <section id="futur-1" data-step="Description & Formule">
+          <div class="slide-card">
+            <div class="flag-stripe"></div>
+            <div class="step-ribbon"><span class="sr-n">7</span> Formation</div>
+            <div class="card-hero">
+              <h2>Le Futur Simple &amp; Futur Antérieur</h2>
+              <p class="subtitle">Future events and action ordering in future narratives</p>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:10px;">
+              <div style="background:var(--box-blue-bg);padding:14px;border-radius:8px;border-left:4px solid #002395;">
+                <h4 style="color:#002395;">Futur Simple</h4>
+                <p style="font-size:0.92rem;color:var(--text-muted);">Infinitif + -ai, -as, -a, -ons, -ez, -ont</p>
+                <div class="u-ex">"Aksa parlera avec le professeur."</div>
+              </div>
+              <div style="background:var(--box-gold-bg);padding:14px;border-radius:8px;border-left:4px solid #b45309;">
+                <h4 style="color:#b45309;">Futur Antérieur (Action 1)</h4>
+                <p style="font-size:0.92rem;color:var(--text-muted);">Futur d'avoir/être + Participe passé</p>
+                <div class="u-ex">"Aussitôt que Trisha aura fini, elle sortira."</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="futur-usages" data-step="Usages & Applications">
+          <div class="slide-card">
+            <div class="flag-stripe"></div>
+            <div class="step-ribbon"><span class="sr-n">📌</span> Usages</div>
+            <h2>📌 Action Order: Futur Antérieur ➔ Futur Simple</h2>
+            <p class="subtitle">Essential CBSE Board Conjunction Triggers</p>
+            <div class="usages-grid-dedicated" style="grid-template-columns:repeat(2, 1fr) !important;">
+              <div class="usage-card-item">
+                <div class="u-badge" style="background:#00239522;color:#002395;">RULE 1 • TIME CONJUNCTIONS</div>
+                <h4 class="u-title">Quand / Lorsque / Dès que / Aussitôt que</h4>
+                <p class="u-desc">Action 1 (First in future) uses Futur Antérieur. Action 2 (Second) uses Futur Simple.</p>
+                <div class="u-ex">"Dès que Kevin sera arrivé (FA), nous dînerons (FS)."</div>
+                <div class="u-tip"><strong>CBSE Rule:</strong> FA happens BEFORE FS in the future!</div>
+              </div>
+              <div class="usage-card-item">
+                <div class="u-badge" style="background:#15803d22;color:#15803d;">RULE 2 • HYPOTHESIS WITH SI</div>
+                <h4 class="u-title">Real Future Condition (Si + Présent)</h4>
+                <p class="u-desc">Expresses real conditions in the future.</p>
+                <div class="u-ex">"Si Jacob travaille bien, il réussira son brevet."</div>
+                <div class="u-tip"><strong>CBSE Rule:</strong> Si + Présent ➔ Futur Simple / Impératif!</div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <!-- ============ TOPIC 8: LE CONDITIONNEL PRÉSENT ============ -->
+      <section id="le-conditionnel" data-topic="conditionnel" data-topic-name="Le Conditionnel Présent">
+        <section id="conditionnel-1" data-step="Description & Formule">
+          <div class="slide-card">
+            <div class="flag-stripe"></div>
+            <div class="step-ribbon"><span class="sr-n">8</span> Formation</div>
+            <div class="card-hero">
+              <h2>Le Conditionnel Présent — Radical Futur + Terminaisons Imparfait</h2>
+              <p class="subtitle">Polite requests, advice, and hypothetical situations ('would / could')</p>
+            </div>
+            <div class="formula-pipeline">
+              <div class="formula-step-box">
+                <div class="formula-step-label">Radical du Futur</div>
+                <div class="formula-step-val">parler- / ser-</div>
+              </div>
+              <div class="formula-op">+</div>
+              <div class="formula-step-box" style="border-color:#16a34a;">
+                <div class="formula-step-label">Terminaisons Imparfait</div>
+                <div class="formula-step-val" style="color:#15803d;">-ais, -ais, -ait, -ions, -iez, -aient</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="conditionnel-usages" data-step="Usages & Applications">
+          <div class="slide-card">
+            <div class="flag-stripe"></div>
+            <div class="step-ribbon"><span class="sr-n">📌</span> Usages</div>
+            <h2>📌 3 Key Usages of Le Conditionnel Présent</h2>
+            <p class="subtitle">Politeness, advice, and Si clauses in CBSE Board Exams</p>
+            <div class="usages-grid-dedicated">
+              <div class="usage-card-item">
+                <div class="u-badge" style="background:#00239522;color:#002395;">USAGE 1 • POLITENESS</div>
+                <h4 class="u-title">Polite Requests (Politesse)</h4>
+                <p class="u-desc">Softens requests and wishes with vouloir, pouvoir, aimer.</p>
+                <div class="u-ex">"Je voudrais un verre d'eau, s'il vous plaît."</div>
+                <div class="u-tip"><strong>CBSE Tip:</strong> Voudrais, pourrais, aimerais.</div>
+              </div>
+              <div class="usage-card-item">
+                <div class="u-badge" style="background:#ed293922;color:#ed2939;">USAGE 2 • ADVICE</div>
+                <h4 class="u-title">Giving Advice (Conseil)</h4>
+                <p class="u-desc">Used with devoir or falloir to give friendly advice.</p>
+                <div class="u-ex">"Tu devrais étudier plus régulièrement, Rohan."</div>
+                <div class="u-tip"><strong>CBSE Tip:</strong> Tu devrais + infinitif.</div>
+              </div>
+              <div class="usage-card-item">
+                <div class="u-badge" style="background:#15803d22;color:#15803d;">USAGE 3 • HYPOTHESIS</div>
+                <h4 class="u-title">Si + Imparfait ➔ Conditionnel</h4>
+                <p class="u-desc">Expresses potential or unreal present conditions.</p>
+                <div class="u-ex">"Si j'avais de l'argent, j'achèterais ce livre."</div>
+                <div class="u-tip"><strong>CBSE Rule:</strong> Si + Imparfait ➔ Conditionnel Présent!</div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <!-- ============ TOPIC 9: LES VERBES PRONOMINAUX ============ -->
+      <section id="les-verbes-pronominaux" data-topic="pronominaux" data-topic-name="Les Verbes Pronominaux">
+        <section id="pronominaux-1" data-step="Description & Pronoms">
+          <div class="slide-card">
+            <div class="flag-stripe"></div>
+            <div class="step-ribbon"><span class="sr-n">9</span> Pronominaux</div>
+            <div class="card-hero">
+              <h2>Les Verbes Pronominaux — Pronom Réfléchi + Verbe</h2>
+              <p class="subtitle">Reflexive actions, daily routines, and reciprocal verbs</p>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(3, 1fr);gap:14px;margin-top:12px;">
+              <div style="background:var(--box-blue-bg);padding:14px;border-radius:8px;">
+                <h4 style="color:#002395;">Présent (se lever)</h4>
+                <p style="font-size:0.9rem;color:var(--text-muted);">
+                  je me lève<br>tu te lèves<br>il se lève<br>nous nous levons<br>vous vous levez<br>ils se lèvent
+                </p>
+              </div>
+              <div style="background:var(--box-gold-bg);padding:14px;border-radius:8px;">
+                <h4 style="color:#b45309;">Passé Composé (Être)</h4>
+                <p style="font-size:0.9rem;color:var(--text-muted);">
+                  Je me suis levé(e)<br>Tu t'es levé(e)<br>Il s'est levé / Elle s'est levée<br>Nous nous sommes levé(e)s
+                </p>
+              </div>
+              <div style="background:var(--box-blue-bg);padding:14px;border-radius:8px;">
+                <h4 style="color:#15803d;">Règle d'Accord CBSE</h4>
+                <p style="font-size:0.9rem;color:var(--text-muted);">
+                  Agreement with subject EXCEPT when direct object follows!<br>
+                  <em>Elle s'est lavée.</em> BUT <em>Elle s'est lavé les mains.</em>
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <!-- ============ TOPIC 10: LE SUBJONCTIF ============ -->
+      <section id="le-subjonctif" data-topic="subjonctif" data-topic-name="Le Subjonctif Présent">
+        <section id="subjonctif-1" data-step="Description & Formule">
+          <div class="slide-card">
+            <div class="flag-stripe"></div>
+            <div class="step-ribbon"><span class="sr-n">10</span> Formation</div>
+            <div class="card-hero">
+              <h2>Le Subjonctif — Radical ils/elles + -e, -es, -e, -ions, -iez, -ent</h2>
+              <p class="subtitle">Expressing necessity, desire, emotion, and doubt after 'que'</p>
+            </div>
+            <div class="formula-pipeline">
+              <div class="formula-step-box">
+                <div class="formula-step-label">Ils/Elles du Présent</div>
+                <div class="formula-step-val">finissent</div>
+              </div>
+              <div class="formula-op">➜ Drop -ent</div>
+              <div class="formula-step-box">
+                <div class="formula-step-label">Radical Subjonctif</div>
+                <div class="formula-step-val">finiss-</div>
+              </div>
+              <div class="formula-op">+</div>
+              <div class="formula-step-box" style="border-color:#16a34a;">
+                <div class="formula-step-label">Terminaisons</div>
+                <div class="formula-step-val" style="color:#15803d;">-e, -es, -e, -ions, -iez, -ent</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="subjonctif-usages-part1" data-step="Usages (1/2)">
+          <div class="slide-card">
+            <div class="flag-stripe"></div>
+            <div class="step-ribbon"><span class="sr-n">📌</span> Usages (1/2)</div>
+            <h2>📌 Mandatory Triggers of Le Subjonctif (Part 1/2)</h2>
+            <p class="subtitle">Mandatory CBSE Section C Grammar Triggers</p>
+            <div class="usages-grid-dedicated">
+              <div class="usage-card-item">
+                <div class="u-badge" style="background:#00239522;color:#002395;">USAGE 1 • NECESSITY</div>
+                <h4 class="u-title">Obligation (Il faut que)</h4>
+                <p class="u-desc">Used after expressions of necessity and obligation.</p>
+                <div class="u-ex">"Il faut que Jacob fasse ses devoirs."</div>
+                <div class="u-tip"><strong>CBSE Trigger:</strong> Il faut que, Il est nécessaire que.</div>
+              </div>
+              <div class="usage-card-item">
+                <div class="u-badge" style="background:#ed293922;color:#ed2939;">USAGE 2 • DESIRE &amp; WILL</div>
+                <h4 class="u-title">Wishes &amp; Orders (Vouloir que)</h4>
+                <p class="u-desc">Used after verbs expressing desire, preference, or order.</p>
+                <div class="u-ex">"Le professeur veut que Kevin étudie bien."</div>
+                <div class="u-tip"><strong>CBSE Trigger:</strong> Vouloir que, Désirer que, Exiger que.</div>
+              </div>
+              <div class="usage-card-item">
+                <div class="u-badge" style="background:#15803d22;color:#15803d;">USAGE 3 • EMOTION</div>
+                <h4 class="u-title">Feelings &amp; Sentiments (Être content que)</h4>
+                <p class="u-desc">Used after expressions of joy, fear, regret, or surprise.</p>
+                <div class="u-ex">"Je suis ravi que Diya soit présente."</div>
+                <div class="u-tip"><strong>CBSE Trigger:</strong> Être content/triste/surpris que.</div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <!-- ============ TOPIC 11: LA NÉGATION ============ -->
+      <section id="la-negation" data-topic="negation" data-topic-name="La Négation Complexe">
+        <section id="negation-1" data-step="Description & Rules">
+          <div class="slide-card">
+            <div class="flag-stripe"></div>
+            <div class="step-ribbon"><span class="sr-n">11</span> Négation</div>
+            <div class="card-hero">
+              <h2>La Négation Complexe — Ne ... Pas / Jamais / Rien / Personne / Ni...Ni</h2>
+              <p class="subtitle">Transforming affirmative statements into complete negative structures</p>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(4, 1fr);gap:12px;margin-top:14px;">
+              <div style="background:var(--box-blue-bg);padding:12px;border-radius:8px;">
+                <h4 style="color:#002395;">Quelque chose ➜ Ne...Rien</h4>
+                <p style="font-size:0.88rem;color:var(--text-muted);">Diya mange quelque chose ➜ Diya ne mange rien.</p>
+              </div>
+              <div style="background:var(--box-gold-bg);padding:12px;border-radius:8px;">
+                <h4 style="color:#b45309;">Quelqu'un ➜ Ne...Personne</h4>
+                <p style="font-size:0.88rem;color:var(--text-muted);">Kevin voit quelqu'un ➜ Kevin ne voit personne.</p>
+              </div>
+              <div style="background:var(--box-blue-bg);padding:12px;border-radius:8px;">
+                <h4 style="color:#15803d;">Toujours ➜ Ne...Jamais</h4>
+                <p style="font-size:0.88rem;color:var(--text-muted);">Trisha va toujours au parc ➜ Trisha n'y va jamais.</p>
+              </div>
+              <div style="background:var(--box-blue-bg);padding:12px;border-radius:8px;">
+                <h4 style="color:#7e22ce;">Encore ➜ Ne...Plus</h4>
+                <p style="font-size:0.88rem;color:var(--text-muted);">Aksa travaille encore ➜ Aksa ne travaille plus.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <!-- ============ TOPIC 12: LA NOMINALISATION ============ -->
+      <section id="nominalisation" data-topic="nominalisation" data-topic-name="🏷️ La Nominalisation (Verbe ➔ Nom)">
+        <section id="nominalisation-1" data-step="Description & Suffixes">
+          <div class="slide-card">
+            <div class="flag-stripe"></div>
+            <div class="step-ribbon"><span class="sr-n">12</span> Transformation</div>
+            <div class="card-hero">
+              <h2>La Nominalisation — Transformer un Verbe en Nom</h2>
+              <p class="subtitle">Essential CBSE Section B Skill: Suffix Rules (-tion, -ment, -age, -ure)</p>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(4, 1fr);gap:12px;margin-top:16px;">
+              <div style="background:var(--box-blue-bg);padding:14px;border-radius:8px;border-top:4px solid #002395;">
+                <h4 style="color:#002395;">Suffixe -TION</h4>
+                <p style="font-size:0.9rem;color:var(--text-muted);">Partir ➔ Le départ<br>Inscrire ➔ L'inscription</p>
+              </div>
+              <div style="background:var(--box-gold-bg);padding:14px;border-radius:8px;border-top:4px solid #b45309;">
+                <h4 style="color:#b45309;">Suffixe -MENT</h4>
+                <p style="font-size:0.9rem;color:var(--text-muted);">Changer ➔ Le changement<br>Développer ➔ Le développement</p>
+              </div>
+              <div style="background:var(--box-blue-bg);padding:14px;border-radius:8px;border-top:4px solid #15803d;">
+                <h4 style="color:#15803d;">Suffixe -AGE</h4>
+                <p style="font-size:0.9rem;color:var(--text-muted);">Nettoyer ➔ Le nettoyage<br>Laver ➔ Le lavage</p>
+              </div>
+              <div style="background:var(--box-blue-bg);padding:14px;border-radius:8px;border-top:4px solid #7e22ce;">
+                <h4 style="color:#7e22ce;">Suffixe -URE</h4>
+                <p style="font-size:0.9rem;color:var(--text-muted);">Fermer ➔ La fermeture<br>Ouvrir ➔ L'ouverture</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="nominalisation-usages" data-step="Usages & Applications">
+          <div class="slide-card">
+            <div class="flag-stripe"></div>
+            <div class="step-ribbon"><span class="sr-n">📌</span> Usages</div>
+            <h2>📌 4 Key Usages of La Nominalisation</h2>
+            <p class="subtitle">Converting clauses to formal noun phrases in CBSE Board Exams</p>
+            <div class="usages-grid-dedicated" style="grid-template-columns:repeat(2, 1fr) !important;">
+              <div class="usage-card-item">
+                <div class="u-badge" style="background:#00239522;color:#002395;">USAGE 1 • NEWSPAPER TITLES</div>
+                <h4 class="u-title">Headings &amp; Media Headlines</h4>
+                <p class="u-desc">Transforms verb sentences into concise, high-impact titles.</p>
+                <div class="u-ex">"Le train arrive ➔ L'arrivée du train."</div>
+                <div class="u-tip"><strong>CBSE Tip:</strong> Essential for CBSE Section B writing tasks!</div>
+              </div>
+              <div class="usage-card-item">
+                <div class="u-badge" style="background:#ed293922;color:#ed2939;">USAGE 2 • OFFICIAL NOTICES</div>
+                <h4 class="u-title">Official Announcements &amp; Rules</h4>
+                <p class="u-desc">Expresses administrative actions as formal noun phrases.</p>
+                <div class="u-ex">"Inscrire les candidats ➔ L'inscription de Diya."</div>
+                <div class="u-tip"><strong>CBSE Tip:</strong> Common suffixes: -tion, -ment, -age, -ure.</div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <!-- ============ TOPIC 13: LES PRONOMS PERSONNELS & RELATIFS ============ -->
+      <section id="les-pronoms" data-topic="pronoms" data-topic-name="Les Pronoms Personnels & Relatifs">
+        <section id="pronoms-1" data-step="COD, COI, Y, EN & Relatifs">
+          <div class="slide-card">
+            <div class="flag-stripe"></div>
+            <div class="step-ribbon"><span class="sr-n">13</span> Pronoms</div>
+            <div class="card-hero">
+              <h2>Les Pronoms Personnels (COD, COI, Y, EN) &amp; Relatifs</h2>
+              <p class="subtitle">Replacing direct/indirect objects and combining clauses with Qui, Que, Où, Dont</p>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(4, 1fr);gap:12px;margin-top:12px;">
+              <div style="background:var(--box-blue-bg);padding:12px;border-radius:8px;">
+                <h4 style="color:#002395;">COD (Direct)</h4>
+                <p style="font-size:0.88rem;color:var(--text-muted);">me, te, le, la, nous, vous, les<br><em>Aksa voit le film ➔ Aksa le voit.</em></p>
+              </div>
+              <div style="background:var(--box-gold-bg);padding:12px;border-radius:8px;">
+                <h4 style="color:#b45309;">COI (Indirect)</h4>
+                <p style="font-size:0.88rem;color:var(--text-muted);">me, te, lui, nous, vous, leur<br><em>Diya parle à Kevin ➔ Diya lui parle.</em></p>
+              </div>
+              <div style="background:var(--box-blue-bg);padding:12px;border-radius:8px;">
+                <h4 style="color:#15803d;">Y &amp; EN</h4>
+                <p style="font-size:0.88rem;color:var(--text-muted);">Y = Place / À + Thing<br>EN = De + Thing / Quantity<br><em>Rohan va à Paris ➔ Rohan y va.</em></p>
+              </div>
+              <div style="background:var(--box-blue-bg);padding:12px;border-radius:8px;">
+                <h4 style="color:#7e22ce;">Relatifs</h4>
+                <p style="font-size:0.88rem;color:var(--text-muted);">QUI (S), QUE (O), OÙ (Place/Time), DONT (de + obj)</p>
+              </div>
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <!-- ============ TOPIC 14: DISCOURS DIRECT / INDIRECT ============ -->
+      <section id="discours-direct-indirect" data-topic="discours" data-topic-name="Discours Direct & Indirect">
+        <section id="discours-1" data-step="Règles de Concordance">
+          <div class="slide-card">
+            <div class="flag-stripe"></div>
+            <div class="step-ribbon"><span class="sr-n">14</span> Discours</div>
+            <div class="card-hero">
+              <h2>Discours Direct et Indirect — Concordance des Temps</h2>
+              <p class="subtitle">Reporting statements, questions, and commands when introductory verb is in the past</p>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:12px;">
+              <div style="background:var(--box-blue-bg);padding:14px;border-radius:8px;border-left:4px solid #002395;">
+                <h4 style="color:#002395;">Changements de Temps (Past Intro Verb)</h4>
+                <p style="font-size:0.9rem;color:var(--text-muted);">
+                  • Présent ➔ Imparfait<br>
+                  • Passé Composé ➔ Plus-que-parfait<br>
+                  • Futur Simple ➔ Conditionnel Présent
+                </p>
+              </div>
+              <div style="background:var(--box-gold-bg);padding:14px;border-radius:8px;border-left:4px solid #b45309;">
+                <h4 style="color:#b45309;">Exemple CBSE</h4>
+                <div class="u-ex">Direct: Kevin a dit: "Je suis fatigué."<br>Indirect: Kevin a dit qu'il était fatigué.</div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <!-- ============ TOPIC 15: TROUVEZ LA QUESTION ============ -->
+      <section id="trouvez-la-question" data-topic="trouvez-question" data-topic-name="Trouvez la Question">
+        <section id="question-1" data-step="Formulation des Questions">
+          <div class="slide-card">
+            <div class="flag-stripe"></div>
+            <div class="step-ribbon"><span class="sr-n">15</span> Questions</div>
+            <div class="card-hero">
+              <h2>Trouvez la Question — Mots Interrogatifs &amp; Inversion</h2>
+              <p class="subtitle">Formulating questions for highlighted answers in CBSE Section C</p>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(3, 1fr);gap:12px;margin-top:12px;">
+              <div style="background:var(--box-blue-bg);padding:12px;border-radius:8px;">
+                <h4 style="color:#002395;">Qui / Que</h4>
+                <p style="font-size:0.88rem;color:var(--text-muted);">Qui = Person (Who)<br>Que / Qu'est-ce que = Thing (What)</p>
+                <div class="u-ex">"C'est Diya ➔ Qui est-ce ?"</div>
+              </div>
+              <div style="background:var(--box-gold-bg);padding:12px;border-radius:8px;">
+                <h4 style="color:#b45309;">Où / Quand / Pourquoi</h4>
+                <p style="font-size:0.88rem;color:var(--text-muted);">Où = Place | Quand = Time<br>Pourquoi = Reason (Parce que)</p>
+                <div class="u-ex">"Il va à Paris ➔ Où va-t-il ?"</div>
+              </div>
+              <div style="background:var(--box-blue-bg);padding:12px;border-radius:8px;">
+                <h4 style="color:#15803d;">Comment / Combien</h4>
+                <p style="font-size:0.88rem;color:var(--text-muted);">Comment = Means/Manner<br>Combien de = Quantity</p>
+                <div class="u-ex">"50 euros ➔ Combien coûte ce livre ?"</div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <!-- ============ TOPIC 16: LES POSSESSIFS ET DÉMONSTRATIFS ============ -->
+      <section id="possessifs-demonstratifs" data-topic="possessifs-demonstratifs" data-topic-name="Les Possessifs et Démonstratifs">
+        <section id="possessifs-1" data-step="Adjectifs & Pronoms">
+          <div class="slide-card">
+            <div class="flag-stripe"></div>
+            <div class="step-ribbon"><span class="sr-n">16</span> Possessifs / Démonstratifs</div>
+            <div class="card-hero">
+              <h2>Les Adjectifs et Pronoms Possessifs / Démonstratifs</h2>
+              <p class="subtitle">Expressing ownership and pointing out nouns in French</p>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:12px;">
+              <div style="background:var(--box-blue-bg);padding:14px;border-radius:8px;border-left:4px solid #002395;">
+                <h4 style="color:#002395;">Possessifs</h4>
+                <p style="font-size:0.88rem;color:var(--text-muted);">
+                  • Adjectifs: mon/ma/mes, ton/ta/tes, son/sa/ses, notre/nos, votre/vos, leur/leurs<br>
+                  • Pronoms: le mien, la mienne, les miens, le sien, le nôtre, le leur
+                </p>
+              </div>
+              <div style="background:var(--box-gold-bg);padding:14px;border-radius:8px;border-left:4px solid #b45309;">
+                <h4 style="color:#b45309;">Démonstratifs</h4>
+                <p style="font-size:0.88rem;color:var(--text-muted);">
+                  • Adjectifs: ce, cet (masc. voyelle), cette, ces<br>
+                  • Pronoms: celui, celle, ceux, celles (-ci / -là)
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <!-- ============ TOPIC 17: RÉVISION MIXTE CBSE ============ -->
+      <section id="revision-mixte" data-topic="revision-mixte" data-topic-name="🎓 Révision Mixte & Practice Board">
+        <section id="revision-1" data-step="CBSE Board Master Practice">
+          <div class="slide-card">
+            <div class="flag-stripe"></div>
+            <div class="step-ribbon"><span class="sr-n">🎓</span> Board Master</div>
+            <div class="card-hero">
+              <h2>Révision Mixte — CBSE Board Exam Challenge</h2>
+              <p class="subtitle">Complete grammar synthesis covering all Section B &amp; C board exam patterns</p>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(3, 1fr);gap:14px;margin-top:14px;">
+              <div style="background:var(--box-blue-bg);padding:14px;border-radius:8px;">
+                <h4 style="color:#002395;">Section B • Writing</h4>
+                <p style="font-size:0.88rem;color:var(--text-muted);">Lettre, Message, Invitation, Nominalisation headlines.</p>
+              </div>
+              <div style="background:var(--box-gold-bg);padding:14px;border-radius:8px;">
+                <h4 style="color:#b45309;">Section C • Grammar</h4>
+                <p style="font-size:0.88rem;color:var(--text-muted);">Concordance des temps, Subjonctif, Négation, Pronoms, Questions.</p>
+              </div>
+              <div style="background:var(--box-blue-bg);padding:14px;border-radius:8px;">
+                <h4 style="color:#15803d;">Board Target</h4>
+                <p style="font-size:0.88rem;color:var(--text-muted);">100/100 Full Marks Strategy for CBSE French Class 10!</p>
+              </div>
+            </div>
+          </div>
+        </section>
+      </section>
+
+      </div><!-- /.slides -->
+  </div><!-- /.reveal -->
+</div><!-- /.reveal-shell -->
+
+<!-- ============ PERMANENT BOTTOM HUD ============ -->
+<div class="hud">
+  <button class="nav-btn" id="prevBtn" title="Previous slide">◄ Préc</button>
+  <span class="slide-counter" id="slideCounter">—</span>
+  <button class="nav-btn" id="nextBtn" title="Next slide">Suiv ►</button>
+  <button class="nav-btn" id="fsBtn" title="Toggle Fullscreen">⛶</button>
+</div>
+
+<!-- ============ SEARCH MODAL OVERLAY ============ -->
+<div id="searchModalOverlay">
+  <div class="search-card">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+      <h3 style="margin:0;color:#60a5fa;">🔍 Quick Search CBSE Grammar</h3>
+      <button id="closeSearchBtn" style="background:none;border:none;color:#94a3b8;cursor:pointer;font-size:1.2rem;">✕</button>
+    </div>
+    <input type="text" id="searchInput" class="search-input" placeholder="Type topic name (e.g. Subjonctif, COD, Timeline)..." />
+    <div id="searchResults" class="search-results"></div>
+  </div>
+</div>
+
+<!-- ============ SETTINGS PANEL OVERLAY ============ -->
+<div id="settingsPanel">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+    <h3 style="margin:0;color:#60a5fa;">⚙️ Customization Settings</h3>
+    <button id="closeSettingsBtn" style="background:none;border:none;color:#94a3b8;cursor:pointer;font-size:1.2rem;">✕</button>
+  </div>
+  
+  <div class="settings-group">
+    <label for="fontScaleSlider" style="display:flex;justify-content:space-between;align-items:center;">
+      <span>🔤 Manual Text Scale (90% – 200%)</span>
+      <span id="fontScaleVal" style="color:#60a5fa;font-weight:800;">100%</span>
+    </label>
+    <div style="display:flex;align-items:center;gap:10px;margin-top:6px;">
+      <span style="font-size:0.8rem;color:#94a3b8;">90%</span>
+      <input type="range" id="fontScaleSlider" min="90" max="200" value="100" step="5" style="flex:1;cursor:pointer;accent-color:#3b82f6;" />
+      <span style="font-size:0.8rem;color:#94a3b8;">200%</span>
+    </div>
+  </div>
+
+  <div class="settings-group">
+    <label>Theme Selection</label>
+    <select id="themeSelect" class="tb-select" style="width:100%;">
+      <option value="theme-classic">Classic Crisp White (Default Light)</option>
+      <option value="theme-slate">Slate Navy (Dark High-Contrast)</option>
+      <option value="theme-emerald">EdTech Emerald Green</option>
+      <option value="theme-purple">Royal Purple</option>
+    </select>
+  </div>
+</div>
+
+<!-- ============ SIDEBAR MENU ============ -->
+<div id="sidebar">
+  <h3 style="color:#60a5fa;margin-bottom:14px;">📑 Table of Contents</h3>
+  <div id="sidebarList"></div>
+</div>
+
+<!-- Reveal.js Engine Library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.js"></script>
+
+<script>
+/* ============================================================
+   CBSE CLASS 10 FRENCH BOARD MASTER — JAVASCRIPT ENGINE
+   ============================================================ */
+(function() {
+  'use strict';
+
+  // 1. LocalStorage Helper
+  const ls = {
+    get: (k, d) => localStorage.getItem(k) || d,
+    set: (k, v) => localStorage.setItem(k, v)
+  };
+
+  // 2. DOM Helper
+  const $ = (sel, root) => (root || document).querySelector(sel);
+  const $$ = (sel, root) => Array.from((root || document).querySelectorAll(sel));
+
+  // 3. Reveal Deck Initialization
+  const Deck = new Reveal({
+    width: 1400,
+    height: 768,
+    margin: 0.02,
+    minScale: 0.2,
+    maxScale: 1.5,
+    center: true,
+    hash: false,
+    controls: false,
+    progress: false,
+    slideNumber: false,
+    transition: 'slide',
+    backgroundTransition: 'fade'
+  });
+  window.Deck = Deck;
+
+  // 4. Topics Catalog Data
+  const TOPICS = [
+    { key: 'conjugaison-lab', name: '⚡ Conjugaison Engine & Speed Drill', slides: 2 },
+    { key: 'tense-timeline', name: '⏳ Visual Tense Timeline', slides: 1 },
+    { key: 'le-present', name: "Le Présent de l'Indicatif", slides: 3 },
+    { key: 'limparfait', name: "L'Imparfait de l'Indicatif", slides: 2 },
+    { key: 'le-passe-compose', name: 'Le Passé Composé', slides: 2 },
+    { key: 'le-plus-que-parfait', name: 'Le Plus-que-parfait', slides: 2 },
+    { key: 'le-futur-simple-anterieur', name: 'Le Futur Simple & Futur Antérieur', slides: 2 },
+    { key: 'le-conditionnel', name: 'Le Conditionnel Présent', slides: 2 },
+    { key: 'les-verbes-pronominaux', name: 'Les Verbes Pronominaux', slides: 1 },
+    { key: 'le-subjonctif', name: 'Le Subjonctif Présent', slides: 2 },
+    { key: 'la-negation', name: 'La Négation Complexe', slides: 1 },
+    { key: 'nominalisation', name: '🏷️ La Nominalisation (Verbe ➔ Nom)', slides: 2 },
+    { key: 'les-pronoms', name: 'Les Pronoms Personnels & Relatifs', slides: 1 },
+    { key: 'discours-direct-indirect', name: 'Discours Direct & Indirect', slides: 1 },
+    { key: 'trouvez-la-question', name: 'Trouvez la Question', slides: 1 },
+    { key: 'possessifs-demonstratifs', name: 'Les Possessifs et Démonstratifs', slides: 1 },
+    { key: 'revision-mixte', name: '🎓 Révision Mixte & Practice Board', slides: 1 }
+  ];
+
+  // 5. Render Topic Menu Dropdown
+  function renderTopicMenu() {
+    const menu = $('#topicMenu');
+    if (!menu) return;
+    menu.innerHTML = TOPICS.map(t => `
+      <div class="topic-menu-item" data-key="${t.key}">
+        <span>${t.name}</span>
+        <span style="font-size:0.75rem;opacity:0.6;">${t.slides} slides</span>
+      </div>
+    `).join('');
+
+    menu.querySelectorAll('.topic-menu-item').forEach(item => {
+      item.addEventListener('click', () => {
+        const key = item.dataset.key;
+        jumpToTopic(key);
+        menu.classList.remove('open');
+      });
+    });
+  }
+
+  // 6. Navigation Jump Helper
+  function jumpToTopic(key) {
+    const sections = $$('#slidesRoot > section');
+    const idx = sections.findIndex(s => s.id === key || s.dataset.topic === key);
+    if (idx !== -1) {
+      Deck.slide(idx, 0);
+    } else {
+      const target = $('#' + key);
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  }
+  window.jumpToTopic = jumpToTopic;
+
+  // 7. Update HUD Display
+  function updateHud() {
+    const counter = $('#slideCounter');
+    const prevBtn = $('#prevBtn');
+    const nextBtn = $('#nextBtn');
+    const indices = Deck.getIndices();
+    
+    if (counter) {
+      const activeSlide = Deck.getCurrentSlide();
+      const topicName = activeSlide ? (activeSlide.dataset.step || 'Grammaire') : '';
+      counter.textContent = `${indices.h + 1}.${indices.v + 1} — ${topicName}`;
+    }
+    if (prevBtn) prevBtn.disabled = (indices.h === 0 && indices.v === 0);
+    if (nextBtn) nextBtn.disabled = Deck.isLastSlide();
+  }
+
+  // 8. Sound FX Helper (Web Audio API)
+  function playSound(type) {
+    if (ls.get('sound_enabled', '0') !== '1') return;
+    try {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.frequency.value = type === 'click' ? 440 : 880;
+      gain.gain.setValueAtTime(0.1, ctx.currentTime);
+      osc.start(); osc.stop(ctx.currentTime + 0.08);
+    } catch(e) {}
+  }
+
+  // 9. Theme Controller
+  function applyTheme(name) {
+    Array.from(document.body.classList).filter(c => c.startsWith('theme-')).forEach(c => document.body.classList.remove(c));
+    document.body.classList.add(name);
+    ls.set('theme', name);
+    const sel = $('#themeSelect'); if (sel) sel.value = name;
+  }
+
+  function toggleLight() {
+    const cur = Array.from(document.body.classList).find(c => c.startsWith('theme-')) || 'theme-classic';
+    if (cur === 'theme-classic') applyTheme('theme-slate');
+    else applyTheme('theme-classic');
+  }
+
+  // 10. Manual Font Scale Controller (90% - 200%)
+  function applyFontScale(percent) {
+    const val = parseInt(percent, 10) || 100;
+    const scale = val / 100;
+    document.documentElement.style.setProperty('--custom-font-scale', scale);
+    const valEl = $('#fontScaleVal'); if (valEl) valEl.textContent = val + '%';
+    const slider = $('#fontScaleSlider'); if (slider) slider.value = val;
+    ls.set('user_font_scale', val);
+  }
+
+  // 11. Search Overlay Controller
+  function openSearch() {
+    const overlay = $('#searchModalOverlay');
+    const input = $('#searchInput');
+    if (overlay) {
+      overlay.classList.add('show');
+      if (input) { input.focus(); input.value = ''; renderSearchResults(''); }
+    }
+  }
+  function closeSearch() {
+    const overlay = $('#searchModalOverlay');
+    if (overlay) overlay.classList.remove('show');
+  }
+
+  function renderSearchResults(q) {
+    const results = $('#searchResults');
+    if (!results) return;
+    const query = q.toLowerCase().trim();
+    const matches = TOPICS.filter(t => !query || t.name.toLowerCase().includes(query) || t.key.includes(query));
+    
+    if (matches.length === 0) {
+      results.innerHTML = '<div style="padding:15px;color:#94a3b8;">No matching grammar topic found.</div>';
+      return;
+    }
+
+    results.innerHTML = matches.map(m => `
+      <div class="search-item" data-key="${m.key}">
+        <div style="font-weight:700;">${m.name}</div>
+        <div style="font-size:0.8rem;opacity:0.6;">Topic module (${m.slides} slides)</div>
+      </div>
+    `).join('');
+
+    results.querySelectorAll('.search-item').forEach(item => {
+      item.addEventListener('click', () => {
+        jumpToTopic(item.dataset.key);
+        closeSearch();
+      });
+    });
+  }
+
+  // 12. Smart Auto-Detector for Light Content Slides
+  function updateSlideDensity(currentSlide) {
+    if (!currentSlide) return;
+    const card = currentSlide.querySelector('.slide-card');
+    if (!card) return;
+    
+    const textLen = (card.textContent || '').trim().length;
+    const hasTable = card.querySelector('table, .conj-table, .usages-grid-dedicated');
+    
+    if (textLen < 300 && !hasTable) {
+      card.classList.add('light-slide');
+    } else {
+      card.classList.remove('light-slide');
+    }
+  }
+
+  // 13. Event Listener Bindings
+  function bindEvents() {
+    // Topbar Buttons
+    const topicMenuBtn = $('#topicMenuBtn');
+    if (topicMenuBtn) topicMenuBtn.onclick = (e) => { e.stopPropagation(); $('#topicMenu').classList.toggle('open'); };
+
+    const searchBtn = $('#searchBtn');
+    if (searchBtn) searchBtn.onclick = openSearch;
+
+    const closeSearchBtn = $('#closeSearchBtn');
+    if (closeSearchBtn) closeSearchBtn.onclick = closeSearch;
+
+    const lightBtn = $('#lightBtn');
+    if (lightBtn) lightBtn.onclick = toggleLight;
+
+    const printBtn = $('#printTopicBtn');
+    if (printBtn) printBtn.onclick = () => window.print();
+
+    const sidebarBtn = $('#sidebarBtn');
+    if (sidebarBtn) sidebarBtn.onclick = () => document.body.classList.toggle('sidebar-open');
+
+    const settingsBtn = $('#settingsBtn');
+    if (settingsBtn) settingsBtn.onclick = () => $('#settingsPanel').classList.toggle('open');
+
+    const closeSettingsBtn = $('#closeSettingsBtn');
+    if (closeSettingsBtn) closeSettingsBtn.onclick = () => $('#settingsPanel').classList.remove('open');
+
+    const themeSelect = $('#themeSelect');
+    if (themeSelect) themeSelect.onchange = (e) => applyTheme(e.target.value);
+
+    const fontScaleSlider = $('#fontScaleSlider');
+    if (fontScaleSlider) fontScaleSlider.oninput = (e) => applyFontScale(e.target.value);
+
+    const searchInput = $('#searchInput');
+    if (searchInput) searchInput.oninput = (e) => renderSearchResults(e.target.value);
+
+    // HUD Buttons
+    const prevBtn = $('#prevBtn');
+    if (prevBtn) prevBtn.onclick = () => Deck.prev();
+
+    const nextBtn = $('#nextBtn');
+    if (nextBtn) nextBtn.onclick = () => Deck.next();
+
+    const fsBtn = $('#fsBtn');
+    if (fsBtn) fsBtn.onclick = () => {
+      if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+      else document.exitFullscreen();
+    };
+
+    // Keyboard Shortcuts
+    window.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); openSearch(); }
+      if (e.key === 'Escape') { closeSearch(); $('#settingsPanel').classList.remove('open'); }
+      if (e.key.toLowerCase() === 'l' && e.target.tagName !== 'INPUT') toggleLight();
+    });
+
+    // Close overlays on outside click
+    window.addEventListener('click', (e) => {
+      if (!e.target.closest('.topic-menu-wrap')) {
+        const menu = $('#topicMenu'); if (menu) menu.classList.remove('open');
+      }
+    });
+  }
+
+  // Boot Application
+  
+  /* Student Personalization Datasets */
+  const STUDENTS_10E = [
+    "Abdul", "Abel", "Abiya", "Acsa", "Adnan", "Adriel", "Aksa", "Akshita",
+    "Alby", "Alesha", "Alfred", "Andriya", "Angelin", "Annet", "Anushka", "Athen",
+    "Baiden", "Diya", "Elvis", "Fida", "George", "Glifsho", "Helen", "Janoah",
+    "Johan", "Jomel", "Juwan", "Kevin", "Liya", "Muhammed", "Nivin", "Raima",
+    "Rubil", "Serra", "Shaun", "Steffin", "Trisha", "Vaishnavi"
+  ];
+
+  const STUDENTS_10J = [
+    "Abel", "Aevin", "Aida", "Alexa", "Alvin", "Amala", "Anika", "Anjika",
+    "Ankitha", "Anna", "Bebiya", "Danny", "Elen", "Evan", "Geevu", "Hayden",
+    "Hefzibah", "Hema", "Jacob", "Jaswinth", "Jesbiya", "Johan", "Joshua", "Joveline",
+    "Kaviya", "Keziah", "Kripa", "Linson", "Marvel", "Mebin", "Mishab", "Rayan",
+    "Rehan", "Riya", "Rohan", "Ron", "Sherwin"
+  ];
+
+  const MASTER_VERB_LIST = [
+    "parler", "finir", "vendre", "être", "avoir", "aller", "faire", "voir",
+    "pouvoir", "vouloir", "devoir", "savoir", "prendre", "mettre", "venir",
+    "partir", "sortir", "lire", "écrire", "dire", "recevoir", "apprendre"
+  ];
+
+  function safeBind(el, evt, fn) {
+    if (!el || el.dataset.bound) return;
+    el.addEventListener(evt, fn);
+    el.dataset.bound = "true";
+  }
+
+
+function boot() {
+    renderTopicMenu();
+    bindEvents();
+    applyTheme(ls.get('theme', 'theme-classic'));
+    applyFontScale(ls.get('user_font_scale', 100));
+
+    Deck.on('slidechanged', (e) => {
+      updateHud();
+      updateSlideDensity(e.currentSlide);
+      playSound('click');
+    });
+
+    updateHud();
+    updateSlideDensity(Deck.getCurrentSlide());
+  }
+
+  Deck.initialize().then(boot).catch(err => {
+    console.warn('Reveal init warning:', err);
+    boot();
+  });
+
+})();
+</script>
+</body>
+</html>

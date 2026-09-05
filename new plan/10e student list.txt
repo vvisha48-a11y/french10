@@ -1,0 +1,39 @@
+Sl. No.	Admn. No.	Roll No.	Name
+1	15598	1	Abdul Abid Ansari
+2	15933	2	Abel Thanickal Aluckal Ajo
+3	15681	3	Abiya Elizebeth Jijo
+4	19621	4	Acsa Kallarackal Joshy
+5	22540	5	Adnan Siddique
+6	15348	6	Adriel Antony
+7	22580	7	Aksa Jose
+8	16028	8	Akshita Jyothish
+9	15730	9	Alby Abraham Regi
+10	15691	10	Alesha Cherian Chathanattu
+11	15448	11	Alfred Paul Sunil
+12	15618	12	Andriya Ezabel Roy
+13	15367	13	Angelin Gibi
+14	15477	14	Annet Maria Biju
+15	22741	15	Anushka Shibin
+16	15483	16	Athen Binil Skaria
+17	15217	17	Baiden Paul George
+18	15628	18	Diya Ann Shiju
+19	15392	19	Elvis Kurian Johny
+20	15607	20	Fida Rashid Palliparambil
+21	16130	21	George Mathew
+22	15765	22	Glifsho Refson Teshy Frashans
+23	15326	23	Helen Jomon
+24	15383	24	Janoah Reji
+25	17009	25	Johan Koshy Shaji
+26	15291	26	Jomel Tom Renji
+27	14617	27	Juwan Anoop
+28	17062	28	Kevin Jinu Eapen
+29	21804	29	Liya Laiju
+30	15699	30	Muhammed Shaheen Shah
+31	15580	31	Nivin Tom Mathew
+32	16945	32	Raima Remesh
+33	21116	33	Rubil Anna Koshy
+34	15608	34	Serra Ann Shibu
+35	20265	35	Shaun Luby John
+36	16865	36	Steffin Geo Sunil
+37	15528	37	Trisha Tom
+38	18142	38	Vaishnavi Predheep Nair

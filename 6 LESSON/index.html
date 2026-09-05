@@ -1,0 +1,2575 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Le Musée du Louvre — 800 Ans d'Histoire | Expérience Pédagogique Visuelle</title>
+  <meta name="description" content="Découvrez l'histoire fascinante du Musée du Louvre à travers une approche visuelle interactive : forteresse médiévale, palais royal, musée révolutionnaire et pyramide moderne.">
+
+  <!-- Google Fonts: Cinzel for classical Louvre inscriptions, Playfair for royal elegance, Plus Jakarta Sans & Poppins for clear readability -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Playfair+Display:ital,wght@0,600;0,800;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-dark: #070d18;
+      --bg-surface: #0e182a;
+      --bg-card: rgba(18, 30, 52, 0.78);
+      --bg-card-hover: rgba(26, 42, 72, 0.9);
+      --text-main: #f5f5f7;
+      --text-muted: #a0aec0;
+      --text-sub: #cbd5e1;
+      --gold-primary: #d4af37;
+      --gold-bright: #ffd700;
+      --gold-glow: rgba(212, 175, 55, 0.35);
+      --royal-blue: #1d4ed8;
+      --royal-blue-light: #3b82f6;
+      --royal-blue-deep: #002395;
+      --accent-crimson: #e11d48;
+      --border-subtle: rgba(212, 175, 55, 0.22);
+      --border-bright: rgba(212, 175, 55, 0.6);
+      --shadow-elevation: 0 20px 40px -15px rgba(0, 0, 0, 0.7);
+      --shadow-gold: 0 0 30px rgba(212, 175, 55, 0.25);
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 22px;
+      --font-ui: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+      --font-display: 'Cinzel', serif;
+      --font-serif: 'Playfair Display', serif;
+      --transition-smooth: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      --text-scale: 1;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: var(--font-ui);
+      line-height: 1.6;
+      overflow-x: hidden;
+      font-size: calc(16px * var(--text-scale));
+      background-image: 
+        radial-gradient(circle at 15% 15%, rgba(29, 78, 216, 0.12) 0%, transparent 40%),
+        radial-gradient(circle at 85% 85%, rgba(212, 175, 55, 0.09) 0%, transparent 45%);
+      background-attachment: fixed;
+    }
+
+    /* Top Navigation & Controls */
+    header.louvre-header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      background: rgba(7, 13, 24, 0.88);
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 12px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: var(--transition-smooth);
+    }
+
+    .header-branding {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .brand-crest {
+      width: 44px;
+      height: 44px;
+      border: 1px solid var(--gold-primary);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle, rgba(212, 175, 55, 0.25) 0%, rgba(14, 24, 42, 0.8) 100%);
+      box-shadow: 0 0 15px var(--gold-glow);
+    }
+
+    .brand-crest svg {
+      width: 24px;
+      height: 24px;
+      fill: var(--gold-bright);
+    }
+
+    .brand-title h1 {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      color: var(--gold-bright);
+      text-transform: uppercase;
+    }
+
+    .brand-title p {
+      font-size: 0.78rem;
+      letter-spacing: 1.2px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    /* Nav Tabs */
+    nav.nav-tabs {
+      display: flex;
+      gap: 6px;
+      background: rgba(14, 24, 42, 0.7);
+      padding: 5px;
+      border-radius: 40px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .tab-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      padding: 8px 18px;
+      border-radius: 30px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: var(--transition-smooth);
+      font-family: var(--font-ui);
+    }
+
+    .tab-btn:hover {
+      color: var(--text-main);
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .tab-btn.active {
+      background: linear-gradient(135deg, var(--gold-primary), #b38728);
+      color: #0b121e;
+      box-shadow: 0 4px 14px rgba(212, 175, 55, 0.35);
+      font-weight: 700;
+    }
+
+    /* Utility Tools Bar */
+    .header-tools {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .tool-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: var(--text-muted);
+      padding: 8px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: var(--transition-smooth);
+    }
+
+    .tool-btn:hover {
+      border-color: var(--gold-primary);
+      color: var(--gold-bright);
+      background: rgba(212, 175, 55, 0.1);
+    }
+
+    .tool-btn.active {
+      background: rgba(212, 175, 55, 0.2);
+      border-color: var(--gold-primary);
+      color: var(--gold-bright);
+    }
+
+    /* Main Container */
+    main.app-viewport {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 24px 28px 80px 28px;
+    }
+
+    /* Section Header */
+    .section-lead {
+      text-align: center;
+      margin-bottom: 28px;
+      position: relative;
+    }
+
+    .section-lead .badge {
+      display: inline-block;
+      padding: 5px 14px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-weight: 700;
+      color: var(--gold-bright);
+      background: rgba(212, 175, 55, 0.12);
+      border: 1px solid var(--border-subtle);
+      margin-bottom: 10px;
+    }
+
+    .section-lead h2 {
+      font-family: var(--font-serif);
+      font-size: 2.25rem;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 8px;
+      letter-spacing: -0.5px;
+    }
+
+    .section-lead p {
+      color: var(--text-muted);
+      max-width: 720px;
+      margin: 0 auto;
+      font-size: 1rem;
+    }
+
+    /* Section Views */
+    .view-panel {
+      display: none;
+      animation: fadeInView 0.4s ease forwards;
+    }
+
+    .view-panel.active-view {
+      display: block;
+    }
+
+    @keyframes fadeInView {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* =========================================================================
+       VIEW 1: TIME MACHINE (CHRONOLOGIE VISUELLE)
+       ========================================================================= */
+    .time-machine-container {
+      background: var(--bg-surface);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-subtle);
+      box-shadow: var(--shadow-elevation);
+      overflow: hidden;
+    }
+
+    /* Epoch Selector Bar */
+    .epoch-selector {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      background: rgba(10, 18, 32, 0.95);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .epoch-step {
+      padding: 18px 16px;
+      text-align: center;
+      cursor: pointer;
+      border-right: 1px solid rgba(255, 255, 255, 0.06);
+      transition: var(--transition-smooth);
+      position: relative;
+    }
+
+    .epoch-step:last-child {
+      border-right: none;
+    }
+
+    .epoch-step:hover {
+      background: rgba(212, 175, 55, 0.08);
+    }
+
+    .epoch-step.selected {
+      background: rgba(212, 175, 55, 0.15);
+    }
+
+    .epoch-step.selected::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--gold-primary), var(--gold-bright));
+      box-shadow: 0 0 10px var(--gold-glow);
+    }
+
+    .epoch-year {
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--gold-bright);
+      margin-bottom: 4px;
+      display: block;
+    }
+
+    .epoch-title {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text-sub);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* Main Visual Display Area */
+    .epoch-stage {
+      display: grid;
+      grid-template-columns: 1.35fr 1fr;
+      min-height: 580px;
+    }
+
+    .stage-visual {
+      position: relative;
+      background: #040810;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .stage-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease;
+      cursor: zoom-in;
+    }
+
+    .stage-visual:hover .stage-image {
+      transform: scale(1.03);
+    }
+
+    /* Visual Hotspot Markers on the Image */
+    .visual-hotspot {
+      position: absolute;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--gold-bright);
+      color: #0b121e;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 0.82rem;
+      box-shadow: 0 0 0 4px rgba(255, 215, 0, 0.35), 0 4px 12px rgba(0,0,0,0.6);
+      cursor: pointer;
+      animation: pulseGlow 2s infinite;
+      z-index: 20;
+      transition: transform 0.3s ease;
+    }
+
+    .visual-hotspot:hover {
+      transform: scale(1.2);
+    }
+
+    @keyframes pulseGlow {
+      0% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.6); }
+      70% { box-shadow: 0 0 0 12px rgba(255, 215, 0, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0); }
+    }
+
+    .hotspot-tooltip {
+      position: absolute;
+      bottom: 42px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(10, 18, 32, 0.95);
+      border: 1px solid var(--gold-primary);
+      padding: 8px 14px;
+      border-radius: var(--radius-sm);
+      color: #fff;
+      font-size: 0.8rem;
+      white-space: nowrap;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.25s ease, transform 0.25s ease;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.7);
+    }
+
+    .visual-hotspot:hover .hotspot-tooltip {
+      opacity: 1;
+      transform: translateX(-50%) translateY(-4px);
+    }
+
+    .visual-controls-overlay {
+      position: absolute;
+      bottom: 18px;
+      left: 18px;
+      right: 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 30;
+      pointer-events: none;
+    }
+
+    .visual-badge {
+      background: rgba(7, 13, 24, 0.85);
+      backdrop-filter: blur(8px);
+      padding: 6px 14px;
+      border-radius: 20px;
+      border: 1px solid var(--border-subtle);
+      font-size: 0.78rem;
+      color: var(--gold-bright);
+      font-weight: 600;
+      pointer-events: auto;
+    }
+
+    .visual-actions {
+      display: flex;
+      gap: 8px;
+      pointer-events: auto;
+    }
+
+    .stage-action-btn {
+      background: rgba(7, 13, 24, 0.85);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #fff;
+      padding: 7px 12px;
+      border-radius: var(--radius-sm);
+      font-size: 0.78rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: var(--transition-smooth);
+    }
+
+    .stage-action-btn:hover {
+      border-color: var(--gold-primary);
+      color: var(--gold-bright);
+    }
+
+    /* Stage Pedagogical Content (Written & Anchored) */
+    .stage-content {
+      padding: 34px 30px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      background: linear-gradient(180deg, var(--bg-surface) 0%, rgba(10, 18, 32, 0.98) 100%);
+      overflow-y: auto;
+    }
+
+    .stage-epoch-tag {
+      font-family: var(--font-display);
+      font-size: 0.85rem;
+      letter-spacing: 2px;
+      color: var(--gold-primary);
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .stage-title {
+      font-family: var(--font-serif);
+      font-size: 1.85rem;
+      color: #ffffff;
+      line-height: 1.25;
+      margin-bottom: 16px;
+    }
+
+    /* The Authentic Lesson Text Highlight Card */
+    .lesson-text-card {
+      background: rgba(29, 78, 216, 0.09);
+      border-left: 4px solid var(--royal-blue-light);
+      border-radius: 0 var(--radius-md) var(--radius-md) 0;
+      padding: 16px 20px;
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    .card-label {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      font-weight: 800;
+      color: #60a5fa;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .authentic-french-quote {
+      font-family: var(--font-serif);
+      font-size: 1.15rem;
+      color: #ffffff;
+      font-style: italic;
+      line-height: 1.55;
+      margin-bottom: 10px;
+    }
+
+    .french-highlight {
+      color: #93c5fd;
+      background: rgba(0, 35, 149, 0.35);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 700;
+      border-bottom: 1px solid #3b82f6;
+    }
+
+    .quote-translation {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      border-top: 1px dashed rgba(255, 255, 255, 0.1);
+      padding-top: 8px;
+      display: none;
+    }
+
+    .quote-translation.show-en {
+      display: block;
+    }
+
+    /* Key Facts Pillars */
+    .facts-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-bottom: 22px;
+    }
+
+    .fact-pill {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      padding: 10px 14px;
+      border-radius: var(--radius-sm);
+    }
+
+    .fact-pill-label {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      color: var(--gold-primary);
+      font-weight: 700;
+      letter-spacing: 1px;
+      margin-bottom: 3px;
+    }
+
+    .fact-pill-val {
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    /* Educational Grammar/Exam Insights */
+    .exam-note-box {
+      background: rgba(212, 175, 55, 0.06);
+      border: 1px dashed var(--gold-primary);
+      border-radius: var(--radius-md);
+      padding: 14px 18px;
+      margin-bottom: 20px;
+    }
+
+    .exam-note-header {
+      font-size: 0.78rem;
+      font-weight: 800;
+      color: var(--gold-bright);
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .exam-note-body {
+      font-size: 0.85rem;
+      color: var(--text-sub);
+      line-height: 1.45;
+    }
+
+    .exam-note-body strong {
+      color: #ffffff;
+    }
+
+    /* Speech & Interaction Toolbar */
+    .stage-nav-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding-top: 18px;
+    }
+
+    .audio-play-btn {
+      background: linear-gradient(135deg, var(--royal-blue), #1e40af);
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 30px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: var(--transition-smooth);
+      box-shadow: 0 4px 14px rgba(29, 78, 216, 0.4);
+    }
+
+    .audio-play-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(29, 78, 216, 0.6);
+    }
+
+    .audio-play-btn.speaking {
+      background: linear-gradient(135deg, var(--accent-crimson), #be123c);
+      animation: pulseBtn 1s infinite alternate;
+    }
+
+    @keyframes pulseBtn {
+      from { transform: scale(1); }
+      to { transform: scale(1.04); }
+    }
+
+    .timeline-pager {
+      display: flex;
+      gap: 8px;
+    }
+
+    .pager-btn {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #fff;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+    }
+
+    .pager-btn:hover {
+      border-color: var(--gold-primary);
+      color: var(--gold-bright);
+      background: rgba(212, 175, 55, 0.1);
+    }
+
+    /* =========================================================================
+       VIEW 2: 40-HECTARE SPATIAL MAP (PLAN DES 40 HECTARES)
+       ========================================================================= */
+    .spatial-layout {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+
+    .map-canvas-card {
+      background: var(--bg-surface);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-subtle);
+      overflow: hidden;
+      box-shadow: var(--shadow-elevation);
+      position: relative;
+    }
+
+    .map-media-wrapper {
+      position: relative;
+      height: 520px;
+      overflow: hidden;
+      background: #020617;
+    }
+
+    .map-photo {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.6s ease;
+    }
+
+    /* Interactive Map Hotspot Pins */
+    .map-pin {
+      position: absolute;
+      transform: translate(-50%, -50%);
+      cursor: pointer;
+      z-index: 25;
+      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .pin-circle {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(14, 24, 42, 0.9);
+      border: 2px solid var(--gold-bright);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--gold-bright);
+      font-weight: 800;
+      font-size: 0.82rem;
+      box-shadow: 0 0 15px var(--gold-glow);
+    }
+
+    .pin-label {
+      position: absolute;
+      top: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(7, 13, 24, 0.95);
+      border: 1px solid var(--border-subtle);
+      color: #fff;
+      font-size: 0.75rem;
+      padding: 3px 8px;
+      border-radius: 4px;
+      white-space: nowrap;
+      pointer-events: none;
+      font-weight: 600;
+    }
+
+    .map-pin:hover, .map-pin.active-pin {
+      transform: translate(-50%, -50%) scale(1.22);
+    }
+
+    .map-pin.active-pin .pin-circle {
+      background: var(--gold-bright);
+      color: #0b121e;
+      box-shadow: 0 0 25px rgba(255, 215, 0, 0.8);
+    }
+
+    /* Spatial Details Sidebar */
+    .map-detail-card {
+      background: var(--bg-surface);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-subtle);
+      padding: 30px 28px;
+      box-shadow: var(--shadow-elevation);
+    }
+
+    .map-detail-tag {
+      color: var(--gold-primary);
+      font-size: 0.78rem;
+      letter-spacing: 1.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .map-detail-title {
+      font-family: var(--font-serif);
+      font-size: 1.75rem;
+      color: #fff;
+      margin-bottom: 14px;
+    }
+
+    .map-detail-desc {
+      color: var(--text-sub);
+      font-size: 0.95rem;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+
+    .spatial-stats {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .stat-box {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 12px 14px;
+      border-radius: var(--radius-sm);
+    }
+
+    .stat-number {
+      font-family: var(--font-display);
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: var(--gold-bright);
+      margin-bottom: 2px;
+    }
+
+    .stat-desc {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* Wing selector chips */
+    .wings-chip-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .wing-chip {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: var(--text-sub);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+    }
+
+    .wing-chip:hover, .wing-chip.active-chip {
+      background: rgba(212, 175, 55, 0.18);
+      border-color: var(--gold-primary);
+      color: var(--gold-bright);
+      font-weight: 600;
+    }
+
+    /* =========================================================================
+       VIEW 3: MASTERPIECES (GALERIE DES CHEFS-D'ŒUVRE)
+       ========================================================================= */
+    .art-gallery-intro {
+      background: rgba(212, 175, 55, 0.06);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 18px 24px;
+      margin-bottom: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .gallery-intro-text h3 {
+      font-family: var(--font-serif);
+      font-size: 1.25rem;
+      color: var(--gold-bright);
+      margin-bottom: 4px;
+    }
+
+    .gallery-intro-text p {
+      font-size: 0.9rem;
+      color: var(--text-sub);
+    }
+
+    .art-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .art-card {
+      background: var(--bg-surface);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-subtle);
+      overflow: hidden;
+      box-shadow: var(--shadow-elevation);
+      transition: var(--transition-smooth);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .art-card:hover {
+      transform: translateY(-6px);
+      border-color: var(--gold-primary);
+      box-shadow: 0 25px 45px -10px rgba(0,0,0,0.8), 0 0 25px rgba(212, 175, 55, 0.15);
+    }
+
+    .art-card-img-wrap {
+      height: 240px;
+      overflow: hidden;
+      position: relative;
+      background: #000;
+    }
+
+    .art-card-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.6s ease;
+    }
+
+    .art-card:hover .art-card-img {
+      transform: scale(1.06);
+    }
+
+    .art-card-badge {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: rgba(14, 24, 42, 0.9);
+      border: 1px solid var(--gold-primary);
+      color: var(--gold-bright);
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 20px;
+      text-transform: uppercase;
+    }
+
+    .art-card-body {
+      padding: 22px 20px;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .art-title {
+      font-family: var(--font-serif);
+      font-size: 1.3rem;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+
+    .art-artist {
+      font-size: 0.85rem;
+      color: var(--gold-primary);
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .art-desc {
+      font-size: 0.88rem;
+      color: var(--text-sub);
+      line-height: 1.5;
+      margin-bottom: 16px;
+    }
+
+    .art-details-tag {
+      background: rgba(255, 255, 255, 0.04);
+      padding: 8px 12px;
+      border-radius: var(--radius-sm);
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      border-left: 2px solid var(--gold-primary);
+      margin-bottom: 14px;
+    }
+
+    .art-card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid rgba(255, 255, 255, 0.07);
+      padding-top: 12px;
+    }
+
+    .btn-inspect {
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: var(--text-sub);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+    }
+
+    .btn-inspect:hover {
+      border-color: var(--gold-primary);
+      color: var(--gold-bright);
+      background: rgba(212, 175, 55, 0.1);
+    }
+
+    /* =========================================================================
+       VIEW 4: CBSE LAB (QUIZ, LETTER BUILDER & EXAM TOOLS)
+       ========================================================================= */
+    .cbse-lab-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 26px;
+      align-items: start;
+    }
+
+    /* 80-Word Letter Composer */
+    .letter-builder-card {
+      background: var(--bg-surface);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-subtle);
+      padding: 30px;
+      box-shadow: var(--shadow-elevation);
+    }
+
+    .card-title-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .card-title-row h3 {
+      font-family: var(--font-serif);
+      font-size: 1.45rem;
+      color: #fff;
+    }
+
+    .word-counter-badge {
+      background: rgba(29, 78, 216, 0.15);
+      border: 1px solid var(--royal-blue-light);
+      color: #93c5fd;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+
+    .letter-prompt-info {
+      background: rgba(255, 255, 255, 0.03);
+      border-left: 3px solid var(--gold-primary);
+      padding: 10px 14px;
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      font-size: 0.84rem;
+      color: var(--text-sub);
+      margin-bottom: 18px;
+    }
+
+    .letter-paper {
+      background: #fdfbf7;
+      color: #1a202c;
+      border-radius: var(--radius-md);
+      padding: 24px;
+      font-family: 'Poppins', sans-serif;
+      box-shadow: inset 0 2px 10px rgba(0,0,0,0.08);
+      position: relative;
+      margin-bottom: 18px;
+      min-height: 290px;
+    }
+
+    .letter-header-date {
+      text-align: right;
+      color: #4a5568;
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .letter-salutation {
+      font-weight: 700;
+      color: #2d3748;
+      font-size: 0.95rem;
+      margin-bottom: 10px;
+    }
+
+    .letter-body-editable {
+      font-size: 0.95rem;
+      line-height: 1.65;
+      color: #2d3748;
+      min-height: 140px;
+      outline: none;
+    }
+
+    .letter-body-editable span.fact-hl {
+      color: #002395;
+      font-weight: 700;
+      border-bottom: 1px dashed #002395;
+    }
+
+    .letter-signoff {
+      text-align: right;
+      margin-top: 14px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #4a5568;
+    }
+
+    .letter-builder-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn-action {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #fff;
+      padding: 8px 16px;
+      border-radius: var(--radius-sm);
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: var(--transition-smooth);
+    }
+
+    .btn-action:hover {
+      background: rgba(212, 175, 55, 0.15);
+      border-color: var(--gold-primary);
+      color: var(--gold-bright);
+    }
+
+    .btn-action.btn-primary {
+      background: linear-gradient(135deg, var(--royal-blue), #1e40af);
+      border-color: transparent;
+      color: #fff;
+    }
+
+    /* Quiz Card */
+    .quiz-card {
+      background: var(--bg-surface);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-subtle);
+      padding: 30px;
+      box-shadow: var(--shadow-elevation);
+    }
+
+    .quiz-progress-bar {
+      height: 6px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+
+    .quiz-progress-fill {
+      height: 100%;
+      width: 20%;
+      background: linear-gradient(90deg, var(--royal-blue-light), var(--gold-bright));
+      transition: width 0.4s ease;
+    }
+
+    .quiz-question-tag {
+      font-size: 0.75rem;
+      color: var(--gold-primary);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 8px;
+    }
+
+    .quiz-question-text {
+      font-family: var(--font-serif);
+      font-size: 1.25rem;
+      color: #fff;
+      margin-bottom: 20px;
+      line-height: 1.4;
+    }
+
+    .quiz-options {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 22px;
+    }
+
+    .quiz-opt-btn {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 12px 18px;
+      border-radius: var(--radius-md);
+      color: var(--text-sub);
+      font-size: 0.92rem;
+      font-weight: 500;
+      cursor: pointer;
+      text-align: left;
+      transition: var(--transition-smooth);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .quiz-opt-btn:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.2);
+      color: #fff;
+    }
+
+    .quiz-opt-btn.correct {
+      background: rgba(16, 185, 129, 0.2) !important;
+      border-color: #10b981 !important;
+      color: #6ee7b7 !important;
+    }
+
+    .quiz-opt-btn.wrong {
+      background: rgba(239, 68, 68, 0.2) !important;
+      border-color: #ef4444 !important;
+      color: #fca5a5 !important;
+    }
+
+    .opt-letter {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .quiz-feedback {
+      padding: 12px 16px;
+      border-radius: var(--radius-sm);
+      font-size: 0.88rem;
+      margin-bottom: 18px;
+      display: none;
+    }
+
+    .quiz-feedback.show {
+      display: block;
+    }
+
+    .quiz-feedback.success {
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      color: #a7f3d0;
+    }
+
+    .quiz-feedback.error {
+      background: rgba(239, 68, 68, 0.12);
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      color: #fecaca;
+    }
+
+    /* Fireworks Canvas Overlay */
+    #fireworks-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 99999;
+      display: none;
+    }
+
+    /* Modal for Detailed Visual Inspection */
+    .image-lightbox-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(4, 8, 16, 0.95);
+      backdrop-filter: blur(12px);
+      z-index: 10000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 40px;
+    }
+
+    .image-lightbox-modal.active {
+      display: flex;
+    }
+
+    .lightbox-card {
+      max-width: 1100px;
+      width: 100%;
+      max-height: 90vh;
+      background: var(--bg-surface);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--gold-primary);
+      box-shadow: 0 0 50px rgba(0,0,0,0.9), 0 0 30px var(--gold-glow);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .lightbox-close-btn {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(0,0,0,0.7);
+      border: 1px solid rgba(255,255,255,0.3);
+      color: #fff;
+      font-size: 1.2rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 30;
+      transition: var(--transition-smooth);
+    }
+
+    .lightbox-close-btn:hover {
+      background: var(--accent-crimson);
+      border-color: var(--accent-crimson);
+    }
+
+    .lightbox-image {
+      width: 100%;
+      max-height: 65vh;
+      object-fit: contain;
+      background: #000;
+    }
+
+    .lightbox-info {
+      padding: 20px 28px;
+      background: var(--bg-surface);
+    }
+
+    .lightbox-title {
+      font-family: var(--font-serif);
+      font-size: 1.45rem;
+      color: var(--gold-bright);
+      margin-bottom: 6px;
+    }
+
+    .lightbox-desc {
+      color: var(--text-sub);
+      font-size: 0.92rem;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 1024px) {
+      .epoch-stage {
+        grid-template-columns: 1fr;
+      }
+      .stage-visual {
+        min-height: 380px;
+      }
+      .spatial-layout {
+        grid-template-columns: 1fr;
+      }
+      .art-cards-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .cbse-lab-grid {
+        grid-template-columns: 1fr;
+      }
+      header.louvre-header {
+        flex-direction: column;
+        gap: 14px;
+        padding: 16px 20px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .epoch-selector {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .art-cards-grid {
+        grid-template-columns: 1fr;
+      }
+      .facts-grid {
+        grid-template-columns: 1fr;
+      }
+      nav.nav-tabs {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Global Header & Navigation -->
+  <header class="louvre-header">
+    <div class="header-branding">
+      <div class="brand-crest">
+        <!-- Classical Louvre Pyramid + Fleur-de-lis icon -->
+        <svg viewBox="0 0 24 24">
+          <path d="M12 2L2 20h20L12 2zm0 4.5l6.5 11.5h-13L12 6.5zM12 10l-3 5h6l-3-5z"/>
+        </svg>
+      </div>
+      <div class="brand-title">
+        <h1>Musée du Louvre</h1>
+        <p>800 Ans d'Histoire &bull; Pédagogie Visuelle</p>
+      </div>
+    </div>
+
+    <!-- Mode Tabs -->
+    <nav class="nav-tabs" role="tablist">
+      <button class="tab-btn active" data-target="view-timemachine" id="tab-timeline">
+        <span>⏳</span> Chronologie Visuelle
+      </button>
+      <button class="tab-btn" data-target="view-spatial" id="tab-spatial">
+        <span>🗺️</span> Domaine de 40 Hectares
+      </button>
+      <button class="tab-btn" data-target="view-gallery" id="tab-gallery">
+        <span>🎨</span> 6000 Peintures & Chefs-d'Œuvre
+      </button>
+      <button class="tab-btn" data-target="view-cbselab" id="tab-cbselab">
+        <span>✍️</span> Atelier CBSE & Lettre
+      </button>
+    </nav>
+
+    <!-- Header Tools (Sound, Translation, Font Scale, Teacher Mode) -->
+    <div class="header-tools">
+      <button class="tool-btn" id="btn-toggle-en" title="Basculer Traduction Anglaise">
+        <span>🌐</span> <span id="label-lang-toggle">English : Off</span>
+      </button>
+      <button class="tool-btn" id="btn-font-scale" title="Agrandir la taille du texte">
+        <span>Aa</span>
+      </button>
+      <button class="tool-btn" id="btn-fullscreen" title="Plein Écran">
+        <span>⛶</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Viewport -->
+  <main class="app-viewport">
+
+    <!-- =======================================================================
+         VIEW 1: TIME MACHINE (CHRONOLOGIE VISUELLE - VISUAL FIRST PEDAGOGY)
+         ======================================================================= -->
+    <section id="view-timemachine" class="view-panel active-view">
+      <div class="section-lead">
+        <span class="badge">Apprendre d'abord par le visuel &bull; Étape 1</span>
+        <h2>La Machine à Remonter le Temps : 800 Ans du Louvre</h2>
+        <p>Observez la métamorphose visuelle du bâtiment avant de lire le texte : d'une formidable forteresse médiévale à un somptueux palais royal, jusqu'au musée universel et sa pyramide de verre.</p>
+      </div>
+
+      <div class="time-machine-container">
+        <!-- 4 Epoch Selectors -->
+        <div class="epoch-selector" role="tablist">
+          <div class="epoch-step selected" data-epoch="0" tabindex="0">
+            <span class="epoch-year">1190</span>
+            <span class="epoch-title">Château Médiéval</span>
+          </div>
+          <div class="epoch-step" data-epoch="1" tabindex="0">
+            <span class="epoch-year">1546 – 1682</span>
+            <span class="epoch-title">Palais des Rois</span>
+          </div>
+          <div class="epoch-step" data-epoch="2" tabindex="0">
+            <span class="epoch-year">1793</span>
+            <span class="epoch-title">Musée de la République</span>
+          </div>
+          <div class="epoch-step" data-epoch="3" tabindex="0">
+            <span class="epoch-year">1989 – Aujourd'hui</span>
+            <span class="epoch-title">La Pyramide Moderne</span>
+          </div>
+        </div>
+
+        <!-- Dynamic Epoch Visual & Written Anchor -->
+        <div class="epoch-stage">
+          <!-- Left: High Resolution Visual with Interactive Hotspots -->
+          <div class="stage-visual" id="stage-visual-box">
+            <img id="epoch-main-img" class="stage-image" src="./assets/louvre_medieval.jpg" alt="Château Médiéval du Louvre en 1190">
+            
+            <!-- Hotspots dynamically populated by JS -->
+            <div id="visual-hotspots-container"></div>
+
+            <!-- Overlay Controls -->
+            <div class="visual-controls-overlay">
+              <span class="visual-badge" id="visual-caption-badge">🏰 Reconstitution Historique : Le Donjon de Philippe Auguste (1190)</span>
+              <div class="visual-actions">
+                <button class="stage-action-btn" id="btn-zoom-img" title="Agrandir en plein écran">
+                  <span>🔍</span> Plein écran
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: Authentic Lesson Text & Pedagogical Anchors -->
+          <div class="stage-content">
+            <div>
+              <div class="stage-epoch-tag" id="epoch-tag">ÉPOQUE I &bull; XIIe SIÈCLE</div>
+              <h3 class="stage-title" id="epoch-heading">La Forteresse Imprenable de Philippe Auguste</h3>
+
+              <!-- The Authentic Sentence from the Shared Text -->
+              <div class="lesson-text-card">
+                <div class="card-label">
+                  <span>📖</span> Extrait Officiel de la Leçon
+                </div>
+                <blockquote class="authentic-french-quote" id="epoch-quote">
+                  « <span class="french-highlight">Château médiéval</span>, <span class="french-highlight">palais des rois de France</span>, musée depuis deux siècles, le palais du Louvre développe son architecture sur <span class="french-highlight">plus de 800 années d'histoire</span>. »
+                </blockquote>
+                <div class="quote-translation" id="epoch-quote-en">
+                  "Medieval castle, palace of the kings of France, museum for two centuries, the Louvre palace unfolds its architecture over more than 800 years of history."
+                </div>
+              </div>
+
+              <!-- Facts Pillars -->
+              <div class="facts-grid" id="epoch-facts-grid">
+                <!-- Dynamically filled -->
+              </div>
+
+              <!-- Exam & Grammar Insight Box -->
+              <div class="exam-note-box" id="epoch-exam-box">
+                <!-- Dynamically filled -->
+              </div>
+            </div>
+
+            <!-- Speech Narration & Pager Controls -->
+            <div class="stage-nav-bar">
+              <button class="audio-play-btn" id="btn-speech-read">
+                <span>🔊</span> <span id="speech-btn-label">Écouter la prononciation française</span>
+              </button>
+              <div class="timeline-pager">
+                <button class="pager-btn" id="btn-prev-epoch" title="Époque précédente">←</button>
+                <button class="pager-btn" id="btn-next-epoch" title="Époque suivante">→</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =======================================================================
+         VIEW 2: 40-HECTARE SPATIAL MAP (PLAN DES 40 HECTARES)
+         ======================================================================= -->
+    <section id="view-spatial" class="view-panel">
+      <div class="section-lead">
+        <span class="badge">Géographie & Architecture &bull; Rive Droite de la Seine</span>
+        <h2>Un Domaine de Plus de 40 Hectares en Plein Cœur de Paris</h2>
+        <p>Explorez la disposition spatiale du plus grand musée de Paris. Cliquez sur les ailes et les cours pour découvrir comment ce vaste domaine impérial est structuré.</p>
+      </div>
+
+      <div class="spatial-layout">
+        <!-- Interactive Aerial Map Card -->
+        <div class="map-canvas-card">
+          <div class="map-media-wrapper">
+            <img src="./assets/louvre_aerial.jpg" alt="Vue aérienne du Domaine du Louvre de 40 hectares" class="map-photo" id="spatial-photo">
+            
+            <!-- Interactive Map Pins -->
+            <div class="map-pin active-pin" style="top: 48%; left: 52%;" data-wing="pyramide">
+              <div class="pin-circle">1</div>
+              <span class="pin-label">Cour Napoléon & Pyramide</span>
+            </div>
+            <div class="map-pin" style="top: 66%; left: 75%;" data-wing="sully">
+              <div class="pin-circle">2</div>
+              <span class="pin-label">Cour Carrée & Aile Sully</span>
+            </div>
+            <div class="map-pin" style="top: 62%; left: 45%;" data-wing="denon">
+              <div class="pin-circle">3</div>
+              <span class="pin-label">Aile Denon (La Seine)</span>
+            </div>
+            <div class="map-pin" style="top: 44%; left: 63%;" data-wing="richelieu">
+              <div class="pin-circle">4</div>
+              <span class="pin-label">Aile Richelieu</span>
+            </div>
+            <div class="map-pin" style="top: 36%; left: 24%;" data-wing="tuileries">
+              <div class="pin-circle">5</div>
+              <span class="pin-label">Jardin des Tuileries</span>
+            </div>
+            <div class="map-pin" style="top: 76%; left: 22%;" data-wing="seine">
+              <div class="pin-circle">6</div>
+              <span class="pin-label">La Seine (Rive Droite)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sidebar Details -->
+        <div class="map-detail-card">
+          <div class="map-detail-tag" id="spatial-tag">SECTEUR CENTRAL</div>
+          <h3 class="map-detail-title" id="spatial-title">Cour Napoléon & Grande Pyramide</h3>
+
+          <div class="lesson-text-card">
+            <div class="card-label"><span>📖</span> Fait Clé du Texte</div>
+            <blockquote class="authentic-french-quote" style="font-size: 1.05rem;">
+              « Le Louvre est installé sur un domaine de <span class="french-highlight">plus de 40 hectares</span> en plein cœur de Paris, sur la <span class="french-highlight">rive droite de la Seine</span>. C'est l'un des plus grands musées du monde et <span class="french-highlight">le plus grand de Paris</span>. »
+            </blockquote>
+          </div>
+
+          <p class="map-detail-desc" id="spatial-desc">
+            Le cœur névralgique du Louvre moderne. C'est ici que l'architecte Ieoh Ming Pei a conçu l'audacieuse pyramide de verre inaugurée en 1989. Elle sert d'entrée centrale lumineuse vers les trois grandes ailes du musée.
+          </p>
+
+          <div class="spatial-stats">
+            <div class="stat-box">
+              <div class="stat-number">40 ha</div>
+              <div class="stat-desc">Superficie totale du domaine</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-number">Rive Droite</div>
+              <div class="stat-desc">Bord de la Seine (Paris 1er)</div>
+            </div>
+          </div>
+
+          <div class="exam-note-header">Sélectionner un secteur à explorer :</div>
+          <div class="wings-chip-list">
+            <button class="wing-chip active-chip" data-wing="pyramide">Pyramide & Cour Napoléon</button>
+            <button class="wing-chip" data-wing="sully">Aile Sully (Histoire)</button>
+            <button class="wing-chip" data-wing="denon">Aile Denon (La Joconde)</button>
+            <button class="wing-chip" data-wing="richelieu">Aile Richelieu (Sculptures)</button>
+            <button class="wing-chip" data-wing="tuileries">Jardin des Tuileries</button>
+            <button class="wing-chip" data-wing="seine">La Seine (Rive Droite)</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =======================================================================
+         VIEW 3: 6000 PAINTINGS & MASTERPIECES (GALERIE DES CHEFS-D'ŒUVRE)
+         ======================================================================= -->
+    <section id="view-gallery" class="view-panel">
+      <div class="section-lead">
+        <span class="badge">Collections Artistiques &bull; 6 000 Peintures Européennes</span>
+        <h2>La Galerie des Chefs-d'Œuvre du Monde Entier</h2>
+        <p>Découvrez les trésors inestimables conservés au Louvre, de la Renaissance italienne aux grands maîtres européens.</p>
+      </div>
+
+      <div class="art-gallery-intro">
+        <div class="gallery-intro-text">
+          <h3>« Environ 6 000 peintures européennes y compris Renoir, Van Gogh et Leonardo da Vinci »</h3>
+          <p>Le musée abrite l'une des plus exceptionnelles collections d'art universel, attirant plus de 9 millions de visiteurs chaque année.</p>
+        </div>
+        <button class="btn-action btn-primary" id="btn-audio-gallery">
+          <span>🔊</span> Écouter l'histoire des œuvres
+        </button>
+      </div>
+
+      <div class="art-cards-grid">
+        <!-- Card 1: Mona Lisa / La Joconde -->
+        <div class="art-card">
+          <div class="art-card-img-wrap">
+            <img src="./assets/louvre_salle_joconde.jpg" alt="La Joconde par Léonard de Vinci au Louvre" class="art-card-img">
+            <span class="art-card-badge">Chef-d'œuvre absolu</span>
+          </div>
+          <div class="art-card-body">
+            <div>
+              <h4 class="art-title">La Joconde (Mona Lisa)</h4>
+              <p class="art-artist">Léonard de Vinci &bull; v. 1503 – 1519</p>
+              <p class="art-desc">
+                Le tableau le plus célèbre au monde. Exposé dans la monumentale Salle des États de l'aile Denon sous une protection de verre ultra-sécurisée.
+              </p>
+              <div class="art-details-tag">
+                <strong>Localisation :</strong> Aile Denon, 1er étage, Salle 711
+              </div>
+            </div>
+            <div class="art-card-footer">
+              <span style="font-size: 0.8rem; color: var(--gold-bright);">Peinture à l'huile sur bois de peuplier</span>
+              <button class="btn-inspect" onclick="openLightbox('./assets/louvre_salle_joconde.jpg', 'La Joconde — Léonard de Vinci', 'La Joconde peinte par Léonard de Vinci, trésor emblématique de la collection de 6 000 peintures européennes du Louvre.')">Inspecter 🔍</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 2: Renoir & Van Gogh context -->
+        <div class="art-card">
+          <div class="art-card-img-wrap">
+            <img src="./assets/louvre_revolution.jpg" alt="Galerie des peintures européennes" class="art-card-img">
+            <span class="art-card-badge">Maîtres Européens</span>
+          </div>
+          <div class="art-card-body">
+            <div>
+              <h4 class="art-title">Peintres Européens : Renoir & Van Gogh</h4>
+              <p class="art-artist">Grands Maîtres &bull; Impressionnisme & Héritage</p>
+              <p class="art-desc">
+                Comme mentionné dans votre leçon, les œuvres de Renoir et Van Gogh s'inscrivent dans l'histoire des collections nationales françaises rattachées au patrimoine universel du Louvre.
+              </p>
+              <div class="art-details-tag">
+                <strong>CBSE Section D :</strong> Les peintres clés cités dans le manuel de classe 10
+              </div>
+            </div>
+            <div class="art-card-footer">
+              <span style="font-size: 0.8rem; color: var(--gold-bright);">Collection européenne</span>
+              <button class="btn-inspect" onclick="openLightbox('./assets/louvre_revolution.jpg', 'La Grande Galerie des Peintures', 'Vue historique de la Grande Galerie avec ses chefs-d\'œuvre de la peinture européenne.')">Inspecter 🔍</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 3: Antiquités & Sculptures -->
+        <div class="art-card">
+          <div class="art-card-img-wrap">
+            <img src="./assets/louvre_royal.jpg" alt="Statues et trésors royaux du Louvre" class="art-card-img">
+            <span class="art-card-badge">Sculptures Célèbres</span>
+          </div>
+          <div class="art-card-body">
+            <div>
+              <h4 class="art-title">Vénus de Milo & Victoire de Samothrace</h4>
+              <p class="art-artist">Sculpture Antique & Trésors des Rois</p>
+              <p class="art-desc">
+                En plus des 6 000 peintures, le Louvre abrite les sculptures les plus emblématiques de l'Antiquité, admirées autrefois dans les galeries des rois de France.
+              </p>
+              <div class="art-details-tag">
+                <strong>Vocabulaire Clé :</strong> Une œuvre d'art, une statue de marbre
+              </div>
+            </div>
+            <div class="art-card-footer">
+              <span style="font-size: 0.8rem; color: var(--gold-bright);">Antiquités grecques & romaines</span>
+              <button class="btn-inspect" onclick="openLightbox('./assets/louvre_royal.jpg', 'Les Trésors Royaux du Louvre', 'Les collections royales accumulées par François Ier, Louis XIV et la Nation.')">Inspecter 🔍</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =======================================================================
+         VIEW 4: CBSE LAB (LETTER BUILDER & QUIZ)
+         ======================================================================= -->
+    <section id="view-cbselab" class="view-panel">
+      <div class="section-lead">
+        <span class="badge">Expression Écrite & Évaluation &bull; Classe 10</span>
+        <h2>Atelier CBSE : Rédiger la Lettre & Tester ses Connaissances</h2>
+        <p>Mobilisez les faits appris visuellement pour composer la lettre officielle de 80 mots sur la visite du Louvre et réussir le quiz de Section D.</p>
+      </div>
+
+      <div class="cbse-lab-grid">
+        <!-- CBSE Letter Composer -->
+        <div class="letter-builder-card">
+          <div class="card-title-row">
+            <h3>✉️ Rédaction de la Lettre (Section B)</h3>
+            <span class="word-counter-badge" id="letter-word-count">85 mots</span>
+          </div>
+
+          <div class="letter-prompt-info">
+            <strong>Sujet d'examen :</strong> « Vous avez visité le musée du Louvre. Écrivez une lettre de 80 mots à votre ami(e) pour lui raconter votre visite. »
+          </div>
+
+          <div class="letter-paper">
+            <div class="letter-header-date" contenteditable="true" id="letter-date">Paris, le 22 août 2026</div>
+            <div class="letter-salutation" contenteditable="true">Cher Rahul,</div>
+            <div class="letter-body-editable" contenteditable="true" id="letter-content" oninput="updateWordCount()">
+Comment vas-tu ? J'espère que cette lettre te trouvera en bonne santé.
+
+Samedi dernier, <span class="fact-hl">j'ai visité le musée du Louvre</span> et <span class="fact-hl">c'était magnifique</span>. Autrefois, ce bâtiment <span class="fact-hl">était le palais des rois de France</span>. Aujourd'hui, c'est <span class="fact-hl">le musée le plus visité du monde</span> avec environ 9 millions de visiteurs. À l'entrée, il y a une grande pyramide de verre construite par <span class="fact-hl">l'architecte Ieoh Ming Pei</span>.
+
+À l'intérieur, j'ai vu <span class="fact-hl">la Joconde de Léonard de Vinci</span>. Il y a environ <span class="fact-hl">6000 peintures</span> ! Tu devras y aller un jour.
+            </div>
+            <div class="letter-signoff" contenteditable="true">Ton ami,<br>XYZ</div>
+          </div>
+
+          <div class="letter-builder-actions">
+            <button class="btn-action btn-primary" id="btn-read-letter">
+              <span>🔊</span> Écouter la lettre
+            </button>
+            <button class="btn-action" id="btn-reset-letter">
+              <span>🔄</span> Réinitialiser
+            </button>
+            <button class="btn-action" id="btn-copy-letter">
+              <span>📋</span> Copier le texte
+            </button>
+            <button class="btn-action" id="btn-print-letter">
+              <span>🖨️</span> Imprimer
+            </button>
+          </div>
+        </div>
+
+        <!-- Interactive CBSE Quiz -->
+        <div class="quiz-card">
+          <div class="card-title-row">
+            <h3>🎯 Quiz Culture & Civilisation (Section D)</h3>
+            <span style="font-size: 0.85rem; color: var(--gold-bright); font-weight: 700;" id="quiz-score-display">Score : 0 / 5</span>
+          </div>
+
+          <div class="quiz-progress-bar">
+            <div class="quiz-progress-fill" id="quiz-progress"></div>
+          </div>
+
+          <div class="quiz-question-tag" id="quiz-step-tag">QUESTION 1 SUR 5 &bull; ARCHITECTURE</div>
+          <h4 class="quiz-question-text" id="quiz-question-title">Qui a construit la grande pyramide au centre de la cour Napoléon ?</h4>
+
+          <div class="quiz-options" id="quiz-options-container">
+            <!-- Options injected by JS -->
+          </div>
+
+          <div class="quiz-feedback" id="quiz-feedback-box"></div>
+
+          <div style="display: flex; justify-content: flex-end;">
+            <button class="btn-action btn-primary" id="btn-next-question" style="display: none;">
+              Question suivante →
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Lightbox Modal for Fullscreen Visual Detail -->
+  <div class="image-lightbox-modal" id="lightbox-modal">
+    <div class="lightbox-card">
+      <button class="lightbox-close-btn" id="lightbox-close">&times;</button>
+      <img src="" alt="" class="lightbox-image" id="lightbox-img">
+      <div class="lightbox-info">
+        <h3 class="lightbox-title" id="lightbox-title"></h3>
+        <p class="lightbox-desc" id="lightbox-desc"></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Fireworks Overlay Canvas -->
+  <canvas id="fireworks-canvas"></canvas>
+
+  <!-- =========================================================================
+       JAVASCRIPT APPLICATION ENGINE
+       ========================================================================= -->
+  <script>
+    // State Management
+    const appState = {
+      currentEpoch: 0,
+      showEnglish: false,
+      textScaleIndex: 1,
+      currentQuizIndex: 0,
+      quizScore: 0,
+      speechActive: false
+    };
+
+    // 4 Historical Epoch Data (Faithful to shared text and historical accuracy)
+    const epochsData = [
+      {
+        year: "1190",
+        periodTag: "ÉPOQUE I • FIN DU XIIe SIÈCLE (PHILIPPE AUGUSTE)",
+        title: "Le Château Fort Médiéval & La Grosse Tour",
+        image: "./assets/louvre_medieval.jpg",
+        caption: "🏰 Forteresse médiévale de Philippe Auguste avec son donjon circulaire et ses fossés sur la Seine (1190)",
+        quote: "« <span class='french-highlight'>Château médiéval</span>, <span class='french-highlight'>palais des rois de France</span>, musée depuis deux siècles, le palais du Louvre développe son architecture sur <span class='french-highlight'>plus de 800 années d'histoire</span>. »",
+        quoteEn: "Medieval castle, palace of the kings of France, museum for two centuries, the Louvre palace unfolds its architecture over more than 800 years of history.",
+        facts: [
+          { label: "Fondateur", val: "Roi Philippe Auguste (1190)" },
+          { label: "Fonction initiale", val: "Forteresse défensive de Paris" },
+          { label: "Élément clé", val: "Le Donjon (La Grosse Tour)" },
+          { label: "Situation", val: "Rive droite de la Seine" }
+        ],
+        examInsight: {
+          title: "📌 Point Clé CBSE & Grammaire",
+          text: "Retenez l'opposition : <em>« Autrefois, ce bâtiment <strong>était</strong> une forteresse médiévale »</em> (<strong>Imparfait</strong> de description dans le passé) vs <em>« Philippe Auguste <strong>a construit</strong> le château »</em> (<strong>Passé Composé</strong> d'action précise)."
+        },
+        hotspots: [
+          { top: "34%", left: "61%", label: "La Grosse Tour (Le Donjon de 30m)" },
+          { top: "62%", left: "40%", label: "Pont-levis & Entrée fortifiée" },
+          { top: "72%", left: "75%", label: "Fossés défensifs en eau" },
+          { top: "42%", left: "14%", label: "La Seine & Quais médiévaux" }
+        ]
+      },
+      {
+        year: "1546 – 1682",
+        periodTag: "ÉPOQUE II • RENAISSANCE & MONARCHIE ROYALE",
+        title: "Le Somptueux Palais des Rois de France",
+        image: "./assets/louvre_royal.jpg",
+        caption: "👑 Le Palais Royal de la Renaissance : François Ier, Henri IV et Louis XIV développent la Grande Galerie",
+        quote: "« <span class='french-highlight'>Palais des rois de France</span> pendant plusieurs siècles, les souverains comme François Ier et Henri IV ont transformé la forteresse en résidence royale prestigieuse. »",
+        quoteEn: "Palace of the kings of France for several centuries, monarchs such as Francis I and Henry IV transformed the fortress into a prestigious royal residence.",
+        facts: [
+          { label: "Rois Bâtisseurs", val: "François Ier, Henri IV, Louis XIV" },
+          { label: "Transformation", val: "Démolition du donjon en 1528" },
+          { label: "Grande Galerie", val: "Bordant la Seine (450 mètres)" },
+          { label: "Départ royal", val: "Louis XIV part pour Versailles (1682)" }
+        ],
+        examInsight: {
+          title: "📌 Question Fréquente CBSE Section D",
+          text: "<strong>Question :</strong> <em>Qu'était le Louvre autrefois avant de devenir un musée ?</em><br><strong>Réponse :</strong> <em>Autrefois, le Louvre était le château fort médiéval puis le <strong>palais des rois de France</strong>.</em>"
+        },
+        hotspots: [
+          { top: "38%", left: "16%", label: "La Grande Galerie longeant la Seine" },
+          { top: "54%", left: "67%", label: "La Cour d'Honneur & Fontaines royales" },
+          { top: "80%", left: "26%", label: "Carrosses de la Couronne royale" },
+          { top: "25%", left: "77%", label: "Façade classique sculptée" }
+        ]
+      },
+      {
+        year: "1793",
+        periodTag: "ÉPOQUE III • RÉVOLUTION FRANÇAISE (10 AOÛT 1793)",
+        title: "La Révolution & La Naissance du Musée Public",
+        image: "./assets/louvre_revolution.jpg",
+        caption: "🏛️ Ouverture du Muséum central des arts de la République : les chefs-d'œuvre appartiennent désormais au peuple",
+        quote: "« Musée depuis <span class='french-highlight'>deux siècles</span>, le palais du Louvre ouvre ses portes aux citoyens en 1793 sous la Révolution française pour partager les chefs-d'œuvre de la Nation. »",
+        quoteEn: "A museum for two centuries, the Louvre palace opened its doors to citizens in 1793 during the French Revolution to share the nation's artistic masterpieces.",
+        facts: [
+          { label: "Date d'Inauguration", val: "10 août 1793 (Révolution)" },
+          { label: "Nom d'origine", val: "Muséum central des arts" },
+          { label: "Accès", val: "Gratuit pour le peuple & les artistes" },
+          { label: "Statut actuel", val: "Musée national universel" }
+        ],
+        examInsight: {
+          title: "📌 Repère Chronologique CBSE",
+          text: "La formule de votre texte : <em>« musée depuis deux siècles »</em> fait référence aux plus de 200 ans écoulés depuis la Révolution de 1793 !"
+        },
+        hotspots: [
+          { top: "45%", left: "50%", label: "Citoyens découvrant les peintures" },
+          { top: "26%", left: "12%", label: "Chefs-d'œuvre religieux & royaux" },
+          { top: "18%", left: "54%", label: "Verrières & Éclairage zénithal" },
+          { top: "72%", left: "13%", label: "Gardes nationaux de la République" }
+        ]
+      },
+      {
+        year: "1989 – Aujourd'hui",
+        periodTag: "ÉPOQUE IV • LE GRAND LOUVRE MODERNE",
+        title: "La Grande Pyramide de Ieoh Ming Pei",
+        image: "./assets/louvre_pyramide.jpg",
+        caption: "✨ La pyramide de verre de I.M. Pei dans la cour Napoléon, entrée centrale accueillant 9 millions de visiteurs",
+        quote: "« C'est l'architecte sino-américain <span class='french-highlight'>Ieoh Ming Pei</span> qui a construit au centre de la cour Napoléon <span class='french-highlight'>une grande pyramide</span>. Avec environ <span class='french-highlight'>neuf millions de visiteurs annuels</span>, le Louvre reste <span class='french-highlight'>le musée le plus visité du monde</span>. »",
+        quoteEn: "It was the Chinese-American architect Ieoh Ming Pei who built a large pyramid in the center of the Napoleon courtyard. With about nine million annual visitors, the Louvre remains the most visited museum in the world.",
+        facts: [
+          { label: "Architecte", val: "Ieoh Ming Pei (Sino-Américain)" },
+          { label: "Inauguration", val: "1989 (Bicentenaire Révolution)" },
+          { label: "Emplacement", val: "Centre de la cour Napoléon" },
+          { label: "Fréquentation", val: "Environ 9 millions de visiteurs / an" }
+        ],
+        examInsight: {
+          title: "📌 Les Incontournables de l'Examen CBSE",
+          text: "Retenez impérativement l'orthographe du nom : <strong>Ieoh Ming Pei</strong> et les superlatifs : <em>« le plus grand de Paris »</em> et <em>« le musée le plus visité du monde »</em>."
+        },
+        hotspots: [
+          { top: "48%", left: "51%", label: "La Grande Pyramide en verre et métal (21,6m)" },
+          { top: "59%", left: "49%", label: "Pyramide d'entrée inversée sous la cour" },
+          { top: "54%", left: "76%", label: "Bassin d'eau & Réflexions lumineuses" },
+          { top: "36%", left: "89%", label: "Aile Richelieu intégrée au Grand Louvre" }
+        ]
+      }
+    ];
+
+    // Spatial Map Data
+    const spatialWings = {
+      pyramide: {
+        tag: "SECTEUR CENTRAL",
+        title: "Cour Napoléon & Grande Pyramide",
+        desc: "Conçue par Ieoh Ming Pei et inaugurée en 1989, la pyramide en losanges de verre illumine l'immense hall d'accueil souterrain qui distribue les accès vers les ailes Denon, Sully et Richelieu.",
+        area: "Cour Napoléon",
+        fact: "Hauteur : 21,6 mètres, 673 losanges et triangles de verre."
+      },
+      sully: {
+        tag: "AILE EST",
+        title: "Cour Carrée & Aile Sully",
+        desc: "L'aile la plus historique ! Elle entoure la majestueuse Cour Carrée et abrite dans ses sous-sols les vestiges spectaculaires du Louvre Médiéval (fossés et base du donjon de Philippe Auguste), ainsi que la célèbre Vénus de Milo.",
+        area: "Cour Carrée",
+        fact: "C'est ici qu'on peut marcher dans les douves médiévales de 1190."
+      },
+      denon: {
+        tag: "AILE SUD",
+        title: "Aile Denon (Bord de Seine)",
+        desc: "S'étendant parallèlement à la Seine, l'aile Denon accueille les plus illustres chefs-d'œuvre : La Joconde de Léonard de Vinci dans la Salle des États, Les Noces de Cana, et La Victoire de Samothrace au sommet de l'escalier Daru.",
+        area: "Rive Droite de la Seine",
+        fact: "Contient les peintures italiennes et les grands formats français."
+      },
+      richelieu: {
+        tag: "AILE NORD",
+        title: "Aile Richelieu (Rue de Rivoli)",
+        desc: "Anciennement occupée par le Ministère des Finances, elle a été restituée au musée lors du projet du Grand Louvre de 1989. Elle abrite les cours intérieures vitrées Puget et Khorsabad, les sculptures françaises et les appartements Napoléon III.",
+        area: "Rue de Rivoli",
+        fact: "Magnifiques sculptures baignées de lumière naturelle sous de hautes verrières."
+      },
+      tuileries: {
+        tag: "JARDIN HISTORIQUE",
+        title: "Jardin des Tuileries & Arc du Carrousel",
+        desc: "Créé par Catherine de Médicis et redessiné par André Le Nôtre, ce jardin à la française de plus de 25 hectares prolonge l'axe historique du Louvre vers la Place de la Concorde et les Champs-Élysées.",
+        area: "Domaine extérieur",
+        fact: "Fait partie intégrante du domaine de 40 hectares du Grand Louvre."
+      },
+      seine: {
+        tag: "GÉOGRAPHIE PARISIENNE",
+        title: "La Rive Droite de la Seine",
+        desc: "Le Louvre est implanté sur la 'rive droite' de la Seine (au nord du fleuve), en plein centre du 1er arrondissement de Paris. Cette position stratégique permettait autrefois de surveiller les bateaux venant de Normandie.",
+        area: "Cœur de Paris",
+        fact: "Point clé de la leçon : « sur la rive droite de la Seine »."
+      }
+    };
+
+    // Quiz Questions Data (Aligned directly with lesson text & CBSE Class 10 Section D)
+    const quizData = [
+      {
+        question: "Qui est l'architecte sino-américain qui a construit la grande pyramide au centre de la cour Napoléon ?",
+        tag: "QUESTION 1 SUR 5 • ARCHITECTURE",
+        options: [
+          "Gustave Eiffel",
+          "Ieoh Ming Pei",
+          "Le Corbusier",
+          "Jean Nouvel"
+        ],
+        correct: 1,
+        explanation: "Bravo ! C'est l'architecte sino-américain Ieoh Ming Pei qui a créé la pyramide de verre inaugurée en 1989."
+      },
+      {
+        question: "Sur quelle rive de la Seine le musée du Louvre est-il situé ?",
+        tag: "QUESTION 2 SUR 5 • GÉOGRAPHIE",
+        options: [
+          "Sur la rive gauche",
+          "Sur la rive droite",
+          "Sur l'île de la Cité",
+          "Sur l'île Saint-Louis"
+        ],
+        correct: 1,
+        explanation: "Exact ! Le texte précise : « Le Louvre est installé [...] sur la rive droite de la Seine »."
+      },
+      {
+        question: "Quelle était la fonction du Louvre au Moyen Âge à l'époque de Philippe Auguste (1190) ?",
+        tag: "QUESTION 3 SUR 5 • HISTOIRE",
+        options: [
+          "Un opéra national",
+          "Un château fort médiéval défensif",
+          "Une université parisienne",
+          "Un marché couvert"
+        ],
+        correct: 1,
+        explanation: "Correct ! Le Louvre était à l'origine un château médiéval fortifié avec donjon et fossés pour protéger Paris."
+      },
+      {
+        question: "Environ combien de peintures européennes le musée du Louvre conserve-t-il ?",
+        tag: "QUESTION 4 SUR 5 • COLLECTIONS",
+        options: [
+          "Environ 1 000 peintures",
+          "Environ 3 500 peintures",
+          "Environ 6 000 peintures",
+          "Plus de 50 000 peintures"
+        ],
+        correct: 2,
+        explanation: "Parfait ! Le texte indique : « Le musée du Louvre conserve environ 6000 peintures européennes »."
+      },
+      {
+        question: "Combien de visiteurs annuels le musée du Louvre accueille-t-il environ ?",
+        tag: "QUESTION 5 SUR 5 • RAYONNEMENT MONDIAL",
+        options: [
+          "Environ 2 millions",
+          "Environ 5 millions",
+          "Environ 9 millions",
+          "Environ 20 millions"
+        ],
+        correct: 2,
+        explanation: "Excellent ! Avec environ 9 millions de visiteurs annuels, le Louvre reste le musée le plus visité du monde."
+      }
+    ];
+
+    // Initialize Audio Synthesis & Web Audio FX
+    const synth = window.speechSynthesis;
+    let frenchVoice = null;
+
+    function initVoice() {
+      if (!synth) return;
+      const voices = synth.getVoices();
+      frenchVoice = voices.find(v => v.lang.startsWith('fr') || v.lang === 'fr-FR') || voices.find(v => v.name.toLowerCase().includes('french'));
+    }
+
+    if (synth) {
+      synth.onvoiceschanged = initVoice;
+      initVoice();
+    }
+
+    // Web Audio Chime FX (Zero dependencies, pure Web Audio)
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    
+    function playChime(type = 'click') {
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+
+      const now = audioCtx.currentTime;
+      if (type === 'click') {
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(587.33, now); // D5
+        osc.frequency.exponentialRampToValueAtTime(880, now + 0.1); // A5
+        gain.gain.setValueAtTime(0.08, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
+        osc.start(now);
+        osc.stop(now + 0.16);
+      } else if (type === 'correct') {
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(523.25, now); // C5
+        osc.frequency.setValueAtTime(659.25, now + 0.1); // E5
+        osc.frequency.setValueAtTime(783.99, now + 0.2); // G5
+        osc.frequency.setValueAtTime(1046.50, now + 0.3); // C6
+        gain.gain.setValueAtTime(0.12, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.55);
+        osc.start(now);
+        osc.stop(now + 0.56);
+      } else if (type === 'wrong') {
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(220, now); // A3
+        osc.frequency.linearRampToValueAtTime(164.81, now + 0.25); // E3
+        gain.gain.setValueAtTime(0.1, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+        osc.start(now);
+        osc.stop(now + 0.31);
+      }
+    }
+
+    // Render Current Historical Epoch
+    function renderEpoch(index) {
+      appState.currentEpoch = index;
+      const data = epochsData[index];
+
+      // Update Top Epoch Steps
+      document.querySelectorAll('.epoch-step').forEach((el, idx) => {
+        if (idx === index) {
+          el.classList.add('selected');
+          el.setAttribute('aria-selected', 'true');
+        } else {
+          el.classList.remove('selected');
+          el.setAttribute('aria-selected', 'false');
+        }
+      });
+
+      // Update Visual & Captions
+      const img = document.getElementById('epoch-main-img');
+      img.style.opacity = '0.3';
+      setTimeout(() => {
+        img.src = data.image;
+        img.alt = data.title;
+        img.style.opacity = '1';
+      }, 180);
+
+      document.getElementById('visual-caption-badge').textContent = data.caption;
+      document.getElementById('epoch-tag').textContent = data.periodTag;
+      document.getElementById('epoch-heading').textContent = data.title;
+      document.getElementById('epoch-quote').innerHTML = data.quote;
+      document.getElementById('epoch-quote-en').textContent = data.quoteEn;
+
+      // Render Hotspots on Image
+      const hotspotsContainer = document.getElementById('visual-hotspots-container');
+      hotspotsContainer.innerHTML = '';
+      data.hotspots.forEach((hs, i) => {
+        const spot = document.createElement('div');
+        spot.className = 'visual-hotspot';
+        spot.style.top = hs.top;
+        spot.style.left = hs.left;
+        spot.innerHTML = `
+          <span>${i + 1}</span>
+          <div class="hotspot-tooltip">${hs.label}</div>
+        `;
+        spot.addEventListener('click', (e) => {
+          e.stopPropagation();
+          playChime('click');
+          speakText(hs.label);
+        });
+        hotspotsContainer.appendChild(spot);
+      });
+
+      // Render Facts Grid
+      const factsGrid = document.getElementById('epoch-facts-grid');
+      factsGrid.innerHTML = '';
+      data.facts.forEach(f => {
+        const div = document.createElement('div');
+        div.className = 'fact-pill';
+        div.innerHTML = `
+          <div class="fact-pill-label">${f.label}</div>
+          <div class="fact-pill-val">${f.val}</div>
+        `;
+        factsGrid.appendChild(div);
+      });
+
+      // Render Exam Box
+      const examBox = document.getElementById('epoch-exam-box');
+      examBox.innerHTML = `
+        <div class="exam-note-header">
+          <span>🎓</span> ${data.examInsight.title}
+        </div>
+        <div class="exam-note-body">
+          ${data.examInsight.text}
+        </div>
+      `;
+
+      // Update Speech Button State
+      if (synth && synth.speaking) {
+        synth.cancel();
+      }
+      setSpeakingState(false);
+    }
+
+    // Text to Speech Function
+    function speakText(text) {
+      if (!synth) return;
+      if (synth.speaking) {
+        synth.cancel();
+        setSpeakingState(false);
+        return;
+      }
+
+      // Strip HTML tags for speech
+      const cleanText = text.replace(/<[^>]*>?/gm, '');
+      const utter = new SpeechSynthesisUtterance(cleanText);
+      utter.lang = 'fr-FR';
+      if (frenchVoice) {
+        utter.voice = frenchVoice;
+      }
+      utter.rate = 0.92;
+      utter.pitch = 1.0;
+
+      utter.onstart = () => setSpeakingState(true);
+      utter.onend = () => setSpeakingState(false);
+      utter.onerror = () => setSpeakingState(false);
+
+      synth.speak(utter);
+    }
+
+    function setSpeakingState(speaking) {
+      appState.speechActive = speaking;
+      const btn = document.getElementById('btn-speech-read');
+      const label = document.getElementById('speech-btn-label');
+      if (speaking) {
+        btn.classList.add('speaking');
+        label.textContent = "Arrêter la lecture";
+      } else {
+        btn.classList.remove('speaking');
+        label.textContent = "Écouter la prononciation française";
+      }
+    }
+
+    // Lightbox Controls
+    function openLightbox(imgSrc, title, desc) {
+      playChime('click');
+      const modal = document.getElementById('lightbox-modal');
+      document.getElementById('lightbox-img').src = imgSrc;
+      document.getElementById('lightbox-title').textContent = title;
+      document.getElementById('lightbox-desc').textContent = desc;
+      modal.classList.add('active');
+    }
+
+    document.getElementById('lightbox-close').addEventListener('click', () => {
+      document.getElementById('lightbox-modal').classList.remove('active');
+    });
+
+    document.getElementById('lightbox-modal').addEventListener('click', (e) => {
+      if (e.target.id === 'lightbox-modal') {
+        document.getElementById('lightbox-modal').classList.remove('active');
+      }
+    });
+
+    document.getElementById('btn-zoom-img').addEventListener('click', () => {
+      const cur = epochsData[appState.currentEpoch];
+      openLightbox(cur.image, cur.title, cur.caption);
+    });
+
+    // Navigation Tabs Switching
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        playChime('click');
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.view-panel').forEach(v => v.classList.remove('active-view'));
+
+        btn.classList.add('active');
+        const targetId = btn.getAttribute('data-target');
+        document.getElementById(targetId).classList.add('active-view');
+      });
+    });
+
+    // Epoch Selectors
+    document.querySelectorAll('.epoch-step').forEach(step => {
+      step.addEventListener('click', () => {
+        playChime('click');
+        const epochIdx = parseInt(step.getAttribute('data-epoch'), 10);
+        renderEpoch(epochIdx);
+      });
+    });
+
+    // Pager Buttons
+    document.getElementById('btn-prev-epoch').addEventListener('click', () => {
+      playChime('click');
+      let next = appState.currentEpoch - 1;
+      if (next < 0) next = epochsData.length - 1;
+      renderEpoch(next);
+    });
+
+    document.getElementById('btn-next-epoch').addEventListener('click', () => {
+      playChime('click');
+      let next = appState.currentEpoch + 1;
+      if (next >= epochsData.length) next = 0;
+      renderEpoch(next);
+    });
+
+    // Speech Audio Triggers
+    document.getElementById('btn-speech-read').addEventListener('click', () => {
+      const cur = epochsData[appState.currentEpoch];
+      const textToSpeak = cur.title + ". " + cur.quote;
+      speakText(textToSpeak);
+    });
+
+    document.getElementById('btn-audio-gallery').addEventListener('click', () => {
+      const speech = "Le musée du Louvre conserve environ six mille peintures européennes y compris celles des peintres comme Renoir, Van Gogh et Leonardo da Vinci.";
+      speakText(speech);
+    });
+
+    // English Toggle
+    document.getElementById('btn-toggle-en').addEventListener('click', () => {
+      playChime('click');
+      appState.showEnglish = !appState.showEnglish;
+      const label = document.getElementById('label-lang-toggle');
+      const quoteEn = document.getElementById('epoch-quote-en');
+
+      if (appState.showEnglish) {
+        label.textContent = "English : ON";
+        quoteEn.classList.add('show-en');
+        document.getElementById('btn-toggle-en').classList.add('active');
+      } else {
+        label.textContent = "English : Off";
+        quoteEn.classList.remove('show-en');
+        document.getElementById('btn-toggle-en').classList.remove('active');
+      }
+    });
+
+    // Font Scale
+    const scaleValues = [0.9, 1.0, 1.12, 1.25];
+    document.getElementById('btn-font-scale').addEventListener('click', () => {
+      playChime('click');
+      appState.textScaleIndex = (appState.textScaleIndex + 1) % scaleValues.length;
+      document.documentElement.style.setProperty('--text-scale', scaleValues[appState.textScaleIndex]);
+    });
+
+    // Fullscreen
+    document.getElementById('btn-fullscreen').addEventListener('click', () => {
+      playChime('click');
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(err => alert(`Erreur plein écran: ${err.message}`));
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        }
+      }
+    });
+
+    // =========================================================================
+    // SPATIAL MAP SECTORS INTERACTION
+    // =========================================================================
+    function selectWing(wingKey) {
+      const data = spatialWings[wingKey];
+      if (!data) return;
+
+      playChime('click');
+
+      // Update pins
+      document.querySelectorAll('.map-pin').forEach(pin => {
+        if (pin.getAttribute('data-wing') === wingKey) {
+          pin.classList.add('active-pin');
+        } else {
+          pin.classList.remove('active-pin');
+        }
+      });
+
+      // Update chips
+      document.querySelectorAll('.wing-chip').forEach(chip => {
+        if (chip.getAttribute('data-wing') === wingKey) {
+          chip.classList.add('active-chip');
+        } else {
+          chip.classList.remove('active-chip');
+        }
+      });
+
+      // Update description panel
+      document.getElementById('spatial-tag').textContent = data.tag;
+      document.getElementById('spatial-title').textContent = data.title;
+      document.getElementById('spatial-desc').textContent = data.desc;
+    }
+
+    document.querySelectorAll('.map-pin').forEach(pin => {
+      pin.addEventListener('click', () => {
+        selectWing(pin.getAttribute('data-wing'));
+      });
+    });
+
+    document.querySelectorAll('.wing-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        selectWing(chip.getAttribute('data-wing'));
+      });
+    });
+
+    // =========================================================================
+    // CBSE LETTER & QUIZ LOGIC
+    // =========================================================================
+    function updateWordCount() {
+      const bodyText = document.getElementById('letter-content').innerText.trim();
+      const words = bodyText.length > 0 ? bodyText.split(/\s+/).filter(w => w.length > 0) : [];
+      const countBadge = document.getElementById('letter-word-count');
+      countBadge.textContent = `${words.length} mots`;
+      if (words.length >= 75 && words.length <= 95) {
+        countBadge.style.borderColor = '#10b981';
+        countBadge.style.color = '#6ee7b7';
+      } else {
+        countBadge.style.borderColor = '#3b82f6';
+        countBadge.style.color = '#93c5fd';
+      }
+    }
+
+    document.getElementById('btn-read-letter').addEventListener('click', () => {
+      const fullText = document.getElementById('letter-content').innerText;
+      speakText(fullText);
+    });
+
+    document.getElementById('btn-copy-letter').addEventListener('click', () => {
+      playChime('click');
+      const text = document.getElementById('letter-date').innerText + "\n\n" +
+                   "Cher Rahul,\n\n" +
+                   document.getElementById('letter-content').innerText + "\n\n" +
+                   "Ton ami,\nXYZ";
+      navigator.clipboard.writeText(text).then(() => {
+        alert("Texte de la lettre copié dans le presse-papiers !");
+      });
+    });
+
+    document.getElementById('btn-print-letter').addEventListener('click', () => {
+      window.print();
+    });
+
+    document.getElementById('btn-reset-letter').addEventListener('click', () => {
+      playChime('click');
+      document.getElementById('letter-content').innerHTML = `Comment vas-tu ? J'espère que cette lettre te trouvera en bonne santé.
+
+Samedi dernier, <span class="fact-hl">j'ai visité le musée du Louvre</span> et <span class="fact-hl">c'était magnifique</span>. Autrefois, ce bâtiment <span class="fact-hl">était le palais des rois de France</span>. Aujourd'hui, c'est <span class="fact-hl">le musée le plus visité du monde</span> avec environ 9 millions de visiteurs. À l'entrée, il y a une grande pyramide de verre construite par <span class="fact-hl">l'architecte Ieoh Ming Pei</span>.
+
+À l'intérieur, j'ai vu <span class="fact-hl">la Joconde de Léonard de Vinci</span>. Il y a environ <span class="fact-hl">6000 peintures</span> ! Tu devras y aller un jour.`;
+      updateWordCount();
+    });
+
+    // =========================================================================
+    // QUIZ ENGINE WITH WEB AUDIO & CANVAS FIREWORKS
+    // =========================================================================
+    function renderQuizQuestion(index) {
+      const q = quizData[index];
+      appState.currentQuizIndex = index;
+
+      document.getElementById('quiz-step-tag').textContent = q.tag;
+      document.getElementById('quiz-question-title').textContent = q.question;
+      document.getElementById('quiz-progress').style.width = `${((index + 1) / quizData.length) * 100}%`;
+
+      const optionsContainer = document.getElementById('quiz-options-container');
+      optionsContainer.innerHTML = '';
+
+      const letters = ['A', 'B', 'C', 'D'];
+      q.options.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.className = 'quiz-opt-btn';
+        btn.innerHTML = `
+          <span class="opt-letter">${letters[idx]}</span>
+          <span>${opt}</span>
+        `;
+        btn.addEventListener('click', () => handleQuizAnswer(idx, btn));
+        optionsContainer.appendChild(btn);
+      });
+
+      const feedback = document.getElementById('quiz-feedback-box');
+      feedback.className = 'quiz-feedback';
+      feedback.style.display = 'none';
+
+      document.getElementById('btn-next-question').style.display = 'none';
+    }
+
+    function handleQuizAnswer(selectedIndex, buttonElem) {
+      const q = quizData[appState.currentQuizIndex];
+      const feedback = document.getElementById('quiz-feedback-box');
+      const allButtons = document.querySelectorAll('.quiz-opt-btn');
+
+      allButtons.forEach(b => b.style.pointerEvents = 'none');
+
+      if (selectedIndex === q.correct) {
+        playChime('correct');
+        buttonElem.classList.add('correct');
+        feedback.className = 'quiz-feedback show success';
+        feedback.innerHTML = `<strong>Exact !</strong> ${q.explanation}`;
+        appState.quizScore++;
+        document.getElementById('quiz-score-display').textContent = `Score : ${appState.quizScore} / ${quizData.length}`;
+      } else {
+        playChime('wrong');
+        buttonElem.classList.add('wrong');
+        allButtons[q.correct].classList.add('correct');
+        feedback.className = 'quiz-feedback show error';
+        feedback.innerHTML = `<strong>Incorrect.</strong> ${q.explanation}`;
+      }
+
+      feedback.style.display = 'block';
+
+      const nextBtn = document.getElementById('btn-next-question');
+      if (appState.currentQuizIndex < quizData.length - 1) {
+        nextBtn.textContent = "Question suivante →";
+      } else {
+        nextBtn.textContent = "Voir les résultats & Célébrer 🎉";
+      }
+      nextBtn.style.display = 'inline-flex';
+    }
+
+    document.getElementById('btn-next-question').addEventListener('click', () => {
+      playChime('click');
+      if (appState.currentQuizIndex < quizData.length - 1) {
+        renderQuizQuestion(appState.currentQuizIndex + 1);
+      } else {
+        // Quiz completed
+        if (appState.quizScore >= 3) {
+          launchFireworks();
+        }
+        alert(`Félicitations ! Vous avez terminé le quiz avec un score de ${appState.quizScore} / ${quizData.length} !`);
+        renderQuizQuestion(0);
+        appState.quizScore = 0;
+        document.getElementById('quiz-score-display').textContent = `Score : 0 / ${quizData.length}`;
+      }
+    });
+
+    // =========================================================================
+    // CANVAS CELEBRATORY FIREWORKS
+    // =========================================================================
+    const canvas = document.getElementById('fireworks-canvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    class Particle {
+      constructor(x, y, color) {
+        this.x = x;
+        this.y = y;
+        this.color = color;
+        this.radius = Math.random() * 3.5 + 1.5;
+        const angle = Math.random() * Math.PI * 2;
+        const speed = Math.random() * 7 + 2;
+        this.vx = Math.cos(angle) * speed;
+        this.vy = Math.sin(angle) * speed;
+        this.alpha = 1;
+        this.decay = Math.random() * 0.02 + 0.015;
+      }
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        this.vy += 0.12; // gravity
+        this.alpha -= this.decay;
+      }
+      draw() {
+        ctx.save();
+        ctx.globalAlpha = this.alpha;
+        ctx.fillStyle = this.color;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+    }
+
+    function createFirework(x, y) {
+      const colors = ['#ffd700', '#3b82f6', '#ef4444', '#10b981', '#ffffff', '#e879f9'];
+      for (let i = 0; i < 60; i++) {
+        const color = colors[Math.floor(Math.random() * colors.length)];
+        particles.push(new Particle(x, y, color));
+      }
+    }
+
+    function animateFireworks() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles = particles.filter(p => p.alpha > 0);
+      particles.forEach(p => {
+        p.update();
+        p.draw();
+      });
+      if (particles.length > 0) {
+        requestAnimationFrame(animateFireworks);
+      } else {
+        canvas.style.display = 'none';
+      }
+    }
+
+    function launchFireworks() {
+      canvas.style.display = 'block';
+      for (let k = 0; k < 6; k++) {
+        setTimeout(() => {
+          const x = Math.random() * (canvas.width * 0.7) + canvas.width * 0.15;
+          const y = Math.random() * (canvas.height * 0.5) + canvas.height * 0.15;
+          createFirework(x, y);
+          playChime('correct');
+        }, k * 350);
+      }
+      animateFireworks();
+    }
+
+    // Keyboard Shortcuts (Arrow keys for timeline navigation)
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight') {
+        let next = appState.currentEpoch + 1;
+        if (next >= epochsData.length) next = 0;
+        renderEpoch(next);
+      } else if (e.key === 'ArrowLeft') {
+        let prev = appState.currentEpoch - 1;
+        if (prev < 0) prev = epochsData.length - 1;
+        renderEpoch(prev);
+      } else if (e.key === 'Escape') {
+        document.getElementById('lightbox-modal').classList.remove('active');
+      }
+    });
+
+    // Initial Load
+    window.addEventListener('DOMContentLoaded', () => {
+      renderEpoch(0);
+      renderQuizQuestion(0);
+      updateWordCount();
+    });
+  </script>
+</body>
+</html>

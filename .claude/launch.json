@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "deck-preview",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["build-system/serve.js"],
+      "port": 8099
+    },
+    {
+      "name": "letter-app",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["build-system/serve-letterapp.js"],
+      "port": 8123
+    }
+  ]
+}

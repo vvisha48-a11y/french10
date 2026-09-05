@@ -1,0 +1,130 @@
+You are an expert Senior Full-Stack Web Developer and French Pedagogy Specialist.
+
+I have an existing single-file web app ("master-grammar-app.html") containing 49 sub-topics, 434 slides, a custom scoring engine, and interactive quizzes. 
+
+CRITICAL CONSTRAINT: 
+Do NOT alter, break, or remove any existing quiz logic, slide IDs, scoring engine mechanics, or core content structure. You are ONLY adding new features, enhancing existing slides, and layering on the specifications below.
+
+Please update the single-file application with the following 10 comprehensive enhancements:
+
+----------------------------------------------------------------------
+1. CLASSROOM "PICK A STUDENT" RANDOMIZER
+----------------------------------------------------------------------
+- Add a persistent "🎲 Pick Student" button in the global navigation bar.
+- Clicking it opens an animated modal presenting two class buttons: [Class Section A] and [Class Section B].
+- Each class contains a preloaded roster array of placeholder names (e.g., Student 1 to 30) that can be easily customized.
+- Clicking a class triggers a 1.5-second cycling animation before landing on a randomly selected student's name in a large, celebratory badge with confetti effects.
+
+----------------------------------------------------------------------
+2. FULL-SCREEN INTERACTIVE TENSE TIMELINE (INTRODUCTORY HERO TOPIC)
+----------------------------------------------------------------------
+- Insert an introductory hero topic at the very beginning of the app: "Timeline of French Tenses".
+- Build this as a full-screen, responsive SVG/CSS interactive timeline displaying all major tenses in chronological order:
+  [Plus-que-parfait] ➔ [Passé Composé / Imparfait] ➔ [Passé Récent] ➔ [Présent] ➔ [Futur Proche] ➔ [Futur Simple] ➔ [Futur Antérieur]
+- Include the Conditional and Subjunctive as floating contextual mood overlays.
+- Each tense node on the timeline must show:
+  * Name in French & English
+  * Formation formula badge
+  * A clear visual example sentence tracking one sample verb (e.g., "manger" or "partir") across time.
+
+----------------------------------------------------------------------
+3. "USAGES & REAL-WORLD CONTEXT" SLIDES (1–3 SLIDES PER TOPIC)
+----------------------------------------------------------------------
+- For every grammar topic, ensure there are 1 to 3 dedicated "Usage & Context" slides before deep grammar drills.
+- Embed curated, high-quality online external images via Unsplash CDN (e.g., French street signs, railway station boards, café orders, doctor visits, conversations).
+- Include visual memory anchors and diagrams:
+  * La Négation: The "Ne ... Pas Sandwich" visual diagram.
+  * L'Ordre des Pronoms: The "Pronoun Train" sequence diagram.
+  * Passé Composé vs. Imparfait: The "Film Scene Metaphor" (Imparfait = Background scenery/weather; Passé Composé = Sudden action/lightning bolt).
+  * Le Discours Indirect: Speech bubbles converting from direct to reported speech.
+
+----------------------------------------------------------------------
+4. COMPLETE EXCEPTIONS & BOARD TRICKS (PIÈGES) COVERAGE
+----------------------------------------------------------------------
+- Ensure every grammar topic includes a dedicated "⚠️ Common Traps & Board Pièges" section with 100% of standard exceptions covered:
+  * Irregular stems (Subjunctive, Futur, Conditionnel).
+  * Invariable past participles (e.g., verbs of measurement/cost like 'coûté', 'valu', reflexive verbs with following direct objects like 'Elle s'est lavé les mains').
+  * Negative transformations (e.g., partitive articles du/de la/des ➔ de/d', except with 'être').
+  * Tricky relative pronouns (e.g., 'ce qui', 'ce que', 'ce dont', and compound forms like 'auquel / desquels').
+
+----------------------------------------------------------------------
+5. ENGLISH UI, NAVIGATION & EXPLANATION LAYER
+----------------------------------------------------------------------
+- All navigation buttons, slide titles, instructions, rule descriptions, formula explanations, and "Pro-Tips / Pièges" must be written in clear, concise English for easy student comprehension.
+- All target examples, sample sentences, and quiz options must remain in natural French.
+
+----------------------------------------------------------------------
+6. CBSE BOARD-ALIGNED "RÉVISION MIXTE" (CLUE-WORD DRIVEN)
+----------------------------------------------------------------------
+- Update the Mixed Tenses revision stacks to strictly mirror the CBSE Class 10 Board Exam format ("Mettez les verbes aux temps convenables"):
+  * Completely REMOVE explicit tense names from the prompt questions.
+  * Emphasize and visually highlight time indicator clues (*hier, demain, souvent, autrefois, pendant que, quand, aussitôt que, dès que, si + présent, si + imparfait*).
+  * Add a "Hint" toggle button on each mixed question that reveals the clue word and the deduction logic in English.
+
+----------------------------------------------------------------------
+7. LA NOMINALISATION (CUSTOM TOPIC UNDER LES VERBES)
+----------------------------------------------------------------------
+- Add a dedicated 4 to 5 slide module specifically for "La Nominalisation" under the Verbs section:
+  * Slide 1: Suffix rules (-tion, -ment, -age, -ure, -ée).
+  * Slide 2: Masculine vs. Feminine noun patterns.
+  * Slide 3: Irregular & zero-suffix nominalisations (e.g., voler ➔ le vol, partir ➔ le départ).
+  * Slide 4: Real-world CBSE headline transformations (e.g., "Le président visite l'Inde" ➔ "Visite du président en Inde").
+  * Slide 5: Interactive practice drill.
+
+----------------------------------------------------------------------
+8. THE CONJUGATION LAB (DRILL ENGINE)
+----------------------------------------------------------------------
+- Build a dedicated, interactive "Conjugation Drilling Lab" tab/modal.
+- Structure it to ingest a 500-verb Markdown dataset with instant search by infinitive, group (1st, 2nd, 3rd), or irregularity.
+- Include a "Speed Drill Mode" where students are given a subject pronoun + tense and must type or select the correct conjugation against an optional timer.
+
+----------------------------------------------------------------------
+9. PRINT-TO-A4 PERFECTION (`@media print`)
+----------------------------------------------------------------------
+- Implement advanced print CSS optimized strictly for standard A4 paper:
+  * Add a "🖨️ Print Topic Worksheet" button on each topic toolbar, and a "🖨️ Print Complete Workbook" option.
+  * When printing a single topic, format all exercises and examples into clean, high-density 2-column or 1-column printable worksheets.
+  * Automatically hide all UI bars, randomizers, navigation buttons, and digital background colors.
+  * Enforce clean page breaks between major topics (`page-break-after: always;` / `break-after: page;`) to eliminate blank margins or awkward cut-offs.
+
+----------------------------------------------------------------------
+10. VERIFICATION & CODE INTEGRITY
+----------------------------------------------------------------------
+- Verify that all DOM selectors, event listeners, and data attributes match the existing engine.
+- Ensure the JavaScript syntax parses cleanly with zero console errors.
+- Keep the entire updated application delivered as a unified, ready-to-run file.
+
+----------------------------------------------------------------------
+11. POWERPOINT-STYLE STEP-BY-STEP REVEAL (CLICKER CONTROLLED)
+----------------------------------------------------------------------
+- Since this app will be projected live in a classroom, internal slide elements (bullet points, examples, rules) must NOT appear all at once.
+- Implement a "Step-by-Step Reveal" system controlled by user input, exactly like PowerPoint animations.
+- The JavaScript must listen for global keyboard events matching standard presentation clickers: `ArrowRight`, `ArrowLeft`, `PageDown`, `PageUp`, and `Spacebar`.
+- LOGIC: When the "Next" key/click is pressed:
+  1. Check if the current slide has any hidden "step" elements.
+  2. If yes, reveal the next single element (with a smooth CSS fade/slide-in).
+  3. If all elements on the current slide are already revealed, transition to the next slide.
+- Ensure the presenter can also use on-screen UI buttons to trigger these same step-by-step reveals.
+
+----------------------------------------------------------------------
+12. PROJECTOR & FULL-SCREEN OPTIMIZATION
+----------------------------------------------------------------------
+- Add a "📺 Fullscreen / Projector Mode" toggle button in the main navigation.
+- Clicking this must trigger the browser's native `requestFullscreen()` API to hide the browser UI, address bar, and OS taskbar.
+- Optimize the CSS for large projector displays (typically 16:9 or 4:3 aspect ratios):
+  * Use relative viewport units (`vh`, `vw`, `vmin`) or `clamp()` for typography so text scales up massively without breaking the layout.
+  * Ensure the content remains vertically and horizontally centered on the projector screen.
+----------------------------------------------------------------------
+13. ONLINE MODE TRANSITION & PRE-FLIGHT CONSULTATION
+----------------------------------------------------------------------
+- This application is officially transitioning from an "Offline-only" file to an "Online Mode" web application. 
+- You are strictly instructed to leverage robust online capabilities: utilize fast CDNs for modern web fonts (Google Fonts), UI icons (Lucide), lightweight animation engines (e.g., GSAP, Animate.css, or Lottie if applicable for grammar illustrations), and dynamic image linking (Unsplash source APIs for high-res context images).
+- CRITICAL STOPPING POINT: BEFORE you execute the full code generation, you must pause and act as my consultant. Based on the fact that we are now online, suggest to me a bulleted list of advanced, creative online-only features we can add—specifically focusing on rich illustrations, dynamic images, and advanced animations that would elevate a French grammar class. 
+- Wait for my feedback and approval on those suggestions before you generate the final HTML/JS file.
+----------------------------------------------------------------------
+8. THE CONJUGATION LAB (PATTERN RECOGNITION & DRILL ENGINE)
+----------------------------------------------------------------------
+- Build an advanced "Conjugation Lab" module that ingests my 500-verb markdown database. Do NOT just render a massive static table. Build it as an interactive learning engine with three core features:
+- A. SMART FILTERING: Allow students to search not just by typing a name, but by selecting "Verb Families" (e.g., Regular -ER, The 'Prendre' Family, The 'Venir/Tenir' Family, Stem-changing 'Boot' verbs).
+- B. VISUAL STEM HIGHLIGHTING: When displaying a conjugation table, dynamically use CSS/color to highlight irregular stem changes versus standard endings (e.g., visually separating the 'buv' in 'nous buvons' from the 'boiv' in 'ils boivent').
+- C. THE CBSE SPEED DRILL: A gamified practice mode that mimics board exams. Instead of just asking for a tense by name, the drill provides a Context Clue + Subject + Infinitive (e.g., "Hier, elle _______ (finir) le projet.") and challenges the student to type the correct conjugated form against an optional timer.

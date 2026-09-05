@@ -1,0 +1,39 @@
+Sl. No.	Admn. No.	Roll No.	Name
+1	15268	1	Abel Binu
+2	19510	2	Aevin Paul Shabu
+3	15239	3	Aida Sunny
+4	16008	4	Alexa Aleya Philip
+5	15423	5	Alvin Anil Chacko
+6	16039	6	Amala Susan Philip
+7	15505	7	Anika Binil
+8	15533	8	Anjika Mariya Sijo
+9	15577	9	Ankitha Arun Ravi
+10	15518	10	Anna Mariya Benoy
+11	18069	11	Bebiya Ann Basil
+12	22679	12	Danny Thankachan Tenson
+13	16805	13	Elen Abraham
+14	15953	14	Evan Mathew Sabu
+15	17869	15	Geevu Sam Francis
+16	15640	16	Hayden Quadros
+17	15324	17	Hefzibah Mathew
+18	14343	18	Hema Priya Ravana
+19	16032	19	Jacob Ajo
+20	22693	20	Jaswinth Karthikeyan
+21	15449	21	Jesbiya Jaison
+22	16874	22	Johan Joji
+23	15548	23	Joshua Varghese Prajeesh
+24	15232	24	Joshua Viju Job
+25	15199	25	Joveline Elias
+26	18260	26	Kaviya Varshini
+27	15313	27	Keziah Sunil Thomas
+28	15554	28	Kripa Sara George
+29	16108	29	Linson Mathew Varghese
+30	17991	30	Marvel Maneesh
+31	15381	31	Mebin Roy
+32	16043	32	Mishab Bin Yasir
+33	15412	33	Rayan Thomas Chacko
+34	15770	34	Rehan Nishad
+35	20182	35	Riya George
+36	16018	36	Rohan Roy
+37	15407	37	Ron Koshy Binu
+38	15369	38	Sherwin Biju Kallaparambil

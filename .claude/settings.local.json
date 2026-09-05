@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(bash build.sh)",
+      "Bash(awk '{print $5, $NF}')",
+      "Bash(sed -i 's|^SP=.*|SP=\"C:/claude/10 th/build-system\"|' build.sh)",
+      "Bash(node verify.js)",
+      "Bash(node check-verbs.js)",
+      "Bash(grep -n -o '<img[^>]\\\\{0,160\\\\}' docs/index.html)",
+      "Read(//c/claude/10th 2/letter-app/**)",
+      "Bash(node --input-type=module -e ' *)",
+      "Bash(cp firebase-layer.js \"C:/Users/User/AppData/Local/Temp/claude/C--claude-10-th/4bde3cfe-a369-4b64-97d5-6e0e6da34eb0/scratchpad/fb-before-pick.bak\")",
+      "Bash(node \"C:/Users/User/AppData/Local/Temp/claude/C--claude-10-th/4bde3cfe-a369-4b64-97d5-6e0e6da34eb0/scratchpad/pick-patch.js\")"
+    ]
+  }
+}

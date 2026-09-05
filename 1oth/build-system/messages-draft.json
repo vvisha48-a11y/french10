@@ -1,0 +1,69 @@
+{
+  "_readme": [
+    "Content in Les Messages that needs a teacher decision before students see it.",
+    "Nothing here claims a CBSE year. The gate check-messages.js fails the build if a",
+    "\"CBSE 20xx\" label ever appears in this module, or if a drafted model loses its",
+    "on-slide \"awaiting review\" badge.",
+    "Reviewed items: set \"approved\": true. That is a record for you; it changes no output."
+  ],
+  "why_this_exists": "messages.txt supplied 3 invitations, 3 refusals and 2 announcements. It contained NO acceptance, which is one of the three types the syllabus requires, and no practice prompts. Those gaps were filled by drafting, and drafted material is listed here rather than being silently mixed in with the teacher's own.",
+  "drafted_models": [
+    {
+      "id": "msg-acc-anniv",
+      "type": "acceptation",
+      "slide": "Model Messages -> Accepting the Invitation",
+      "prompt_fr": "Votre amie vous invite à l'anniversaire de son frère. Vous acceptez. Rédigez le message. (30 mots)",
+      "message_fr": [
+        "Delhi, le 30 novembre",
+        "Chère Avaanika,",
+        "Merci beaucoup pour ton invitation. J'accepte avec plaisir ! Je viendrai le 7 décembre vers quinze heures pour t'aider à tout préparer. J'apporterai le gâteau. À samedi !",
+        "Ton amie",
+        "Nivya"
+      ],
+      "approved": false
+    },
+    {
+      "id": "msg-acc-campagne",
+      "type": "acceptation",
+      "slide": "Model Messages -> Yes to the Countryside!",
+      "prompt_fr": "Votre amie vous invite à passer le week-end à la campagne. Vous acceptez et vous demandez une précision. Rédigez le message.",
+      "message_fr": [
+        "Bordeaux, le 22 mars",
+        "Chère Julie,",
+        "Quelle bonne idée ! J'accepte ton invitation avec joie. Je suis libre tout le week-end et j'ai vraiment besoin de me reposer après les examens. À quelle heure dois-je arriver ? Réponds-moi vite.",
+        "Ton amie",
+        "Nivya"
+      ],
+      "approved": false
+    }
+  ],
+  "practice_prompts": [
+    {
+      "id": "msg-prac-inv",
+      "type": "invitation",
+      "prompt_fr": "Vous organisez une fête pour la fin des examens. Invitez votre ami(e). (30 mots)",
+      "approved": false
+    },
+    {
+      "id": "msg-prac-acc",
+      "type": "acceptance",
+      "prompt_fr": "Votre ami(e) vous invite à sa fête. Vous acceptez et vous proposez d&#39;apporter quelque chose. (30 mots)",
+      "approved": false
+    },
+    {
+      "id": "msg-prac-ref",
+      "type": "refusal",
+      "prompt_fr": "Votre ami(e) vous invite à un concert, mais vous ne pouvez pas y aller. Refusez et donnez une raison. (30 mots)",
+      "approved": false
+    }
+  ],
+  "derived_claims": [
+    {
+      "id": "msg-freq",
+      "claim": "The \"What Gets Asked\" bar chart ranks message situations by how often they appear.",
+      "basis": "Counted from the 8 messages in messages.txt only — NOT from a board-paper survey.",
+      "on_slide_caveat": "The slide carries a red warning saying exactly this.",
+      "approved": false
+    }
+  ]
+}

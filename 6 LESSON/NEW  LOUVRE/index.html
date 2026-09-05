@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Realistic 3D Louvre: Architectural Evolution (1190 – Present)</title>
+  <meta name="description" content="An interactive 3D historical and architectural reconstruction of the Musée du Louvre in France, spanning from the 1190 medieval fortress to the modern 1989 glass pyramid.">
+
+  <!-- Google Fonts: Cinzel & Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Three.js & Libraries -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tween.js/18.6.4/tween.umd.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+</head>
+<body>
+
+  <!-- 3D WebGL Canvas Container -->
+  <div id="webgl-container"></div>
+
+  <!-- TOP HEADER & HUD BAR -->
+  <header class="top-header">
+    <div class="brand" title="Musée du Louvre - Realistic Architectural History">
+      <div class="brand-icon">🏛️</div>
+      <div class="brand-text">
+        <h1>Musée du Louvre</h1>
+        <span>Realistic 3D History (1190 – Present)</span>
+      </div>
+    </div>
+
+    <!-- HUD Action Tools -->
+    <div class="header-actions">
+      <!-- Lighting Selector -->
+      <div class="lighting-group">
+        <button id="light-day-btn" class="light-pill active" title="Bright Daylight">☀️ Day</button>
+        <button id="light-sunset-btn" class="light-pill" title="Golden Sunset">🌅 Sunset</button>
+        <button id="light-night-btn" class="light-pill" title="Nocturnal Spotlights">🌙 Night</button>
+      </div>
+
+      <button id="tour-mode-btn" class="hud-btn" title="Autopilot Guided Tour through all 8 Eras">
+        <span class="hud-btn-icon">🚀</span>
+        <span>Guided Tour</span>
+      </button>
+
+      <button id="quiz-btn" class="hud-btn" title="Test Your Knowledge in the Time-Traveler Quiz">
+        <span class="hud-btn-icon">✨</span>
+        <span>Time Quiz</span>
+      </button>
+
+      <button id="masterpieces-btn" class="hud-btn" title="Explore Iconic Louvre Masterpieces">
+        <span class="hud-btn-icon">💎</span>
+        <span>Masterpieces</span>
+      </button>
+
+      <button id="audio-toggle-btn" class="hud-btn" title="Toggle Cosmic Ambient Synthesizer">
+        <span class="hud-btn-icon">🎵</span>
+        <span id="audio-status-text">Sound: OFF</span>
+      </button>
+
+      <button id="fullscreen-btn" class="hud-btn" title="Toggle Fullscreen Mode">
+        <span class="hud-btn-icon">⛶</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- FLOATING NAVIGATION HINT -->
+  <div class="instruction-hint">
+    🏛️ <strong>Realistic 3D Architecture:</strong> Click any orbiting Louvre Era Diorama to inspect its real architectural evolution. Drag to rotate, scroll to zoom.
+  </div>
+
+  <!-- 3D HOVER TOOLTIP -->
+  <div id="planet-tooltip" class="planet-tooltip">
+    <div class="tip-year">1190 AD</div>
+    <div class="tip-title">The Medieval Fortress</div>
+  </div>
+
+  <!-- GUIDED TOUR ACTIVE BANNER -->
+  <div id="tour-banner" class="tour-banner">
+    <div class="tour-status">
+      <div class="tour-pulse-dot"></div>
+      <span>AUTOPILOT TOUR:</span>
+      <span id="tour-era-label" style="color: var(--gold-light);">1190 AD: The Medieval Fortress</span>
+    </div>
+    <div class="tour-controls">
+      <button id="tour-pause-btn" class="tour-btn">Exit Tour</button>
+    </div>
+  </div>
+
+  <!-- FLOATING ERA INSPECTION DECK (Glassmorphic Modal/Drawer) -->
+  <aside id="era-inspection-deck" class="era-inspection-deck" aria-label="Era Details">
+    <div class="deck-header">
+      <div class="deck-badge-row">
+        <div id="deck-year-badge" class="deck-year-badge">1190 AD</div>
+        <div id="deck-exact-date" style="font-size: 0.75rem; color: var(--text-muted);">1190 – 1202</div>
+        <button id="deck-close-btn" class="deck-close-btn" title="Close Panel">✕</button>
+      </div>
+      <h2 id="deck-title" class="deck-title">The Medieval Fortress</h2>
+      <div id="deck-subtitle" class="deck-subtitle">La Forteresse Médiévale</div>
+    </div>
+
+    <div class="deck-scroll-content">
+      <!-- Ruler & Architectural Details Grid -->
+      <div class="deck-meta-grid">
+        <div class="meta-box">
+          <div class="meta-label">Ruler / Era</div>
+          <div id="deck-ruler" class="meta-val">King Philippe Auguste</div>
+        </div>
+        <div class="meta-box">
+          <div class="meta-label">Architect</div>
+          <div id="deck-architect" class="meta-val">Royal Military Engineers</div>
+        </div>
+        <div class="meta-box">
+          <div class="meta-label">Primary Role</div>
+          <div id="deck-role" class="meta-val">Armed Citadel & Treasury</div>
+        </div>
+        <div class="meta-box">
+          <div class="meta-label">Architecture Style</div>
+          <div id="deck-style" class="meta-val">Romanesque-Gothic Military</div>
+        </div>
+      </div>
+
+      <!-- Architectural Transformation Feature -->
+      <div class="architecture-box">
+        <div class="sec-title">
+          <span>📐</span> Architectural Transformation
+        </div>
+        <p id="deck-arch-desc">A thick square fortress with 10 circular towers and a massive 30-meter high cylindrical central keep surrounded by a deep moat.</p>
+      </div>
+
+      <!-- Concise Story in 3 Points -->
+      <div class="story-points-box">
+        <div class="sec-heading">Concise History Highlights</div>
+        <div id="deck-history-bullets" style="display:flex; flex-direction:column; gap:8px;"></div>
+      </div>
+
+      <!-- Fun Fact Callout -->
+      <div class="fun-fact-banner">
+        <div class="fun-fact-icon">💡</div>
+        <div class="fun-fact-text">
+          <strong>Did You Know?</strong> <span id="deck-funfact-text">Loading fact...</span>
+        </div>
+      </div>
+
+      <!-- Orbiting Masterpiece Moon Highlight -->
+      <div class="masterpiece-preview-card">
+        <div class="relic-icon-wrap">💎</div>
+        <div class="relic-info">
+          <span id="deck-relic-category">Era Relic / Masterpiece</span>
+          <h4 id="deck-relic-name">Medieval Fortress Foundations</h4>
+          <p id="deck-relic-desc">Excavated stone moat still visible underground.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Deck Footer Navigation -->
+    <div class="deck-footer">
+      <button id="deck-prev-btn" class="deck-nav-btn">← Earlier Era</button>
+      <span style="font-size: 0.72rem; color: var(--text-muted);">Navigate Eras</span>
+      <button id="deck-next-btn" class="deck-nav-btn">Next Era →</button>
+    </div>
+  </aside>
+
+  <!-- BOTTOM ORRERY & TIME MACHINE CONTROLLER -->
+  <nav class="bottom-timeline-bar" aria-label="Louvre Timeline Controller">
+    <div class="timeline-card">
+      <!-- 8 Era Buttons Row -->
+      <div id="era-selector-track" class="era-selector-track">
+        <!-- Injected dynamically by app.js -->
+      </div>
+
+      <!-- Timeline Subcontrols -->
+      <div class="timeline-subcontrols">
+        <div class="playback-group">
+          <button id="play-pause-orbit-btn" class="icon-control-btn" title="Pause Orbits">⏸</button>
+          
+          <div class="orbit-speed-wrapper">
+            <span>Speed:</span>
+            <input type="range" id="orbit-speed-slider" min="0.2" max="3.0" step="0.1" value="1.0" title="Orbit Speed Multiplier">
+          </div>
+
+          <button id="reset-camera-btn" class="icon-control-btn" title="Reset Camera to Cosmic View">🌌</button>
+        </div>
+
+        <div class="view-mode-buttons">
+          <button id="view-space-btn" class="view-pill active">Cosmic Diorama Orrery</button>
+          <button id="view-era-btn" class="view-pill">🏛️ Realistic Palace Inspector</button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- TIME TRAVELER QUIZ MODAL -->
+  <div id="quiz-modal-backdrop" class="modal-backdrop">
+    <div class="quiz-card">
+      <div class="quiz-header">
+        <h3>Louvre Time-Traveler Quiz</h3>
+        <span id="quiz-progress-text" class="quiz-progress-badge">Question 1 of 5</span>
+        <button id="quiz-close-btn" class="deck-close-btn">✕</button>
+      </div>
+
+      <div id="quiz-card-content" class="quiz-body">
+        <div id="quiz-question-text" class="quiz-question-text">Loading question...</div>
+        <div id="quiz-options-list" class="quiz-options-list"></div>
+        <div id="quiz-feedback" class="quiz-feedback"></div>
+      </div>
+
+      <!-- Final Score Result Screen -->
+      <div id="quiz-result-view" class="quiz-result-view">
+        <div class="quiz-score-circle" id="quiz-final-score">5/5</div>
+        <h3 style="font-family: var(--font-serif); color: var(--gold-light);">Chronos Traveler Mastery</h3>
+        <p id="quiz-verdict" style="color: #cbd5e1; font-size: 0.9rem; max-width: 420px; line-height: 1.5;"></p>
+        <button id="quiz-restart-btn" class="hud-btn active" style="margin-top: 8px;">Try Again ↺</button>
+      </div>
+
+      <div class="quiz-footer">
+        <button id="quiz-next-btn" class="hud-btn active" style="display: none;">Next Question →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MASTERPIECES GALLERY MODAL -->
+  <div id="masterpieces-modal-backdrop" class="modal-backdrop">
+    <div class="quiz-card" style="width: min(780px, 94vw);">
+      <div class="quiz-header">
+        <h3>Iconic Louvre Masterpieces</h3>
+        <button id="masterpieces-close-btn" class="deck-close-btn">✕</button>
+      </div>
+      <div style="padding: 20px 24px;">
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px;">
+          Treasures spanning thousands of years housed within the Louvre's legendary halls:
+        </p>
+        <div id="masterpieces-gallery-grid" class="masterpieces-grid"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Application Scripts (Textures -> Models -> Data -> Sound -> App) -->
+  <script src="textures.js"></script>
+  <script src="louvre-models.js"></script>
+  <script src="data.js"></script>
+  <script src="sound.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

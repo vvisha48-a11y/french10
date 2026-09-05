@@ -1,0 +1,207 @@
+20 1 [ P.T.O. 
+ 
+ 
+ 
+ 
+ 
+Roll No.  
+ 
+ 
+FRENCH 
+ 
+Time allowed : 3 hours     Maximum Marks : 80 
+ 
+     
+ 
+ 
+SECTION – A (Compréhension écrite) 
+ 
+I. Lisez bien le texte : 
+ De Pékin à Londres, en passant par New Delhi ou Barcelone, de plus en plus de 
+grandes villes dans le monde sont touchées par la pollution de l’air. 
+ Selon le rapport de l’Organisation mondiale de la santé (OMS) sur la qualité de l’air 
+dans le monde, moins de 12% de la population mondiale respirerait  un air sain. La 
+pollution d e l’air serait responsable de la mor t de 3,3 millions de personnes chaque 
+année. 
+ Series : TYM Code No.  
+ 
+20 
+ Veuillez vérifier que ce questionnaire contient 7 pages imprimées.  
+ Le numéro de code indiqué sur le côté droit du questionnaire doit être écrit sur la 
+première page du carnet des réponses par le candidat. 
+ Veuillez vérifier que ce questionnaire contient 17 questions. 
+ Veuillez écrire le Numéro de Série de la question avant d’écrire sa réponse. 
+ 15 minutes sont allouées pour lire ce questionnaire. Le questionnaire sera distribué à 
+10h15. De 10h15 à 10h30 les candidats doivent seulement lire le questionnaire sans 
+écrire aucune réponse pendant cette période.  
+ Please check that this question paper contains 7 printed pages.  
+ Code number given on the right hand side of the question paper should be written on the 
+title page of the answer-book by the candidate. 
+ Please check that this question paper contains 17 questions. 
+ Please write down the Serial Number of the question before attempting it. 
+ 15 minute time has been allotted to read this question paper. The question paper will be 
+distributed at 10.15 a.m. From 10.15 a.m. to 10.30 a.m., the students will read the 
+question paper only and will not write any answer on the answer -book during this 
+period. 
+ 
+Candidates must write the Code on 
+the title page of the answer-book. 
+ 
+ 
+SET – 4 
+20 2  
+ Dans des zones urbaines récemment industrialisées, comme à Pékin ou à New Delhi, 
+la situation est particulièrement critique. Après les fêtes de Diwali du mois d’octobre 
+2016, le site américain CNN titrait : “New Delhi est la ville la plus polluée sur terre 
+aujourd hui. ” De la même manière, en Chine, malgré les efforts récents du 
+gouvernement central, 23 villes ont été placées en alerte rouge en décembre. A 
+Londres, le taux* de particules fines a dépassé celui de  Pékin en janvier 2017. Sur 
+l’ensemble du Royaume -Uni, les problèmes de sant é causés par la pollution 
+coûteraient chaque année 15 milliards de livres au pays.                         
+       taux* : degree 
+ (a) Répondez aux questions :    2 
+  (i) Selon le rapport de l’Organisation mondiale de la santé, de quoi est-ce que 
+la pollution de l’air serait responsable ? 
+  (ii) En janvier 2017 qu’est-ce qui s’est passé à Londres ? 
+ (b) Trouvez les contraires du texte :   2 
+  (i) moins en moins  (ii) seul 
+  (iii) solutions (iv) rurales  
+ (c) Trouvez dans le texte :   2 
+  (i) un gérondif  
+  (ii) une fête  
+  (iii) deux pays 
+ (d) Cherchez dans le texte :    2 
+  (i) la forme nominale de “mourir”, “situer” 
+  (ii) la forme verbale de “respiration”, “titre” 
+ (e) Dites Vrai ou faux :   2 
+  (i) En Chine, 32 villes ont été placées en alerte rouge en décembre. 
+  (ii) Selon le rapport de OMS sur la qualité de l’air dans le monde, moins de 
+12% de la population mondiale respirerait un air sain. 
+20 3 [ P.T.O. 
+SECTION – B (Expression Écrite) 
+II. Écrivez une lettre d’environ 80 mots :   10 
+ (a) à vos grands-parents, leur décrivant le système d’éducation en France.  
+OU 
+ (b) à votre cousin/cousine pour lui dire ce qu’il/elle peut faire pour protéger 
+l’environnement.  
+ 
+III. Faites deux des questions suivantes :   5  2 = 10 
+ (a) Mettez en ordre le dialogue suivant et récrivez :  5 
+  Le marchand : Regardez aussi des tomates, elles sont belles ! 
+  La cliente : Oui. Merci ! 
+  Le marchand : Alors, un kilo de pommes de terre et un kilo de tomates … ça ira ? 
+  La cliente : Je voudrais des pommes de terre. Un kilo s’il vous plaît.  
+  Le marchand : Bonjour, qu’est-ce qu’il vous faudra ? 
+  La cliente : Oui... elles sont bonnes… donnez-moi un kilo. 
+ (b) Votre ami vous a demandé de l’accompagner au cinéma. Mais vous  ne pouvez pas 
+le faire. Ècrivez un message de refus et donnez une raison pour expliquer votre 
+absence. (30 – 35 mots)    5 
+ (c) Complétez le texte suivant avec les mots donnés ci-dessous :  5 
+  (y/lesquels/décorations/plus / guirlandes / visiteurs / marché / chaque / verre / 
+place) 
+  Le ____ de Noël de Strasbourg a lieu ______ année sur la ______ de la cathédrale 
+et est très apprécié pour son animation et ses illuminations. Lorsque la ville 
+s’illumine … le marché est le ______ agréable. Les ____ se promènent dans les 
+allées … On ____’trouve de petits kiosques  dans ______ on vend des ____ de 
+Noël : des ____, des boules de Noël en ______, des étoiles … 
+20 4  
+SECTION – C (Grammaire) 
+IV. Mettez les verbes aux temps convenables :  3 
+ (a) Est-ce que vous ____ en Italie l’année prochaine ? (seriez allé/irez / êtes allés)  
+ (b) Lorsque mes amies s’étaient habillées, elles ____ (partiront/étaient parties / sont 
+parties) 
+ (c) Hier, nous ____, soudain il a commencé à pleuvoir. (se promenions / nous promenions 
+/ nous sommes promenés)  
+ (d) Sylvie fera ses devoirs aussitôt qu’elle ____ la leçon. (lira / aurait lu / aura lu) 
+ (e) ____ du courage, mes enfants ! (Ayez / Aie / Avez) 
+ (f) Si tu aimais la musique, tu ____ de la guitare. (fais / ferais / as fait)  
+ 
+V. Mettez les phrases suivantes au discours direct ou indirect selon le cas : 3 
+ (a) Le professeur dit aux élèves de faire les exercices dans leurs cahiers. 
+ (b) La mère demande à la petite « Que veux-tu pour ton anniversaire ? » 
+ (c) L’employé demande au voyageur, “Avez-vous votre passeport ?” 
+ 
+VI. Mettez au négatif :   3 
+ (a) Marie a mangé du riz et du poisson. 
+ (b) Elle travaille toujours chez IBM. 
+ (c) J’ai vu quelque chose dans ton sac.  
+ 
+VII. Trouvez la question :    3 
+ (a) Les enfants adorent les chocolats. 
+ (b) Il ira à Bengaluru en train. 
+ (c) Je ne viens pas chez vous parce que je suis malade. 
+20 5 [ P.T.O. 
+VIII. Reliez avec les pronoms relatifs composés :  3 
+ (a) Le quartier est très beau. Nous habitons dans ce quartier.  
+ (b) Ce sont mes amis. J’ai téléphoné à ces amis hier soir.  
+ (c) J’adore cette église. Il y a un beau jardin devant cette église.  
+ 
+IX. Conjuguez le verbe au subjonctif :    3 
+ (a) Tes parents sont contents que tu ______ (avoir) de bonnes notes aux examens.  
+ (b) Mon frère est fâché que j’______ (apprendre) ses secrets. 
+ (c) Il faut que nous _______ (se coucher) tôt ce soir. 
+ 
+X. Complétez avec les adjectifs ou les pronoms démonstratifs : 3  
+ (a) Achète ______ robe-ci, pas ______. 
+ (b) Tu connais le frère de Paul ? – Non, je connais ______ de Marc. 
+ (c) Je préfère ______ romans-ci. ______ ne sont pas aussi intéressants. 
+ (d) Regarde ______ oiseau ! Il est mignon ! 
+ 
+XI. Complétez avec les adjectifs ou les pronoms possessifs : 3 
+ (notre / mon / ses / la tienne / aux vôtres / la leur) 
+ (a) Sophie parle à ______ parents. Parlez-vous ______ ? 
+ (b) ______ grand-mère nous raconte des histoires. Et ______ ? 
+ (c) Je vais chez ______ amie, mais ils ne vont pas chez ______. 
+ 
+XII. Remplacez les noms soulignés par : (en / les / y / leur) 3 
+ (a) Va à l’école ! 
+ (b) Elle a acheté les stylos à la papeterie. 
+ (c) Nous allons écrire des lettres aux parents. 
+20 6  
+XIII. Complétez avec les prépositions : (avec / à / pour / au bord de / par / depuis) 3 
+ (a) Nous envoyons le paquet ______ avion. 
+ (b) ______ faire une omelette, il nous faut des œufs.  
+ (c) Hélène fait une promenade ______ la mer. 
+ (d) As-tu commencé ______ lire la leçon ? 
+ (e) Paul va au marché ______ ses amis.  
+ (f) Ma sœur est malade ______ hier.  
+ 
+SECTION – D (Culture et Civilisation) 
+XIV. Répondez aux questions : (5 au choix)   10 
+ (a) Quel est le travail d’une secrétaire ? 
+ (b) Que savez-vous de Port Blair ? 
+ (c) À quels problèmes peut-on faire face quand on vérifie les mèls ? 
+ (d) Qu’est-ce que c’est la sécurité sociale ? 
+ (e) De quoi se compose le parlement français ?  Comment s’appellent les membres des 
+deux maisons ? 
+ (f) Que faites-vous pour être en pleine forme ? 
+ 
+XV. Choisissez la bonne réponse :    3 
+ (R.K. Narayan / Paroles / Europe 1 / L’ Éditorial / Zapper / Corse) 
+ (a) ______, c’est passer d’une chaîne de télévision à l’autre.  
+ (b) ______ est une chaîne de radio en France.  
+ (c) Les Aiguilles de Bavella se trouvent en ______. 
+ (d) ______ a écrit « Malgudi Days ». 
+ (e) ______ est une rubrique d’un journal. 
+ (f) Jacques Prévert a écrit ______. 
+20 7 [ P.T.O. 
+XVI. Reliez et récrivez :    3 
+(a) Baccalauréat  (i) Journée Mondiale de 
+la Diversité Culturelle  
+(b) Carte de lecteur  (ii) Bengaluru 
+(c) ARTE (iii) Lycée  
+(d) Ville de la technologie 
+de l’information  
+(iv) Chef des armées  
+(e) Président  (v) Bibliothèque  
+(f) UNESCO (vi) Reportage culturel  
+ 
+XVII. Dites vrai ou faux  :   4 
+ (a) Les jeunes doivent gaspiller leur temps en surfant des sites web. _______ 
+ (b) Il faut faire des efforts pour connaître les différentes cultures du monde. _______ 
+ (c) Il faut rester silencieux dans la bibliothèque. _______ 
+ (d) Il ne faut pas faire des efforts pour préserver les ressources naturelles. _______ 
+ 
+________ 
+20 8  
+ 

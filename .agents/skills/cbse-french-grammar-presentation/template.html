@@ -1,0 +1,2439 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Le Subjonctif — CBSE Class 10 French Grammar (3D & Particle Engine)</title>
+  
+  <!-- Famous Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Poppins:wght@400;600;700;800&family=Playfair+Display:ital,wght@0,600;0,800;1,600&family=Space+Grotesk:wght@500;700&family=Comic+Neue:wght@400;700&family=Cinzel:wght@600;800&display=swap" rel="stylesheet">
+  
+  <style>
+    /* -------------------------------------------------------------
+       DYNAMIC CUSTOMIZABLE VARIABLES (SAVED IN LOCALSTORAGE)
+       ------------------------------------------------------------- */
+    :root {
+      --custom-font-family: 'Plus Jakarta Sans', sans-serif;
+      --custom-heading-font: 'Outfit', sans-serif;
+      --custom-font-scale: 1;
+      --custom-text-color: #0f172a;
+    }
+
+    /* -------------------------------------------------------------
+       THEME COLOR SCHEMES (6 CUSTOMIZABLE THEMES)
+       ------------------------------------------------------------- */
+    body.theme-classic {
+      --bg-gradient: radial-gradient(circle at 50% 30%, #eef4fc 0%, #dbeafe 50%, #bfdbfe 100%);
+      --card-bg: rgba(255, 255, 255, 0.94);
+      --card-border: rgba(0, 35, 149, 0.2);
+      --text-main: var(--custom-text-color, #0f172a);
+      --text-muted: #475569;
+      --heading-color: #002395;
+      --subheading-color: #ED2939;
+      --highlight-bg: rgba(0, 35, 149, 0.12);
+      --highlight-border: #002395;
+      --highlight-text: #002395;
+      --box-blue-bg: #eef4fc;
+      --box-gold-bg: #fff8eb;
+      --box-gold-border: #f4b436;
+      --hud-bg: rgba(255, 255, 255, 0.9);
+      --hud-text: #002395;
+      --particle-color: rgba(0, 35, 149, 0.3);
+    }
+
+    body.theme-cyber {
+      --bg-gradient: radial-gradient(circle at 50% 30%, #0b0f19 0%, #030712 60%, #000000 100%);
+      --card-bg: rgba(15, 23, 42, 0.88);
+      --card-border: rgba(0, 242, 254, 0.35);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --heading-color: #00f2fe;
+      --subheading-color: #ff2a4b;
+      --highlight-bg: rgba(0, 242, 254, 0.18);
+      --highlight-border: #00f2fe;
+      --highlight-text: #00f2fe;
+      --box-blue-bg: rgba(0, 102, 255, 0.12);
+      --box-gold-bg: rgba(255, 190, 11, 0.08);
+      --box-gold-border: #ffbe0b;
+      --hud-bg: rgba(15, 23, 42, 0.9);
+      --hud-text: #00f2fe;
+      --particle-color: rgba(0, 242, 254, 0.4);
+    }
+
+    body.theme-sunrise {
+      --bg-gradient: radial-gradient(circle at 50% 30%, #fffbeb 0%, #fef3c7 50%, #fde68a 100%);
+      --card-bg: rgba(255, 255, 255, 0.94);
+      --card-border: rgba(217, 119, 6, 0.25);
+      --text-main: var(--custom-text-color, #451a03);
+      --text-muted: #78350f;
+      --heading-color: #b45309;
+      --subheading-color: #991b1b;
+      --highlight-bg: rgba(217, 119, 6, 0.15);
+      --highlight-border: #b45309;
+      --highlight-text: #92400e;
+      --box-blue-bg: #eff6ff;
+      --box-gold-bg: #fffbe3;
+      --box-gold-border: #d97706;
+      --hud-bg: rgba(255, 255, 255, 0.9);
+      --hud-text: #b45309;
+      --particle-color: rgba(217, 119, 6, 0.35);
+    }
+
+    body.theme-emerald {
+      --bg-gradient: radial-gradient(circle at 50% 30%, #ecfdf5 0%, #d1fae5 50%, #a7f3d0 100%);
+      --card-bg: rgba(255, 255, 255, 0.94);
+      --card-border: rgba(16, 185, 129, 0.3);
+      --text-main: var(--custom-text-color, #064e3b);
+      --text-muted: #047857;
+      --heading-color: #047857;
+      --subheading-color: #b91c1c;
+      --highlight-bg: rgba(16, 185, 129, 0.15);
+      --highlight-border: #059669;
+      --highlight-text: #047857;
+      --box-blue-bg: #e0f2fe;
+      --box-gold-bg: #fefce8;
+      --box-gold-border: #eab308;
+      --hud-bg: rgba(255, 255, 255, 0.9);
+      --hud-text: #047857;
+      --particle-color: rgba(16, 185, 129, 0.35);
+    }
+
+    body.theme-purple {
+      --bg-gradient: radial-gradient(circle at 50% 30%, #faf5ff 0%, #f3e8ff 50%, #e9d5ff 100%);
+      --card-bg: rgba(255, 255, 255, 0.94);
+      --card-border: rgba(168, 85, 247, 0.3);
+      --text-main: var(--custom-text-color, #3b0764);
+      --text-muted: #6b21a8;
+      --heading-color: #7e22ce;
+      --subheading-color: #be185d;
+      --highlight-bg: rgba(168, 85, 247, 0.15);
+      --highlight-border: #9333ea;
+      --highlight-text: #6b21a8;
+      --box-blue-bg: #f0f9ff;
+      --box-gold-bg: #fefce8;
+      --box-gold-border: #eab308;
+      --hud-bg: rgba(255, 255, 255, 0.9);
+      --hud-text: #7e22ce;
+      --particle-color: rgba(168, 85, 247, 0.35);
+    }
+
+    body.theme-minimal {
+      --bg-gradient: radial-gradient(circle at 50% 30%, #f8fafc 0%, #f1f5f9 50%, #e2e8f0 100%);
+      --card-bg: #ffffff;
+      --card-border: #cbd5e1;
+      --text-main: var(--custom-text-color, #0f172a);
+      --text-muted: #475569;
+      --heading-color: #1e293b;
+      --subheading-color: #2563eb;
+      --highlight-bg: #e2e8f0;
+      --highlight-border: #2563eb;
+      --highlight-text: #1d4ed8;
+      --box-blue-bg: #f1f5f9;
+      --box-gold-bg: #f8fafc;
+      --box-gold-border: #64748b;
+      --hud-bg: #ffffff;
+      --hud-text: #0f172a;
+      --particle-color: rgba(100, 116, 139, 0.3);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body, html {
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      font-family: var(--custom-font-family);
+      background: var(--bg-gradient);
+      color: var(--text-main);
+      transition: background 0.6s ease;
+      perspective: 1400px;
+    }
+
+    /* Interactive Background Canvases */
+    #ambientParticlesCanvas, #fireworksCanvas, #confettiCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+    }
+
+    #ambientParticlesCanvas { z-index: 1; }
+    #fireworksCanvas { z-index: 2; }
+    #confettiCanvas { z-index: 3; }
+
+    /* Visual Indicator for Editable Mode */
+    body.editing-active [contenteditable="true"] {
+      outline: 2px dashed #002395 !important;
+      border-radius: 6px;
+      padding: 2px 4px;
+      background: rgba(0, 35, 149, 0.05);
+      cursor: text;
+    }
+
+    /* Toast Notification Feedback */
+    #toastNotification {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-50px);
+      background: #2e7d32;
+      color: white;
+      font-weight: 800;
+      font-size: 1.05em;
+      padding: 10px 26px;
+      border-radius: 30px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+      z-index: 999999999 !important;
+      opacity: 0;
+      transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+      pointer-events: none;
+    }
+
+    #toastNotification.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* 100vw x 100vh Presentation Stage with 3D Perspective */
+    .presentation-viewport {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      z-index: 10;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      perspective: 1500px;
+      transform-style: preserve-3d;
+    }
+
+    /* 3D Enhanced Slide Transitions */
+    .slide {
+      display: none;
+      position: absolute;
+      width: 94vw;
+      max-width: 1420px;
+      height: 88vh;
+      background: var(--card-bg);
+      border: 1.5px solid var(--card-border);
+      border-radius: 28px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12), inset 0 0 2px rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(20px);
+      padding: 24px 45px 55px 45px;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      text-align: center;
+      box-sizing: border-box;
+      overflow-y: auto;
+      transform-style: preserve-3d;
+      backface-visibility: hidden;
+      transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.6s ease;
+      z-index: 20;
+    }
+
+    /* 3D Entering & Exiting Animations */
+    .slide.active {
+      display: flex !important;
+      animation: slide3DEnter 0.65s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+    }
+
+    .slide.prev-out {
+      display: flex !important;
+      animation: slide3DExitLeft 0.55s ease forwards;
+    }
+
+    @keyframes slide3DEnter {
+      0% {
+        opacity: 0;
+        transform: rotateY(45deg) translateZ(-300px) translateX(150px) scale(0.9);
+      }
+      100% {
+        opacity: 1;
+        transform: rotateY(0deg) translateZ(0) translateX(0) scale(1);
+      }
+    }
+
+    @keyframes slide3DExitLeft {
+      0% {
+        opacity: 1;
+        transform: rotateY(0deg) translateZ(0) translateX(0) scale(1);
+      }
+      100% {
+        opacity: 0;
+        transform: rotateY(-45deg) translateZ(-300px) translateX(-150px) scale(0.9);
+      }
+    }
+
+    /* All slide content is fully visible immediately */
+    .step, .content-box {
+      opacity: 1 !important;
+      transform: none !important;
+      pointer-events: auto !important;
+    }
+
+    /* Typography with Custom Font Scaling & Enhanced Hierarchy */
+    h1 {
+      font-family: var(--custom-heading-font);
+      font-size: calc(3.1em * var(--custom-font-scale));
+      font-weight: 900;
+      color: var(--heading-color);
+      letter-spacing: -1px;
+      margin-top: 4px;
+      margin-bottom: 4px;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    h2 {
+      font-family: var(--custom-heading-font);
+      font-size: calc(2.1em * var(--custom-font-scale));
+      font-weight: 800;
+      color: var(--subheading-color);
+      margin-top: 2px;
+      margin-bottom: 8px;
+      display: inline-block;
+      position: relative;
+    }
+
+    h2::after {
+      content: '';
+      display: block;
+      width: 75%;
+      height: 4px;
+      background: var(--heading-color);
+      border-radius: 3px;
+      margin: 4px auto 0 auto;
+      box-shadow: 0 2px 8px rgba(0, 35, 149, 0.3);
+    }
+
+    h3 {
+      font-family: var(--custom-heading-font);
+      font-size: calc(1.35em * var(--custom-font-scale));
+      font-weight: 700;
+      color: var(--heading-color);
+      margin: 4px 0;
+    }
+
+    p, li {
+      font-size: calc(1.15em * var(--custom-font-scale));
+      line-height: 1.55;
+      color: var(--text-muted);
+    }
+
+    ul, ol {
+      display: inline-block;
+      text-align: left;
+      margin: 0 auto 8px auto;
+    }
+
+    li {
+      margin-bottom: 6px;
+    }
+
+    /* Flag Stripe Header */
+    .flag-stripe {
+      display: block;
+      height: 6px;
+      width: 200px;
+      background: linear-gradient(90deg, #002395 33%, #ffffff 33%, #ffffff 66%, #ED2939 66%);
+      border-radius: 4px;
+      margin: 0 auto 8px auto;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Usage Category Pill Badge */
+    .usage-badge {
+      background: var(--heading-color);
+      color: white;
+      font-weight: 800;
+      padding: 4px 18px;
+      border-radius: 30px;
+      font-size: calc(0.88em * var(--custom-font-scale));
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 6px;
+      display: inline-block;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      animation: pulseGlow 3s ease-in-out infinite alternate;
+    }
+
+    @keyframes pulseGlow {
+      0% { box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); }
+      100% { box-shadow: 0 6px 20px rgba(0, 35, 149, 0.4); }
+    }
+
+    /* ENLARGED BLUE VERB HIGHLIGHTS */
+    .highlight {
+      background: var(--highlight-bg);
+      border: 2px solid var(--highlight-border);
+      padding: 6px 20px;
+      border-radius: 35px;
+      font-weight: 800;
+      color: var(--highlight-text);
+      display: inline-block;
+      font-size: calc(1.35em * var(--custom-font-scale));
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+      animation: gentleFloat 2.5s ease-in-out infinite alternate;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .highlight:hover {
+      transform: translateY(-5px) scale(1.1);
+      box-shadow: 0 10px 25px rgba(0, 35, 149, 0.3);
+    }
+
+    @keyframes gentleFloat {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(-4px); }
+    }
+
+    strong {
+      color: var(--heading-color);
+      font-weight: 800;
+    }
+
+    .example-text strong, li strong {
+      font-size: calc(1.18em * var(--custom-font-scale));
+      color: var(--heading-color);
+      font-weight: 800;
+      background: var(--highlight-bg);
+      padding: 2px 10px;
+      border-radius: 8px;
+    }
+
+    /* Magnetic Micro-Interactions for Content Cards */
+    .box {
+      background: var(--card-bg);
+      border-radius: 20px;
+      padding: 14px 24px;
+      margin: 8px auto;
+      border-top: 5px solid var(--subheading-color);
+      border-left: 1px solid var(--card-border);
+      border-right: 1px solid var(--card-border);
+      border-bottom: 1px solid var(--card-border);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.04);
+      text-align: center;
+      width: 100%;
+      max-width: 1320px;
+      box-sizing: border-box;
+      transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .box:hover {
+      transform: translateY(-4px) scale(1.012);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
+    }
+
+    .box.gold {
+      background: var(--box-gold-bg);
+      border-top-color: var(--box-gold-border);
+    }
+
+    .box.blue {
+      background: var(--box-blue-bg);
+      border-top-color: var(--heading-color);
+      font-size: calc(1.1em * var(--custom-font-scale));
+    }
+
+    .example-text {
+      font-style: italic;
+      color: var(--text-main);
+      font-size: calc(1.2em * var(--custom-font-scale));
+      margin: 4px 0;
+      display: block;
+      text-align: center;
+    }
+
+    /* Animated SVG Icon Badges */
+    .svg-badge {
+      width: 65px;
+      height: 65px;
+      margin: 4px auto;
+      animation: badgeFloat 3.5s ease-in-out infinite alternate;
+      filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.15));
+    }
+
+    @keyframes badgeFloat {
+      0% { transform: translateY(0) rotate(0deg); }
+      100% { transform: translateY(-6px) rotate(3deg); }
+    }
+
+    /* Interactive Verb Selector Buttons with Micro-Interactions */
+    .verb-select-btn {
+      background: var(--highlight-bg);
+      border: 1.5px solid var(--card-border);
+      border-radius: 25px;
+      padding: 7px 18px;
+      font-size: calc(1.02em * var(--custom-font-scale));
+      font-weight: 800;
+      color: var(--heading-color);
+      cursor: pointer;
+      font-family: inherit;
+      animation: buttonPulseFloat 3s ease-in-out infinite alternate;
+      transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.06);
+    }
+
+    .verb-select-btn:hover {
+      background: var(--heading-color);
+      color: white;
+      border-color: var(--heading-color);
+      transform: translateY(-4px) scale(1.08);
+      box-shadow: 0 8px 22px rgba(0, 35, 149, 0.3);
+    }
+
+    .verb-select-btn.active-verb {
+      background: var(--heading-color) !important;
+      color: white !important;
+      border-color: var(--heading-color) !important;
+      transform: translateY(-3px) scale(1.06) !important;
+      box-shadow: 0 6px 20px rgba(0, 35, 149, 0.35) !important;
+    }
+
+    @keyframes buttonPulseFloat {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(-3px); }
+    }
+
+    .formula-lab-container {
+      width: 100%;
+      max-width: 1350px;
+      background: var(--card-bg);
+      border: 1.5px solid var(--card-border);
+      border-radius: 24px;
+      padding: 12px 24px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.05);
+      margin: 6px auto;
+    }
+
+    .verb-btn-row {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+
+    .formula-pipeline {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1.4fr;
+      gap: 14px;
+      align-items: center;
+    }
+
+    .formula-step-box {
+      background: var(--box-blue-bg);
+      border: 1.5px solid var(--card-border);
+      border-radius: 16px;
+      padding: 10px 14px;
+      text-align: center;
+      transition: all 0.25s ease;
+    }
+
+    .formula-step-box:hover {
+      transform: translateY(-3px) scale(1.02);
+    }
+
+    .formula-step-title {
+      font-weight: 800;
+      font-size: calc(1.02em * var(--custom-font-scale));
+      color: var(--heading-color);
+      margin-bottom: 4px;
+    }
+
+    .formula-verb-display {
+      font-size: calc(1.45em * var(--custom-font-scale));
+      font-weight: 900;
+      color: var(--heading-color);
+    }
+
+    .formula-cut-display {
+      font-size: calc(1.4em * var(--custom-font-scale));
+      font-weight: 900;
+      color: var(--subheading-color);
+    }
+
+    /* 3D Interactive Flippable Cards */
+    .flip-card-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      width: 100%;
+      max-width: 1320px;
+      margin: 10px auto;
+    }
+
+    .flip-card {
+      background: var(--card-bg);
+      border: 1.5px solid var(--card-border);
+      border-radius: 18px;
+      padding: 14px;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      perspective: 1000px;
+    }
+
+    .flip-card:hover {
+      transform: translateY(-6px) scale(1.04);
+      border-color: var(--heading-color);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+    }
+
+    .flip-card-inner {
+      transition: transform 0.6s ease;
+      transform-style: preserve-3d;
+    }
+
+    .flip-card.flipped .flip-card-inner {
+      transform: rotateY(180deg);
+    }
+
+    .flip-card-front, .flip-card-back {
+      backface-visibility: hidden;
+    }
+
+    .flip-card-back {
+      transform: rotateY(180deg);
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: var(--highlight-bg);
+      border-radius: 18px;
+      color: var(--highlight-text);
+      font-weight: 800;
+      font-size: calc(1.1em * var(--custom-font-scale));
+    }
+
+    /* Grids */
+    .two-columns {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      align-items: start;
+      width: 100%;
+      max-width: 1350px;
+    }
+
+    .three-columns {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 16px;
+      align-items: start;
+      width: 100%;
+      max-width: 1380px;
+    }
+
+    /* Conjugation Table */
+    table.subj-table {
+      width: 100%;
+      margin: 4px auto;
+      border-collapse: collapse;
+      font-size: calc(1.05em * var(--custom-font-scale));
+    }
+
+    table.subj-table th {
+      border-bottom: 2.5px solid var(--heading-color);
+      padding: 6px 10px;
+      text-align: center;
+      color: var(--heading-color);
+      font-weight: 800;
+      font-size: 0.98em;
+    }
+
+    table.subj-table td {
+      padding: 5px 10px;
+      text-align: center;
+      border-bottom: 1px solid var(--card-border);
+      font-size: 0.98em;
+    }
+
+    table.subj-table td strong {
+      font-size: 1.2em;
+      color: var(--heading-color);
+    }
+
+    /* -------------------------------------------------------------
+       TOP-RIGHT SETTINGS & FONT CUSTOMIZATION PANEL ⚙️
+       ------------------------------------------------------------- */
+    .settings-hud-bar {
+      position: fixed;
+      top: 14px;
+      right: 25px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      z-index: 99999999 !important;
+    }
+
+    .settings-toggle-btn, .shortcuts-toggle-btn {
+      background: var(--hud-bg);
+      border: 1.5px solid var(--card-border);
+      color: var(--hud-text);
+      font-weight: 800;
+      padding: 6px 16px;
+      border-radius: 30px;
+      font-size: 0.9em;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.12);
+      backdrop-filter: blur(10px);
+      transition: all 0.25s ease;
+      font-family: inherit;
+    }
+
+    .settings-toggle-btn:hover, .shortcuts-toggle-btn:hover {
+      transform: translateY(-2px) scale(1.04);
+      border-color: var(--heading-color);
+    }
+
+    /* Floating Settings Modal Drawer */
+    .settings-panel, .shortcuts-modal {
+      display: none;
+      position: fixed;
+      top: 55px;
+      right: 25px;
+      width: 360px;
+      max-height: 85vh;
+      overflow-y: auto;
+      background: var(--hud-bg);
+      border: 1.5px solid var(--card-border);
+      border-radius: 20px;
+      padding: 18px 22px;
+      box-shadow: 0 15px 45px rgba(0, 0, 0, 0.2);
+      backdrop-filter: blur(15px);
+      z-index: 99999999 !important;
+      text-align: left;
+      animation: panelSlide 0.25s ease forwards;
+    }
+
+    .settings-panel.open, .shortcuts-modal.open {
+      display: block;
+    }
+
+    @keyframes panelSlide {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .settings-group {
+      margin-bottom: 12px;
+    }
+
+    .settings-group-title {
+      font-size: 0.85em;
+      font-weight: 800;
+      color: var(--heading-color);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 5px;
+    }
+
+    .settings-select, .settings-input {
+      width: 100%;
+      background: var(--box-blue-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 7px 12px;
+      font-size: 0.9em;
+      font-weight: 700;
+      color: var(--text-main);
+      outline: none;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .add-element-btn {
+      width: 100%;
+      background: var(--highlight-bg);
+      color: var(--heading-color);
+      border: 1.5px solid var(--card-border);
+      padding: 7px 12px;
+      border-radius: 12px;
+      font-weight: 800;
+      font-size: 0.88em;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: inherit;
+      margin-bottom: 5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .add-element-btn:hover {
+      background: var(--heading-color);
+      color: white;
+      border-color: var(--heading-color);
+      transform: translateY(-2px);
+    }
+
+    .save-edits-btn {
+      width: 100%;
+      background: #002395;
+      color: white;
+      border: none;
+      padding: 10px;
+      border-radius: 12px;
+      font-weight: 800;
+      font-size: 0.95em;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 14px rgba(0, 35, 149, 0.3);
+      margin-top: 6px;
+      font-family: inherit;
+    }
+
+    .save-edits-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(0, 35, 149, 0.45);
+    }
+
+    /* ULTRA-SLEEK MINIMAL LIGHT BOTTOM NAVIGATION BAR */
+    .nav-controls {
+      position: fixed;
+      bottom: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 14px;
+      align-items: center;
+      z-index: 99999999 !important;
+      background: var(--hud-bg);
+      padding: 6px 20px;
+      border-radius: 40px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.14);
+      backdrop-filter: blur(15px);
+      border: 1.5px solid var(--card-border);
+      pointer-events: auto !important;
+    }
+
+    .nav-btn {
+      background: var(--heading-color);
+      border: none;
+      color: #ffffff;
+      font-weight: 800;
+      padding: 7px 20px;
+      border-radius: 25px;
+      cursor: pointer;
+      font-size: 0.95em;
+      transition: all 0.25s ease;
+      font-family: inherit;
+      box-shadow: 0 3px 12px rgba(0, 35, 149, 0.25);
+      pointer-events: auto !important;
+      user-select: none;
+    }
+
+    .nav-btn:hover {
+      transform: translateY(-3px) scale(1.06);
+      box-shadow: 0 8px 22px rgba(0, 35, 149, 0.4);
+    }
+
+    .nav-btn:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .fullscreen-btn {
+      background: var(--subheading-color);
+      color: white;
+      border: none;
+      padding: 7px 16px;
+      border-radius: 25px;
+      font-weight: 800;
+      cursor: pointer;
+      font-size: 0.88em;
+      transition: all 0.25s ease;
+      box-shadow: 0 3px 12px rgba(237, 41, 57, 0.25);
+      pointer-events: auto !important;
+      user-select: none;
+    }
+
+    .fullscreen-btn:hover {
+      transform: translateY(-3px) scale(1.06);
+    }
+
+    .slide-counter {
+      font-weight: 800;
+      font-size: 1.05em;
+      color: var(--heading-color);
+      padding: 0 8px;
+      user-select: none;
+    }
+
+    /* Enhanced Interactive Quiz Styles */
+    .quiz-container {
+      background: var(--card-bg);
+      border-radius: 20px;
+      padding: 16px 28px;
+      box-shadow: 0 6px 25px rgba(0,0,0,0.05);
+      margin: 6px auto;
+      border: 1px solid var(--card-border);
+      width: 100%;
+      max-width: 1350px;
+    }
+
+    .quiz-progress-bar {
+      height: 8px;
+      width: 100%;
+      background: var(--highlight-bg);
+      border-radius: 4px;
+      margin-bottom: 12px;
+      overflow: hidden;
+    }
+
+    .quiz-progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #002395, #00f2fe);
+      border-radius: 4px;
+      transition: width 0.4s ease;
+    }
+
+    .question-row {
+      margin-bottom: 10px;
+      font-size: 1.1em;
+      text-align: left;
+    }
+
+    .question-text {
+      font-weight: 700;
+      margin-bottom: 4px;
+      color: var(--text-main);
+    }
+
+    .options {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .option-btn {
+      background: var(--highlight-bg);
+      border: 1.5px solid var(--card-border);
+      border-radius: 30px;
+      padding: 6px 18px;
+      font-size: calc(1.02em * var(--custom-font-scale));
+      cursor: pointer;
+      font-weight: 800;
+      color: var(--text-main);
+      font-family: inherit;
+      transition: all 0.25s ease;
+    }
+
+    .option-btn:hover {
+      border-color: var(--heading-color);
+      transform: translateY(-3px) scale(1.06);
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+    }
+
+    .option-btn.correct {
+      background: #2e7d32 !important;
+      border-color: #2e7d32 !important;
+      color: white !important;
+      animation: pulseSuccess 0.4s ease forwards;
+    }
+
+    .option-btn.wrong {
+      background: #c62828 !important;
+      border-color: #c62828 !important;
+      color: white !important;
+      animation: shakeWrong 0.4s ease forwards;
+    }
+
+    @keyframes pulseSuccess {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1.04); }
+    }
+
+    @keyframes shakeWrong {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-6px); }
+      40%, 80% { transform: translateX(6px); }
+    }
+
+    .score-display {
+      font-weight: 800;
+      font-size: 1.25em;
+      color: var(--heading-color);
+    }
+
+    .retry-btn {
+      background: var(--heading-color);
+      color: white;
+      border: none;
+      padding: 8px 22px;
+      border-radius: 30px;
+      font-weight: 800;
+      cursor: pointer;
+      font-size: 0.95em;
+      transition: all 0.25s ease;
+    }
+
+    .retry-btn:hover {
+      transform: translateY(-2px) scale(1.05);
+    }
+
+    kbd {
+      background: var(--highlight-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 6px;
+      padding: 2px 6px;
+      font-size: 0.85em;
+      font-weight: 800;
+      color: var(--heading-color);
+    }
+  </style>
+</head>
+<body class="theme-classic">
+
+  <!-- Interactive Ambient Background Particle Canvas -->
+  <canvas id="ambientParticlesCanvas"></canvas>
+
+  <!-- Fireworks Explosion Canvas -->
+  <canvas id="fireworksCanvas"></canvas>
+
+  <!-- Confetti Cannon Celebration Canvas -->
+  <canvas id="confettiCanvas"></canvas>
+
+  <!-- Toast Feedback Banner -->
+  <div id="toastNotification">✅ Changes Saved Successfully!</div>
+
+  <!-- TOP-RIGHT SETTINGS & KEYBOARD SHORTCUTS BAR ⚙️ -->
+  <div class="settings-hud-bar">
+    <button class="shortcuts-toggle-btn" onclick="toggleShortcutsModal()">
+      ⌨️ Shortcuts (<kbd>?</kbd>)
+    </button>
+    <button class="settings-toggle-btn" onclick="toggleSettingsPanel()">
+      ⚙️ Customization Settings
+    </button>
+  </div>
+
+  <!-- KEYBOARD SHORTCUTS MODAL HUD -->
+  <div class="shortcuts-modal" id="shortcutsModal">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+      <h3 style="font-size:1.1em; color:var(--heading-color); margin:0;">⌨️ Navigation Shortcuts</h3>
+      <button onclick="toggleShortcutsModal()" style="background:none; border:none; font-size:1.2em; cursor:pointer; color:var(--text-muted);">✖</button>
+    </div>
+    <ul style="list-style:none; padding:0; font-size:0.92em;">
+      <li style="margin-bottom:8px;">• <kbd>→</kbd> or <kbd>Space</kbd> or <kbd>PageDown</kbd> : Next Slide</li>
+      <li style="margin-bottom:8px;">• <kbd>←</kbd> or <kbd>PageUp</kbd> : Previous Slide</li>
+      <li style="margin-bottom:8px;">• <kbd>F</kbd> : Toggle Fullscreen</li>
+      <li style="margin-bottom:8px;">• <kbd>S</kbd> : Open Settings Panel</li>
+      <li style="margin-bottom:8px;">• <kbd>E</kbd> : Toggle Text Edit Mode</li>
+      <li style="margin-bottom:8px;">• <kbd>?</kbd> or <kbd>K</kbd> : Toggle Shortcuts Menu</li>
+    </ul>
+  </div>
+
+  <!-- FLOATING SETTINGS MODAL PANEL -->
+  <div class="settings-panel" id="settingsPanel">
+    
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+      <h3 style="font-size:1.15em; color:var(--heading-color); margin:0;">🎨 Customization Settings</h3>
+      <button onclick="toggleSettingsPanel()" style="background:none; border:none; font-size:1.2em; cursor:pointer; color:var(--text-muted);">✖</button>
+    </div>
+
+    <!-- Live In-Place Text Editing Toggle -->
+    <div class="settings-group" style="background: var(--highlight-bg); padding:10px; border-radius:12px; border:1px solid var(--card-border);">
+      <div class="settings-group-title" style="margin-bottom:3px;">✏️ Live Text Edit Mode</div>
+      <p style="font-size:0.82em; color:var(--text-muted); margin-bottom:6px;">Toggle on to click & edit any text on slides directly!</p>
+      <label style="display:flex; align-items:center; gap:8px; font-weight:800; font-size:0.9em; cursor:pointer;">
+        <input type="checkbox" id="liveEditToggle" onchange="toggleLiveEditMode(this.checked)" style="width:18px; height:18px; cursor:pointer;">
+        Enable On-Screen Text Editing
+      </label>
+    </div>
+
+    <!-- ADD NEW ELEMENTS DYNAMICALLY TO CURRENT SLIDE -->
+    <div class="settings-group" style="background: var(--box-gold-bg); padding:10px; border-radius:12px; border:1px solid var(--box-gold-border);">
+      <div class="settings-group-title" style="color:#b45309; margin-bottom:4px;">📦 Add New Elements to Slide</div>
+      <p style="font-size:0.8em; color:var(--text-muted); margin-bottom:8px;">Add new text boxes, notes, or badges directly to the active slide:</p>
+      
+      <button class="add-element-btn" onclick="addNewBlueBox()">
+        ➕ Add New Blue Content Box
+      </button>
+      <button class="add-element-btn" onclick="addNewGoldBox()">
+        ➕ Add New Gold Example Box
+      </button>
+      <button class="add-element-btn" onclick="addNewHighlightBadge()">
+        ➕ Add New Highlight Verb Badge
+      </button>
+      <button class="add-element-btn" onclick="addNewBulletPoint()">
+        ➕ Add New Rule Bullet Point
+      </button>
+    </div>
+
+    <!-- Save Button -->
+    <button class="save-edits-btn" onclick="saveAllTextEdits()">
+      💾 Save Custom Text & Boxes
+    </button>
+
+    <!-- Theme Select -->
+    <div class="settings-group" style="margin-top:14px;">
+      <div class="settings-group-title">🎨 Color Theme</div>
+      <select class="settings-select" id="themeSelect" onchange="changeTheme(this.value)">
+        <option value="theme-classic">🇫🇷 French Tricolor Classic</option>
+        <option value="theme-cyber">🌌 Midnight Cyber Neon</option>
+        <option value="theme-sunrise">☀️ Warm Sunrise Gold</option>
+        <option value="theme-emerald">🌲 Emerald Forest</option>
+        <option value="theme-purple">🍇 Royal Purple</option>
+        <option value="theme-minimal">🎨 Minimalist Clean Studio</option>
+      </select>
+    </div>
+
+    <!-- Famous Font Family Select -->
+    <div class="settings-group">
+      <div class="settings-group-title">🔤 Font Family</div>
+      <select class="settings-select" id="fontFamilySelect" onchange="changeFontFamily(this.value)">
+        <option value="'Plus Jakarta Sans', sans-serif">Plus Jakarta Sans (Sleek Modern)</option>
+        <option value="'Outfit', sans-serif">Outfit (Geometric Bold)</option>
+        <option value="'Poppins', sans-serif">Poppins (Friendly Rounded)</option>
+        <option value="'Playfair Display', serif">Playfair Display (Elegant Serif)</option>
+        <option value="'Space Grotesk', sans-serif">Space Grotesk (Tech Monospace)</option>
+        <option value="'Comic Neue', cursive">Comic Neue (Playful School)</option>
+        <option value="'Cinzel', serif">Cinzel (Classic Luxury)</option>
+      </select>
+    </div>
+
+    <!-- Font Size Scale Select -->
+    <div class="settings-group">
+      <div class="settings-group-title">📏 Font Size Scale</div>
+      <select class="settings-select" id="fontSizeSelect" onchange="changeFontSize(this.value)">
+        <option value="0.88">Small (88%)</option>
+        <option value="1.0" selected>Normal (100%)</option>
+        <option value="1.15">Large (115% — Classroom Reader)</option>
+        <option value="1.3">Extra Large (130% — Back Bench)</option>
+      </select>
+    </div>
+
+    <!-- Custom Text Color -->
+    <div class="settings-group">
+      <div class="settings-group-title">🎨 Text Color Preset</div>
+      <select class="settings-select" id="textColorSelect" onchange="changeTextColor(this.value)">
+        <option value="">Default Theme Color</option>
+        <option value="#002395">French Deep Navy</option>
+        <option value="#ED2939">French Crimson Red</option>
+        <option value="#047857">Emerald Forest Green</option>
+        <option value="#7e22ce">Royal Purple</option>
+        <option value="#0f172a">Charcoal Dark Slate</option>
+      </select>
+    </div>
+
+    <button onclick="resetAllCustomizations()" style="width:100%; margin-top:6px; background:var(--box-blue-bg); border:1px solid var(--card-border); color:var(--heading-color); font-weight:800; padding:8px; border-radius:12px; cursor:pointer; font-family:inherit;">
+      🔄 Reset All Settings & Text
+    </button>
+  </div>
+
+  <!-- Fullscreen Presentation Stage -->
+  <div class="presentation-viewport" id="presentationViewport">
+
+    <!-- Slide 1 — Title & Master Subjonctif Overview -->
+    <div class="slide active" data-slide-id="slide-1">
+      <div class="flag-stripe"></div>
+      
+      <svg class="svg-badge" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="50" cy="50" r="45" fill="#002395" stroke="#ED2939" stroke-width="4"/>
+        <path d="M30 45 L50 25 L70 45 L50 75 Z" fill="#ffffff"/>
+      </svg>
+
+      <h1 class="editable-field" id="topicMainTitle">🇫🇷 Le Subjonctif</h1>
+      <h3 class="editable-field" id="topicSubTitle" style="color: var(--subheading-color); font-weight: 700;">CBSE Class 10 French Grammar Master Guide</h3>
+      
+      <div class="box gold content-box" style="margin: 10px auto; padding: 16px 24px;">
+        <p class="editable-field" style="font-weight: 800; font-size: 1.25em; color: var(--heading-color); margin-bottom: 8px;">
+          Why do we use the Subjonctif in French?
+        </p>
+        <p class="editable-field" style="font-size: 1.1em; margin-bottom: 10px; color: var(--text-main);">
+          Unlike the Indicatif (which states objective facts & certainty), the <strong>Subjonctif</strong> expresses <strong>subjective thoughts, feelings, necessity, and doubt</strong>.
+        </p>
+        <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;" class="badge-container">
+          <span class="highlight editable-field">✨ 1. Wishes & Desires</span>
+          <span class="highlight editable-field">✨ 2. Emotion & Feelings</span>
+          <span class="highlight editable-field">✨ 3. Impersonal Necessity</span>
+          <span class="highlight editable-field">✨ 4. Doubt & Denial</span>
+          <span class="highlight editable-field">✨ 5. Negative Opinions</span>
+        </div>
+      </div>
+
+      <p class="content-box editable-field" style="font-size: 1.08em; color: var(--text-muted); margin-top: 6px;">
+        👉 Click <strong>Next ➔</strong> or press <strong>Right Arrow</strong> to navigate slides instantly!
+      </p>
+    </div>
+
+    <!-- Slide 2 — Prerequisites: The 2 Essential Conditions -->
+    <div class="slide" data-slide-id="slide-2">
+      <div class="flag-stripe"></div>
+
+      <svg class="svg-badge" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="25" y="40" width="50" height="45" rx="10" fill="#002395" stroke="#f4b436" stroke-width="3"/>
+        <path d="M35 40 V25 A15 15 0 0 1 65 25 V40" stroke="#f4b436" stroke-width="6" stroke-linecap="round"/>
+        <circle cx="50" cy="60" r="6" fill="#ffffff"/>
+      </svg>
+
+      <h2 class="editable-field">Prerequisites: The 2 Essential Conditions</h2>
+      <p class="editable-field" style="margin-bottom: 10px; font-size: 1.18em;">Before applying any Subjonctif usage, verify these 2 Board Exam rules:</p>
+      
+      <div class="two-columns">
+        <div class="box blue content-box" style="padding: 16px;">
+          <h3 class="editable-field" style="margin-top: 0 !important; color: var(--heading-color) !important;">Rule 1: Conjunction "Que" vs "De"</h3>
+          <p class="editable-field" style="margin-bottom: 5px;">• You MUST have the word <strong>QUE</strong> connecting the clauses.</p>
+          <p class="editable-field" style="margin-bottom: 5px;">• If followed by <strong>DE</strong> &rarr; Use Infinitive!</p>
+          <hr style="border: none; border-top: 1px solid var(--card-border); margin: 6px 0;">
+          <p class="example-text editable-field">Il est important <strong>que</strong> tu <span class="highlight">fasses</span>... (Subjonctif)</p>
+          <p class="example-text editable-field">Il est important <strong>de</strong> faire... (Infinitive)</p>
+        </div>
+
+        <div class="box gold content-box" style="padding: 16px;">
+          <h3 class="editable-field" style="margin-top: 0 !important; color: #b45309 !important;">Rule 2: Two Different Subjects</h3>
+          <p class="editable-field" style="margin-bottom: 5px;">• Main & subordinate clause MUST have <strong>two different subjects</strong>.</p>
+          <p class="editable-field" style="margin-bottom: 5px;">• Same subject in both clauses &rarr; Use Infinitive!</p>
+          <hr style="border: none; border-top: 1px solid var(--card-border); margin: 6px 0;">
+          <p class="example-text editable-field">Je (Subject 1) veux <strong>que tu</strong> (Subject 2) <span class="highlight">viennes</span>. (2 Subjects)</p>
+          <p class="example-text editable-field">Je veux <strong>partir</strong>. (1 Subject &rarr; Infinitive)</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 3 — USAGE 1: Wishes, Desires & Demands -->
+    <div class="slide" data-slide-id="slide-3">
+      <div class="flag-stripe"></div>
+      <div class="usage-badge editable-field">Usage 1 / 5</div>
+
+      <svg class="svg-badge" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="50,10 63,38 93,38 68,56 78,86 50,68 22,86 32,56 7,38 37,38" fill="#f4b436" stroke="#002395" stroke-width="3"/>
+      </svg>
+
+      <h2 class="editable-field">Wishes, Desires & Demands</h2>
+      <p class="editable-field" style="margin-bottom: 10px; font-size: 1.18em;">Why do we use Subjonctif here? When expressing what you want, wish, or demand someone else to do!</p>
+
+      <div class="two-columns">
+        <div class="box blue content-box" style="padding: 16px;">
+          <h3 class="editable-field" style="margin-top: 0 !important; color: var(--heading-color) !important;">Trigger Verbs</h3>
+          <ul style="list-style: none; margin: 0; padding: 0; text-align: left; font-size: 1.15em;">
+            <li class="editable-field" style="margin-bottom: 6px;">• <strong>Vouloir que...</strong> <em>(To want that)</em></li>
+            <li class="editable-field" style="margin-bottom: 6px;">• <strong>Souhaiter que...</strong> <em>(To wish that)</em></li>
+            <li class="editable-field" style="margin-bottom: 6px;">• <strong>Désirer que...</strong> <em>(To desire that)</em></li>
+            <li class="editable-field" style="margin-bottom: 6px;">• <strong>Exiger / Demander que...</strong> <em>(To demand/ask that)</em></li>
+          </ul>
+        </div>
+
+        <div class="box gold content-box" style="padding: 16px;">
+          <h3 class="editable-field" style="margin-top: 0 !important; color: #b45309 !important;">CBSE Exam Examples</h3>
+          <p class="example-text editable-field">Je veux que tu <span class="highlight">fasses</span> tes devoirs.</p>
+          <p class="editable-field" style="font-size: 0.9em; color: var(--text-muted); margin-bottom: 6px;"><em>(I want you to do your homework.)</em></p>
+          <p class="example-text editable-field">Elle souhaite que nous <span class="highlight">allions</span> en France.</p>
+          <p class="editable-field" style="font-size: 0.9em; color: var(--text-muted);"><em>(She wishes that we go to France.)</em></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 4 — USAGE 2: Emotions & Feelings -->
+    <div class="slide" data-slide-id="slide-4">
+      <div class="flag-stripe"></div>
+      <div class="usage-badge editable-field">Usage 2 / 5</div>
+
+      <svg class="svg-badge" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M50 85 L20 45 A18 18 0 0 1 50 22 A18 18 0 0 1 80 45 Z" fill="#ED2939" stroke="#002395" stroke-width="3"/>
+      </svg>
+
+      <h2 class="editable-field">Emotions, Happiness & Fears</h2>
+      <p class="editable-field" style="margin-bottom: 10px; font-size: 1.18em;">Why do we use Subjonctif here? Any emotional reaction to another person's action triggers the Subjonctif!</p>
+
+      <div class="two-columns">
+        <div class="box blue content-box" style="padding: 16px;">
+          <h3 class="editable-field" style="margin-top: 0 !important; color: var(--heading-color) !important;">Emotion Triggers</h3>
+          <ul style="list-style: none; margin: 0; padding: 0; text-align: left; font-size: 1.15em;">
+            <li class="editable-field" style="margin-bottom: 6px;">• <strong>Être content(e) / heureux(se) que...</strong></li>
+            <li class="editable-field" style="margin-bottom: 6px;">• <strong>Être triste / désolé(e) que...</strong></li>
+            <li class="editable-field" style="margin-bottom: 6px;">• <strong>Avoir peur que...</strong> <em>(To fear that)</em></li>
+            <li class="editable-field" style="margin-bottom: 6px;">• <strong>Être surpris(e) que...</strong> <em>(To be surprised that)</em></li>
+          </ul>
+        </div>
+
+        <div class="box gold content-box" style="padding: 16px;">
+          <h3 class="editable-field" style="margin-top: 0 !important; color: #b45309 !important;">CBSE Exam Examples</h3>
+          <p class="example-text editable-field">Je suis ravie que tu <span class="highlight">sois</span> ici.</p>
+          <p class="editable-field" style="font-size: 0.9em; color: var(--text-muted); margin-bottom: 6px;"><em>(I am delighted that you are here.)</em></p>
+          <p class="example-text editable-field">J'ai peur qu'il ne <span class="highlight">puisse</span> pas venir.</p>
+          <p class="editable-field" style="font-size: 0.9em; color: var(--text-muted);"><em>(I am afraid that he cannot come.)</em></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 5 — USAGE 3: Impersonal Necessity & Preference -->
+    <div class="slide" data-slide-id="slide-5">
+      <div class="flag-stripe"></div>
+      <div class="usage-badge editable-field">Usage 3 / 5</div>
+
+      <svg class="svg-badge" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M55 10 L25 55 H50 L45 90 L75 45 H50 L55 10 Z" fill="#f4b436" stroke="#002395" stroke-width="2"/>
+      </svg>
+
+      <h2 class="editable-field">Impersonal Necessity & Preference</h2>
+      <p class="editable-field" style="margin-bottom: 10px; font-size: 1.18em;">Why do we use Subjonctif here? Impersonal expressions (starting with <em>"Il est..."</em> or <em>"Il faut..."</em>) state necessity, not fact!</p>
+
+      <div class="two-columns">
+        <div class="box blue content-box" style="padding: 16px;">
+          <h3 class="editable-field" style="margin-top: 0 !important; color: var(--heading-color) !important;">High-Frequency Expressions</h3>
+          <ul style="list-style: none; margin: 0; padding: 0; text-align: left; font-size: 1.15em;">
+            <li class="editable-field" style="margin-bottom: 6px;">• <strong>Il faut que...</strong> <em>(It is necessary that)</em></li>
+            <li class="editable-field" style="margin-bottom: 6px;">• <strong>Il est important / nécessaire que...</strong></li>
+            <li class="editable-field" style="margin-bottom: 6px;">• <strong>Il vaut mieux que...</strong> <em>(It is better that)</em></li>
+            <li class="editable-field" style="margin-bottom: 6px;">• <strong>Il est indispensable que...</strong> <em>(It is essential that)</em></li>
+          </ul>
+        </div>
+
+        <div class="box gold content-box" style="padding: 16px;">
+          <h3 class="editable-field" style="margin-top: 0 !important; color: #b45309 !important;">CBSE Exam Examples</h3>
+          <p class="example-text editable-field">Il faut que vous <span class="highlight">fassiez</span> attention.</p>
+          <p class="editable-field" style="font-size: 0.9em; color: var(--text-muted); margin-bottom: 6px;"><em>(You must be careful.)</em></p>
+          <p class="example-text editable-field">Il vaut mieux qu'elle <span class="highlight">sache</span> la vérité.</p>
+          <p class="editable-field" style="font-size: 0.9em; color: var(--text-muted);"><em>(It is better that she knows the truth.)</em></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 6 — USAGE 4: Doubt, Denial & Uncertainty -->
+    <div class="slide" data-slide-id="slide-6">
+      <div class="flag-stripe"></div>
+      <div class="usage-badge editable-field">Usage 4 / 5</div>
+
+      <svg class="svg-badge" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="50" cy="50" r="40" stroke="#002395" stroke-width="4" fill="none"/>
+        <text x="50" y="65" font-size="50" font-weight="900" fill="#002395" text-anchor="middle">?</text>
+      </svg>
+
+      <h2 class="editable-field">Doubt, Denial & Possibility</h2>
+      <p class="editable-field" style="margin-bottom: 10px; font-size: 1.18em;">Why do we use Subjonctif here? When an outcome is uncertain, doubtful, or denied, reality is not factual!</p>
+
+      <div class="two-columns">
+        <div class="box blue content-box" style="padding: 16px;">
+          <h3 class="editable-field" style="margin-top: 0 !important; color: var(--heading-color) !important;">Doubt Triggers</h3>
+          <ul style="list-style: none; margin: 0; padding: 0; text-align: left; font-size: 1.15em;">
+            <li class="editable-field" style="margin-bottom: 6px;">• <strong>Douter que...</strong> <em>(To doubt that)</em></li>
+            <li class="editable-field" style="margin-bottom: 6px;">• <strong>Il est douteux que...</strong> <em>(It is doubtful that)</em></li>
+            <li class="editable-field" style="margin-bottom: 6px;">• <strong>Nier que...</strong> <em>(To deny that)</em></li>
+            <li class="editable-field" style="margin-bottom: 6px;">• <strong>Il est possible que / Il se peut que...</strong></li>
+          </ul>
+        </div>
+
+        <div class="box gold content-box" style="padding: 16px;">
+          <h3 class="editable-field" style="margin-top: 0 !important; color: #b45309 !important;">CBSE Exam Examples</h3>
+          <p class="example-text editable-field">Je doute qu'il <span class="highlight">puisse</span> réussir.</p>
+          <p class="editable-field" style="font-size: 0.9em; color: var(--text-muted); margin-bottom: 6px;"><em>(I doubt that he can succeed.)</em></p>
+          <p class="example-text editable-field">Il est possible qu'il <span class="highlight">pleuve</span> demain.</p>
+          <p class="editable-field" style="font-size: 0.9em; color: var(--text-muted);"><em>(It is possible that it rains tomorrow.)</em></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 7 — USAGE 5: Negative & Questioned Opinions -->
+    <div class="slide" data-slide-id="slide-7">
+      <div class="flag-stripe"></div>
+      <div class="usage-badge editable-field">Usage 5 / 5</div>
+
+      <svg class="svg-badge" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="50,15 90,85 10,85" fill="#ED2939" stroke="#ffffff" stroke-width="3"/>
+        <text x="50" y="72" font-size="45" font-weight="900" fill="#ffffff" text-anchor="middle">!</text>
+      </svg>
+
+      <h2 class="editable-field">Negative Opinions (Penser / Croire Trap)</h2>
+      <p class="editable-field" style="margin-bottom: 10px; font-size: 1.18em;">Why does this change mood? Affirmative opinion expresses belief (Indicatif), but negative/questioned opinion introduces doubt (Subjonctif)!</p>
+
+      <div class="two-columns">
+        <div class="box gold content-box" style="padding: 16px;">
+          <h3 class="editable-field" style="margin-top:0 !important; color: #b45309 !important;">Affirmative &rarr; INDICATIF</h3>
+          <p class="editable-field" style="margin-bottom: 5px;">Expresses belief / certainty:</p>
+          <p class="example-text editable-field">Je pense qu'il <strong>est</strong> là. <em>(Indicatif)</em></p>
+          <p class="example-text editable-field">Je crois qu'elle <strong>vient</strong>. <em>(Indicatif)</em></p>
+          <hr style="border: none; border-top: 1px solid var(--card-border); margin: 6px 0;">
+          <p class="editable-field" style="font-size: 0.9em; color: #ED2939;"><strong>Espérer que</strong> takes Futur: J'espère qu'il <strong>viendra</strong>.</p>
+        </div>
+
+        <div class="box blue content-box" style="padding: 16px;">
+          <h3 class="editable-field" style="margin-top:0 !important; color: var(--heading-color) !important;">Negative / Question &rarr; SUBJONCTIF</h3>
+          <p class="editable-field" style="margin-bottom: 5px;">Expresses uncertainty / doubt:</p>
+          <p class="example-text editable-field">Je ne pense pas qu'il <span class="highlight">soit</span> là. <em>(Subjonctif)</em></p>
+          <p class="example-text editable-field">Penses-tu qu'elle <span class="highlight">vienne</span> ? <em>(Subjonctif)</em></p>
+          <p class="example-text editable-field">Je ne crois pas qu'ils <span class="highlight">sachent</span>. <em>(Subjonctif)</em></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 8 — INTERACTIVE FORMULA LAB -->
+    <div class="slide" data-slide-id="slide-8">
+      <div class="flag-stripe"></div>
+
+      <h2 class="editable-field">🧪 Interactive Conjugation Formula Lab</h2>
+      <p class="editable-field" style="margin-bottom: 8px; font-size: 1.1em;">Click any French verb below to watch the 3-step Subjunctive Formula build live!</p>
+
+      <div class="formula-lab-container content-box">
+        
+        <!-- Interactive Moving Verb Selector Buttons -->
+        <div class="verb-btn-row">
+          <button class="verb-select-btn active-verb" onclick="selectFormulaVerb('parler', 'parlent', 'parl')">💬 parler</button>
+          <button class="verb-select-btn" onclick="selectFormulaVerb('finir', 'finissent', 'finiss')">✨ finir</button>
+          <button class="verb-select-btn" onclick="selectFormulaVerb('vendre', 'vendent', 'vend')">📦 vendre</button>
+          <button class="verb-select-btn" onclick="selectFormulaVerb('choisir', 'choisissent', 'choisiss')">🎨 choisir</button>
+          <button class="verb-select-btn" onclick="selectFormulaVerb('regarder', 'regardent', 'regard')">📺 regarder</button>
+          <button class="verb-select-btn" onclick="selectFormulaVerb('danser', 'dansent', 'dans')">🎵 danser</button>
+        </div>
+
+        <!-- 3-Step Live Visual Formula Pipeline -->
+        <div class="formula-pipeline">
+          
+          <div class="formula-step-box">
+            <div class="formula-step-title editable-field">Step 1: Present "ils"</div>
+            <p class="editable-field" style="font-size: 0.9em; margin-bottom: 4px;">Start with Present Tense <em>ils/elles</em>:</p>
+            <div class="formula-verb-display" id="step1Display">ils parlent</div>
+          </div>
+
+          <div class="formula-step-box">
+            <div class="formula-step-title editable-field">Step 2: Drop "-ent"</div>
+            <p class="editable-field" style="font-size: 0.9em; margin-bottom: 4px;">Cut ending to get Subjunctive Stem:</p>
+            <div class="formula-cut-display" id="step2Display">Stem: parl-</div>
+          </div>
+
+          <div class="formula-step-box" style="grid-column: span 1;">
+            <div class="formula-step-title editable-field">Step 3: Add Subjunctive Endings</div>
+            <p class="editable-field" style="font-size: 0.9em; margin-bottom: 2px;">Endings: <strong>-e, -es, -e, -ions, -iez, -ent</strong></p>
+            <div id="liveFormulaEquation" style="font-size: 1.1em; font-weight: 800; color: var(--heading-color);">
+              que je <span class="highlight" style="font-size:1.05em; padding:2px 10px;">parle</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Live Conjugation Table Matrix -->
+        <table class="subj-table" style="margin-top: 10px;">
+          <thead>
+            <tr>
+              <th class="editable-field">Subject</th>
+              <th class="editable-field">Formula</th>
+              <th class="editable-field">Live Subjunctive Conjugation</th>
+            </tr>
+          </thead>
+          <tbody id="formulaTableBody">
+            <!-- Dynamic JS Output -->
+          </tbody>
+        </table>
+
+      </div>
+    </div>
+
+    <!-- Slide 9 — 2-Stem Boot Verbs -->
+    <div class="slide" data-slide-id="slide-9">
+      <div class="flag-stripe"></div>
+
+      <h2 class="editable-field">2-Stem "Boot" Verbs</h2>
+      <p class="editable-field" style="margin-bottom: 10px; font-size: 1.15em;">Click any card to flip & reveal its subjunctive form!</p>
+
+      <div class="flip-card-grid content-box">
+        <div class="flip-card" onclick="flipCard(this)">
+          <div class="flip-card-inner">
+            <div class="flip-card-front">
+              <h3 class="editable-field">prendre</h3>
+              <p class="editable-field">je / ils: <strong>prenn-</strong></p>
+              <p class="editable-field">nous / vous: <strong>pren-</strong></p>
+            </div>
+            <div class="flip-card-back editable-field">
+              que je prenne<br>que nous prenions
+            </div>
+          </div>
+        </div>
+
+        <div class="flip-card" onclick="flipCard(this)">
+          <div class="flip-card-inner">
+            <div class="flip-card-front">
+              <h3 class="editable-field">venir</h3>
+              <p class="editable-field">je / ils: <strong>vienn-</strong></p>
+              <p class="editable-field">nous / vous: <strong>ven-</strong></p>
+            </div>
+            <div class="flip-card-back editable-field">
+              que tu viennes<br>que vous veniez
+            </div>
+          </div>
+        </div>
+
+        <div class="flip-card" onclick="flipCard(this)">
+          <div class="flip-card-inner">
+            <div class="flip-card-front">
+              <h3 class="editable-field">devoir</h3>
+              <p class="editable-field">je / ils: <strong>doiv-</strong></p>
+              <p class="editable-field">nous / vous: <strong>dev-</strong></p>
+            </div>
+            <div class="flip-card-back editable-field">
+              qu'il doive<br>que nous devions
+            </div>
+          </div>
+        </div>
+
+        <div class="flip-card" onclick="flipCard(this)">
+          <div class="flip-card-inner">
+            <div class="flip-card-front">
+              <h3 class="editable-field">boire</h3>
+              <p class="editable-field">je / ils: <strong>boiv-</strong></p>
+              <p class="editable-field">nous / vous: <strong>buv-</strong></p>
+            </div>
+            <div class="flip-card-back editable-field">
+              que je boive<br>que nous buvions
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 10 — Master Irregular Verbs Table -->
+    <div class="slide" data-slide-id="slide-10">
+      <div class="flag-stripe"></div>
+
+      <svg class="svg-badge" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M20 75 L15 30 L38 50 L50 20 L62 50 L85 30 L80 75 Z" fill="#f4b436" stroke="#002395" stroke-width="3"/>
+      </svg>
+
+      <h2 class="editable-field">Master Irregular Verbs Table</h2>
+      <p class="editable-field" style="color: var(--subheading-color); font-weight: 700; margin-bottom: 6px; font-size: 1.15em;">Essential Irregular Forms for CBSE Board Exam:</p>
+
+      <div class="box blue content-box" style="padding: 14px 20px;">
+        <table class="subj-table">
+          <tr>
+            <th class="editable-field">Verb</th>
+            <th class="editable-field">je</th><th class="editable-field">tu</th><th class="editable-field">il/elle</th><th class="editable-field">nous</th><th class="editable-field">vous</th><th class="editable-field">ils/elles</th>
+          </tr>
+          <tr>
+            <td><strong class="editable-field">être</strong></td>
+            <td><strong class="editable-field">sois</strong></td><td><strong class="editable-field">sois</strong></td><td><strong class="editable-field">soit</strong></td><td><strong class="editable-field">soyons</strong></td><td><strong class="editable-field">soyez</strong></td><td><strong class="editable-field">soient</strong></td>
+          </tr>
+          <tr>
+            <td><strong class="editable-field">avoir</strong></td>
+            <td><strong class="editable-field">aie</strong></td><td><strong class="editable-field">aies</strong></td><td><strong class="editable-field">ait</strong></td><td><strong class="editable-field">ayons</strong></td><td><strong class="editable-field">ayez</strong></td><td><strong class="editable-field">aient</strong></td>
+          </tr>
+          <tr>
+            <td><strong class="editable-field">faire</strong></td>
+            <td><strong class="editable-field">fasse</strong></td><td><strong class="editable-field">fasses</strong></td><td><strong class="editable-field">fasse</strong></td><td><strong class="editable-field">fassions</strong></td><td><strong class="editable-field">fassiez</strong></td><td><strong class="editable-field">fassent</strong></td>
+          </tr>
+          <tr>
+            <td><strong class="editable-field">aller</strong></td>
+            <td><strong class="editable-field">aille</strong></td><td><strong class="editable-field">ailles</strong></td><td><strong class="editable-field">aille</strong></td><td><strong class="editable-field">allions</strong></td><td><strong class="editable-field">alliez</strong></td><td><strong class="editable-field">aillent</strong></td>
+          </tr>
+          <tr>
+            <td><strong class="editable-field">pouvoir</strong></td>
+            <td><strong class="editable-field">puisse</strong></td><td><strong class="editable-field">puisses</strong></td><td><strong class="editable-field">puisse</strong></td><td><strong class="editable-field">puissions</strong></td><td><strong class="editable-field">puissiez</strong></td><td><strong class="editable-field">puissent</strong></td>
+          </tr>
+          <tr>
+            <td><strong class="editable-field">savoir</strong></td>
+            <td><strong class="editable-field">sache</strong></td><td><strong class="editable-field">saches</strong></td><td><strong class="editable-field">sache</strong></td><td><strong class="editable-field">sachions</strong></td><td><strong class="editable-field">sachiez</strong></td><td><strong class="editable-field">sachent</strong></td>
+          </tr>
+          <tr>
+            <td><strong class="editable-field">vouloir</strong></td>
+            <td><strong class="editable-field">veuille</strong></td><td><strong class="editable-field">veuilles</strong></td><td><strong class="editable-field">veuille</strong></td><td><strong class="editable-field">voulions</strong></td><td><strong class="editable-field">vouliez</strong></td><td><strong class="editable-field">veuillent</strong></td>
+          </tr>
+        </table>
+        <p class="editable-field" style="margin-top: 4px; font-weight: 600; font-size: 1em; color: var(--text-muted);">
+          Impersonal Irregulars: <strong>falloir</strong> &rarr; <em>il <span class="highlight" style="font-size:1.05em; padding:2px 10px;">faille</span></em> | <strong>pleuvoir</strong> &rarr; <em>il <span class="highlight" style="font-size:1.05em; padding:2px 10px;">pleuve</span></em>
+        </p>
+      </div>
+    </div>
+
+    <!-- Slide 11 — Interactive Practice Quiz with Better Feedback -->
+    <div class="slide" data-slide-id="slide-11">
+      <div class="flag-stripe"></div>
+
+      <svg class="svg-badge" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M30 20 H70 V50 A20 20 0 0 1 30 50 Z M50 70 V85 M35 85 H65" stroke="#f4b436" stroke-width="5" stroke-linecap="round"/>
+        <path d="M20 30 H30 M70 30 H80" stroke="#f4b436" stroke-width="5"/>
+      </svg>
+
+      <h2 class="editable-field">🎮 CBSE Practice Quiz</h2>
+      
+      <div class="quiz-container content-box">
+        
+        <div class="quiz-progress-bar">
+          <div class="quiz-progress-fill" id="quizProgressFill"></div>
+        </div>
+
+        <div class="question-row" data-answer="fasses">
+          <div class="question-text editable-field">1. Il faut que tu ______. (faire &rarr; Necessity)</div>
+          <div class="options">
+            <button class="option-btn">fasses</button>
+            <button class="option-btn">fasse</button>
+            <button class="option-btn">fait</button>
+          </div>
+        </div>
+
+        <div class="question-row" data-answer="veniez">
+          <div class="question-text editable-field">2. Je veux que vous ______. (venir &rarr; Wish/Desire)</div>
+          <div class="options">
+            <button class="option-btn">venez</button>
+            <button class="option-btn">veniez</button>
+            <button class="option-btn">viendrez</button>
+          </div>
+        </div>
+
+        <div class="question-row" data-answer="soit">
+          <div class="question-text editable-field">3. Il est important qu'elle ______. (être &rarr; Impersonal)</div>
+          <div class="options">
+            <button class="option-btn">est</button>
+            <button class="option-btn">soit</button>
+            <button class="option-btn">sois</button>
+          </div>
+        </div>
+
+        <div class="question-row" data-answer="puisse">
+          <div class="question-text editable-field">4. Je doute qu'il ______. (pouvoir &rarr; Doubt)</div>
+          <div class="options">
+            <button class="option-btn">peut</button>
+            <button class="option-btn">pourra</button>
+            <button class="option-btn">puisse</button>
+          </div>
+        </div>
+
+        <div class="question-row" data-answer="alliez">
+          <div class="question-text editable-field">5. Elle souhaite que vous ______. (aller &rarr; Wish)</div>
+          <div class="options">
+            <button class="option-btn">alliez</button>
+            <button class="option-btn">allez</button>
+            <button class="option-btn">aille</button>
+          </div>
+        </div>
+
+        <div class="question-row" data-answer="viendra">
+          <div class="question-text editable-field">6. J'espère qu'il ______ demain. (venir &rarr; Espérer que = Futur!)</div>
+          <div class="options">
+            <button class="option-btn">vienne</button>
+            <button class="option-btn">viendra</button>
+            <button class="option-btn">viennes</button>
+          </div>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
+          <span class="score-display" id="quizScoreDisplay">Score : 0 / 6</span>
+          <button class="retry-btn">🔄 Reset Quiz</button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Slide 12 — Answer Key & Board Exam Checklist -->
+    <div class="slide" data-slide-id="slide-12">
+      <div class="flag-stripe"></div>
+
+      <svg class="svg-badge" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="50" cy="40" r="25" fill="#002395" stroke="#f4b436" stroke-width="3"/>
+        <path d="M40 60 L30 90 L50 80 L70 90 L60 60 Z" fill="#ED2939"/>
+      </svg>
+
+      <h2 class="editable-field">Answer Key & CBSE Quick Checklist</h2>
+      
+      <div class="two-columns">
+        <div class="box gold content-box" style="padding: 16px 20px; text-align: left;">
+          <h3 class="editable-field" style="margin-top: 0 !important; color: #b45309 !important;">Quiz Answer Key</h3>
+          <ol style="margin-left: 1.2em; font-size: 1.1em !important; line-height: 1.45 !important;">
+            <li class="editable-field">1. tu <strong>fasses</strong> (faire &rarr; Necessity)</li>
+            <li class="editable-field">2. vous <strong>veniez</strong> (venir &rarr; Wish)</li>
+            <li class="editable-field">3. elle <strong>soit</strong> (être &rarr; Impersonal)</li>
+            <li class="editable-field">4. il <strong>puisse</strong> (pouvoir &rarr; Doubt)</li>
+            <li class="editable-field">5. vous <strong>alliez</strong> (aller &rarr; Wish)</li>
+            <li class="editable-field">6. il <strong>viendra</strong> (espérer que &rarr; futur!)</li>
+          </ol>
+        </div>
+
+        <div class="box blue content-box" style="padding: 16px 20px; text-align: left;">
+          <h3 class="editable-field" style="margin-top: 0 !important; color: var(--heading-color) !important;">CBSE Exam Checklist</h3>
+          <ul style="list-style: none; margin: 0; padding: 0; font-size: 1.1em !important; line-height: 1.45 !important;">
+            <li class="editable-field">✅ Check for <strong>QUE</strong> (if <em>de</em> &rarr; infinitive).</li>
+            <li class="editable-field">✅ Verify <strong>2 different subjects</strong>.</li>
+            <li class="editable-field">✅ Identify the <strong>Usage Category</strong> (WEIRDO).</li>
+            <li class="editable-field">✅ Watch for <strong>Negative Penser/Croire</strong> (subjonctif).</li>
+            <li class="editable-field">✅ Remember <strong>Espérer que</strong> takes future.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ULTRA-SLEEK MINIMAL LIGHT NAVIGATION CONTROL BAR -->
+  <div class="nav-controls">
+    <button class="nav-btn" id="prevBtn" onclick="prevSlide()">⬅ Previous</button>
+    <div class="slide-counter" id="slideCounter">Slide 1 / 12</div>
+    <button class="nav-btn" id="nextBtn" onclick="nextSlide()">Next ➔</button>
+    <button class="fullscreen-btn" id="fsBtn" onclick="toggleFullscreen()">⛶ Fullscreen</button>
+  </div>
+
+  <script>
+    // -------------------------------------------------------------
+    // INTERACTIVE AMBIENT BACKGROUND PARTICLES
+    // -------------------------------------------------------------
+    const ambCanvas = document.getElementById('ambientParticlesCanvas');
+    const aCtx = ambCanvas.getContext('2d');
+
+    function resizeAmbCanvas() {
+      ambCanvas.width = window.innerWidth;
+      ambCanvas.height = window.innerHeight;
+    }
+    resizeAmbCanvas();
+    window.addEventListener('resize', resizeAmbCanvas);
+
+    let ambParticles = [];
+    let mousePos = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+
+    window.addEventListener('mousemove', (e) => {
+      mousePos.x = e.clientX;
+      mousePos.y = e.clientY;
+    });
+
+    for (let i = 0; i < 45; i++) {
+      ambParticles.push({
+        x: Math.random() * window.innerWidth,
+        y: Math.random() * window.innerHeight,
+        radius: Math.random() * 3 + 1,
+        vx: (Math.random() - 0.5) * 0.8,
+        vy: (Math.random() - 0.5) * 0.8,
+        alpha: Math.random() * 0.5 + 0.2
+      });
+    }
+
+    function animateAmbientParticles() {
+      aCtx.clearRect(0, 0, ambCanvas.width, ambCanvas.height);
+      const computedStyle = getComputedStyle(document.body);
+      const pColor = computedStyle.getPropertyValue('--particle-color').trim() || 'rgba(0,35,149,0.3)';
+
+      ambParticles.forEach((p, idx) => {
+        p.x += p.vx;
+        p.y += p.vy;
+
+        if (p.x < 0 || p.x > ambCanvas.width) p.vx *= -1;
+        if (p.y < 0 || p.y > ambCanvas.height) p.vy *= -1;
+
+        // Subtle mouse pull interaction
+        const dx = mousePos.x - p.x;
+        const dy = mousePos.y - p.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < 140) {
+          p.x += dx * 0.015;
+          p.y += dy * 0.015;
+        }
+
+        aCtx.beginPath();
+        aCtx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        aCtx.fillStyle = pColor;
+        aCtx.fill();
+
+        // Connect nearby particles with subtle lines
+        for (let j = idx + 1; j < ambParticles.length; j++) {
+          const p2 = ambParticles[j];
+          const dist2 = Math.hypot(p.x - p2.x, p.y - p2.y);
+          if (dist2 < 120) {
+            aCtx.beginPath();
+            aCtx.moveTo(p.x, p.y);
+            aCtx.lineTo(p2.x, p2.y);
+            aCtx.strokeStyle = pColor;
+            aCtx.globalAlpha = (1 - dist2 / 120) * 0.25;
+            aCtx.stroke();
+            aCtx.globalAlpha = 1.0;
+          }
+        }
+      });
+
+      requestAnimationFrame(animateAmbientParticles);
+    }
+    animateAmbientParticles();
+
+    // -------------------------------------------------------------
+    // CONFETTI CANNON CELEBRATION EFFECT
+    // -------------------------------------------------------------
+    const confettiCanvas = document.getElementById('confettiCanvas');
+    const cCtx = confettiCanvas.getContext('2d');
+
+    function resizeConfetti() {
+      confettiCanvas.width = window.innerWidth;
+      confettiCanvas.height = window.innerHeight;
+    }
+    resizeConfetti();
+    window.addEventListener('resize', resizeConfetti);
+
+    let confettiParticles = [];
+
+    function triggerConfettiBurst() {
+      const colors = ['#002395', '#ED2939', '#f4b436', '#00f2fe', '#a855f7', '#00e676', '#ff2a4b'];
+      for (let i = 0; i < 140; i++) {
+        confettiParticles.push({
+          x: Math.random() * window.innerWidth,
+          y: window.innerHeight + 10,
+          vx: (Math.random() - 0.5) * 16,
+          vy: -(Math.random() * 18 + 12),
+          size: Math.random() * 10 + 6,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          rotation: Math.random() * 360,
+          rotationSpeed: (Math.random() - 0.5) * 15,
+          opacity: 1
+        });
+      }
+    }
+
+    function animateConfetti() {
+      cCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+      for (let i = 0; i < confettiParticles.length; i++) {
+        const p = confettiParticles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += 0.35;
+        p.rotation += p.rotationSpeed;
+        p.opacity -= 0.009;
+
+        if (p.opacity > 0) {
+          cCtx.save();
+          cCtx.translate(p.x, p.y);
+          cCtx.rotate((p.rotation * Math.PI) / 180);
+          cCtx.fillStyle = p.color;
+          cCtx.globalAlpha = p.opacity;
+          cCtx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+          cCtx.restore();
+        } else {
+          confettiParticles.splice(i, 1);
+          i--;
+        }
+      }
+      requestAnimationFrame(animateConfetti);
+    }
+    animateConfetti();
+
+    // -------------------------------------------------------------
+    // FIREWORKS EXPLOSION SYSTEM
+    // -------------------------------------------------------------
+    const fireworksCanvas = document.getElementById('fireworksCanvas');
+    const fCtx = fireworksCanvas.getContext('2d');
+
+    function resizeFireworks() {
+      fireworksCanvas.width = window.innerWidth;
+      fireworksCanvas.height = window.innerHeight;
+    }
+    resizeFireworks();
+    window.addEventListener('resize', resizeFireworks);
+
+    let fireworksParticles = [];
+
+    function triggerFireworksBurst() {
+      const colors = ['#00f2fe', '#ff2a4b', '#ffbe0b', '#a855f7', '#00e676', '#ffffff'];
+      for (let i = 0; i < 110; i++) {
+        fireworksParticles.push({
+          x: window.innerWidth / 2,
+          y: window.innerHeight / 2,
+          vx: (Math.random() - 0.5) * 18,
+          vy: (Math.random() - 0.8) * 18,
+          size: Math.random() * 8 + 4,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          rotation: Math.random() * 360,
+          rotationSpeed: (Math.random() - 0.5) * 12,
+          opacity: 1
+        });
+      }
+    }
+
+    function animateFireworks() {
+      fCtx.clearRect(0, 0, fireworksCanvas.width, fireworksCanvas.height);
+      for (let i = 0; i < fireworksParticles.length; i++) {
+        const p = fireworksParticles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += 0.28;
+        p.rotation += p.rotationSpeed;
+        p.opacity -= 0.012;
+
+        if (p.opacity > 0) {
+          fCtx.save();
+          fCtx.translate(p.x, p.y);
+          fCtx.rotate((p.rotation * Math.PI) / 180);
+          fCtx.fillStyle = p.color;
+          fCtx.globalAlpha = p.opacity;
+          fCtx.shadowBlur = 10;
+          fCtx.shadowColor = p.color;
+          fCtx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+          fCtx.restore();
+        } else {
+          fireworksParticles.splice(i, 1);
+          i--;
+        }
+      }
+      requestAnimationFrame(animateFireworks);
+    }
+    animateFireworks();
+
+    // -------------------------------------------------------------
+    // DYNAMICALLY ADD NEW BOXES & TEXT ELEMENTS TO CURRENT SLIDE
+    // -------------------------------------------------------------
+    function getCurrentActiveSlide() {
+      return document.querySelector('.slide.active');
+    }
+
+    function addNewBlueBox() {
+      const activeSlide = getCurrentActiveSlide();
+      if (!activeSlide) return;
+      const box = document.createElement('div');
+      box.className = 'box blue content-box editable-field';
+      box.style.padding = '14px 20px';
+      box.innerHTML = `
+        <h3 class="editable-field" style="margin-top:0 !important;">New Grammar Note Title</h3>
+        <p class="editable-field">Click here to edit this new note content...</p>
+      `;
+      activeSlide.appendChild(box);
+      if (document.getElementById('liveEditToggle').checked) {
+        box.contentEditable = "true";
+        box.querySelectorAll('.editable-field').forEach(el => el.contentEditable = "true");
+      }
+      showToast('➕ Added New Blue Content Box!');
+    }
+
+    function addNewGoldBox() {
+      const activeSlide = getCurrentActiveSlide();
+      if (!activeSlide) return;
+      const box = document.createElement('div');
+      box.className = 'box gold content-box editable-field';
+      box.style.padding = '14px 20px';
+      box.innerHTML = `
+        <h3 class="editable-field" style="margin-top:0 !important; color:#b45309 !important;">New Example Box</h3>
+        <p class="example-text editable-field">Click to write new French example sentence...</p>
+      `;
+      activeSlide.appendChild(box);
+      if (document.getElementById('liveEditToggle').checked) {
+        box.contentEditable = "true";
+        box.querySelectorAll('.editable-field').forEach(el => el.contentEditable = "true");
+      }
+      showToast('➕ Added New Gold Example Box!');
+    }
+
+    function addNewHighlightBadge() {
+      const activeSlide = getCurrentActiveSlide();
+      if (!activeSlide) return;
+      const badgeContainer = activeSlide.querySelector('.badge-container') || activeSlide;
+      const badge = document.createElement('span');
+      badge.className = 'highlight editable-field';
+      badge.style.margin = '4px';
+      badge.textContent = '✨ New Highlight Badge';
+      badgeContainer.appendChild(badge);
+      if (document.getElementById('liveEditToggle').checked) {
+        badge.contentEditable = "true";
+      }
+      showToast('➕ Added New Highlight Badge!');
+    }
+
+    function addNewBulletPoint() {
+      const activeSlide = getCurrentActiveSlide();
+      if (!activeSlide) return;
+      const ul = activeSlide.querySelector('ul') || activeSlide;
+      const li = document.createElement('li');
+      li.className = 'editable-field';
+      li.style.marginBottom = '6px';
+      li.innerHTML = '• <strong>New Rule:</strong> Click here to edit rule point.';
+      ul.appendChild(li);
+      if (document.getElementById('liveEditToggle').checked) {
+        li.contentEditable = "true";
+      }
+      showToast('➕ Added New Rule Bullet Point!');
+    }
+
+    // -------------------------------------------------------------
+    // SETTINGS PANEL & KEYBOARD SHORTCUTS MODAL
+    // -------------------------------------------------------------
+    function toggleSettingsPanel() {
+      const panel = document.getElementById('settingsPanel');
+      panel.classList.toggle('open');
+      document.getElementById('shortcutsModal').classList.remove('open');
+    }
+
+    function toggleShortcutsModal() {
+      const modal = document.getElementById('shortcutsModal');
+      modal.classList.toggle('open');
+      document.getElementById('settingsPanel').classList.remove('open');
+    }
+
+    function changeTheme(themeName) {
+      document.body.className = themeName;
+      localStorage.setItem('subjonctif_theme', themeName);
+    }
+
+    function changeFontFamily(fontFamilyStr) {
+      document.documentElement.style.setProperty('--custom-font-family', fontFamilyStr);
+      document.documentElement.style.setProperty('--custom-heading-font', fontFamilyStr);
+      localStorage.setItem('subjonctif_font_family', fontFamilyStr);
+    }
+
+    function changeFontSize(scaleVal) {
+      document.documentElement.style.setProperty('--custom-font-scale', scaleVal);
+      localStorage.setItem('subjonctif_font_scale', scaleVal);
+    }
+
+    function changeTextColor(colorHex) {
+      if (colorHex) {
+        document.documentElement.style.setProperty('--custom-text-color', colorHex);
+        localStorage.setItem('subjonctif_text_color', colorHex);
+      } else {
+        document.documentElement.style.removeProperty('--custom-text-color');
+        localStorage.removeItem('subjonctif_text_color');
+      }
+    }
+
+    // -------------------------------------------------------------
+    // LIVE ON-PAGE TEXT EDITING & SAVE PERSISTENCE
+    // -------------------------------------------------------------
+    function toggleLiveEditMode(isEnabled) {
+      document.body.classList.toggle('editing-active', isEnabled);
+      const editableFields = document.querySelectorAll('.editable-field');
+      editableFields.forEach(el => {
+        el.contentEditable = isEnabled ? "true" : "false";
+      });
+      if (isEnabled) {
+        showToast('✏️ On-Screen Text Editing Activated! Click any text to edit.');
+      }
+    }
+
+    function saveAllTextEdits() {
+      const edits = {};
+      document.querySelectorAll('.slide').forEach(slide => {
+        const slideId = slide.getAttribute('data-slide-id');
+        if (slideId) {
+          edits[slideId] = slide.innerHTML;
+        }
+      });
+      localStorage.setItem('subjonctif_slide_edits', JSON.stringify(edits));
+      showToast('💾 All Text & Boxes Saved Successfully!');
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById('toastNotification');
+      toast.textContent = message;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3000);
+    }
+
+    function resetAllCustomizations() {
+      localStorage.removeItem('subjonctif_theme');
+      localStorage.removeItem('subjonctif_font_family');
+      localStorage.removeItem('subjonctif_font_scale');
+      localStorage.removeItem('subjonctif_text_color');
+      localStorage.removeItem('subjonctif_slide_edits');
+
+      document.body.className = 'theme-classic';
+      document.documentElement.style.setProperty('--custom-font-family', "'Plus Jakarta Sans', sans-serif");
+      document.documentElement.style.setProperty('--custom-heading-font', "'Outfit', sans-serif");
+      document.documentElement.style.setProperty('--custom-font-scale', '1');
+      document.documentElement.style.removeProperty('--custom-text-color');
+
+      document.getElementById('themeSelect').value = 'theme-classic';
+      document.getElementById('fontFamilySelect').value = "'Plus Jakarta Sans', sans-serif";
+      document.getElementById('fontSizeSelect').value = '1.0';
+      document.getElementById('textColorSelect').value = '';
+      document.getElementById('liveEditToggle').checked = false;
+      toggleLiveEditMode(false);
+
+      showToast('🔄 Reset to Original Default Presentation!');
+      setTimeout(() => location.reload(), 1000);
+    }
+
+    // Load Saved Settings & Slide Text Edits on Startup
+    (function loadSavedSettings() {
+      const savedTheme = localStorage.getItem('subjonctif_theme');
+      if (savedTheme) {
+        document.body.className = savedTheme;
+        const themeEl = document.getElementById('themeSelect');
+        if (themeEl) themeEl.value = savedTheme;
+      }
+
+      const savedFont = localStorage.getItem('subjonctif_font_family');
+      if (savedFont) {
+        document.documentElement.style.setProperty('--custom-font-family', savedFont);
+        document.documentElement.style.setProperty('--custom-heading-font', savedFont);
+        const fontEl = document.getElementById('fontFamilySelect');
+        if (fontEl) fontEl.value = savedFont;
+      }
+
+      const savedScale = localStorage.getItem('subjonctif_font_scale');
+      if (savedScale) {
+        document.documentElement.style.setProperty('--custom-font-scale', savedScale);
+        const scaleEl = document.getElementById('fontSizeSelect');
+        if (scaleEl) scaleEl.value = savedScale;
+      }
+
+      const savedTextColor = localStorage.getItem('subjonctif_text_color');
+      if (savedTextColor) {
+        document.documentElement.style.setProperty('--custom-text-color', savedTextColor);
+        const colorEl = document.getElementById('textColorSelect');
+        if (colorEl) colorEl.value = savedTextColor;
+      }
+
+      // Restore Custom Text Edits & Added Boxes if Present
+      const savedEditsJson = localStorage.getItem('subjonctif_slide_edits');
+      if (savedEditsJson) {
+        try {
+          const edits = JSON.parse(savedEditsJson);
+          Object.keys(edits).forEach(slideId => {
+            const slideEl = document.querySelector(`[data-slide-id="${slideId}"]`);
+            if (slideEl) {
+              slideEl.innerHTML = edits[slideId];
+            }
+          });
+        } catch (e) {
+          console.warn('Could not load saved slide edits:', e);
+        }
+      }
+    })();
+
+    // -------------------------------------------------------------
+    // INTERACTIVE FORMULA LAB CALCULATOR (SLIDE 8)
+    // -------------------------------------------------------------
+    const formulaData = {
+      'parler': {
+        ils: 'ils parlent',
+        stem: 'parl',
+        conjugations: [
+          { subject: 'que je / j\'', ending: '-e', result: 'parle' },
+          { subject: 'que tu', ending: '-es', result: 'parles' },
+          { subject: 'qu\'il / elle', ending: '-e', result: 'parle' },
+          { subject: 'que nous', ending: '-ions', result: 'parlions' },
+          { subject: 'que vous', ending: '-iez', result: 'parliez' },
+          { subject: 'qu\'ils / elles', ending: '-ent', result: 'parlent' }
+        ]
+      },
+      'finir': {
+        ils: 'ils finissent',
+        stem: 'finiss',
+        conjugations: [
+          { subject: 'que je / j\'', ending: '-e', result: 'finisse' },
+          { subject: 'que tu', ending: '-es', result: 'finisses' },
+          { subject: 'qu\'il / elle', ending: '-e', result: 'finisse' },
+          { subject: 'que nous', ending: '-ions', result: 'finissions' },
+          { subject: 'que vous', ending: '-iez', result: 'finissiez' },
+          { subject: 'qu\'ils / elles', ending: '-ent', result: 'finissent' }
+        ]
+      },
+      'vendre': {
+        ils: 'ils vendent',
+        stem: 'vend',
+        conjugations: [
+          { subject: 'que je / j\'', ending: '-e', result: 'vende' },
+          { subject: 'que tu', ending: '-es', result: 'vendes' },
+          { subject: 'qu\'il / elle', ending: '-e', result: 'vende' },
+          { subject: 'que nous', ending: '-ions', result: 'vendions' },
+          { subject: 'que vous', ending: '-iez', result: 'vendiez' },
+          { subject: 'qu\'ils / elles', ending: '-ent', result: 'vendent' }
+        ]
+      },
+      'choisir': {
+        ils: 'ils choisissent',
+        stem: 'choisiss',
+        conjugations: [
+          { subject: 'que je / j\'', ending: '-e', result: 'choisisse' },
+          { subject: 'que tu', ending: '-es', result: 'choisisses' },
+          { subject: 'qu\'il / elle', ending: '-e', result: 'choisisse' },
+          { subject: 'que nous', ending: '-ions', result: 'choisissions' },
+          { subject: 'que vous', ending: '-iez', result: 'choisissiez' },
+          { subject: 'qu\'ils / elles', ending: '-ent', result: 'choisissent' }
+        ]
+      },
+      'regarder': {
+        ils: 'ils regardent',
+        stem: 'regard',
+        conjugations: [
+          { subject: 'que je / j\'', ending: '-e', result: 'regarde' },
+          { subject: 'que tu', ending: '-es', result: 'regardes' },
+          { subject: 'qu\'il / elle', ending: '-e', result: 'regarde' },
+          { subject: 'que nous', ending: '-ions', result: 'regardions' },
+          { subject: 'que vous', ending: '-iez', result: 'regardiez' },
+          { subject: 'qu\'ils / elles', ending: '-ent', result: 'regardent' }
+        ]
+      },
+      'danser': {
+        ils: 'ils dansent',
+        stem: 'dans',
+        conjugations: [
+          { subject: 'que je / j\'', ending: '-e', result: 'danse' },
+          { subject: 'que tu', ending: '-es', result: 'danses' },
+          { subject: 'qu\'il / elle', ending: '-e', result: 'danse' },
+          { subject: 'que nous', ending: '-ions', result: 'dansions' },
+          { subject: 'que vous', ending: '-iez', result: 'dansiez' },
+          { subject: 'qu\'ils / elles', ending: '-ent', result: 'dansent' }
+        ]
+      }
+    };
+
+    function selectFormulaVerb(verbName, ilsForm, stemForm) {
+      document.querySelectorAll('.verb-select-btn').forEach(btn => {
+        btn.classList.toggle('active-verb', btn.textContent.includes(verbName));
+      });
+
+      try { playSound('pop'); } catch(e){}
+
+      const data = formulaData[verbName];
+      const step1El = document.getElementById('step1Display');
+      const step2El = document.getElementById('step2Display');
+      const eqEl = document.getElementById('liveFormulaEquation');
+      const tbody = document.getElementById('formulaTableBody');
+
+      if (step1El) step1El.textContent = data.ils;
+      if (step2El) step2El.innerHTML = `Stem: <strong>${data.stem}-</strong>`;
+      if (eqEl) eqEl.innerHTML = `${data.conjugations[0].subject} <span class="highlight" style="font-size:1.05em; padding:2px 10px;">${data.conjugations[0].result}</span>`;
+
+      if (tbody) {
+        tbody.innerHTML = '';
+        data.conjugations.forEach(item => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td><strong>${item.subject}</strong></td>
+            <td><code>${data.stem}-</code> + <strong>${item.ending}</strong></td>
+            <td>${item.subject} <strong style="color: var(--heading-color); font-size:1.2em;">${item.result}</strong></td>
+          `;
+          tbody.appendChild(tr);
+        });
+      }
+    }
+
+    selectFormulaVerb('parler', 'ils parlent', 'parl');
+
+    // -------------------------------------------------------------
+    // Safe Web Audio Synthesizer
+    // -------------------------------------------------------------
+    let audioCtx = null;
+
+    function playSound(type) {
+      try {
+        if (!audioCtx) {
+          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        if (audioCtx.state === 'suspended') {
+          audioCtx.resume();
+        }
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        if (type === 'pop') {
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(450, audioCtx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(900, audioCtx.currentTime + 0.08);
+          gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+          gain.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 0.08);
+          osc.start();
+          osc.stop(audioCtx.currentTime + 0.08);
+        } else if (type === 'slide') {
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(220, audioCtx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(550, audioCtx.currentTime + 0.15);
+          gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+          gain.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
+          osc.start();
+          osc.stop(audioCtx.currentTime + 0.15);
+        } else if (type === 'correct') {
+          const notes = [523.25, 659.25, 783.99, 1046.50];
+          notes.forEach((freq, idx) => {
+            const o = audioCtx.createOscillator();
+            const g = audioCtx.createGain();
+            o.connect(g);
+            g.connect(audioCtx.destination);
+            o.type = 'sine';
+            o.frequency.setValueAtTime(freq, audioCtx.currentTime + idx * 0.06);
+            g.gain.setValueAtTime(0.12, audioCtx.currentTime + idx * 0.06);
+            g.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + idx * 0.06 + 0.15);
+            o.start(audioCtx.currentTime + idx * 0.06);
+            o.stop(audioCtx.currentTime + idx * 0.06 + 0.15);
+          });
+        } else if (type === 'wrong') {
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(140, audioCtx.currentTime);
+          osc.frequency.linearRampToValueAtTime(90, audioCtx.currentTime + 0.2);
+          gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+          gain.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
+          osc.start();
+          osc.stop(audioCtx.currentTime + 0.2);
+        } else if (type === 'flip') {
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(1200, audioCtx.currentTime + 0.12);
+          gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+          gain.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 0.12);
+          osc.start();
+          osc.stop(audioCtx.currentTime + 0.12);
+        }
+      } catch (err) {
+        console.warn('Audio feedback skipped:', err);
+      }
+    }
+
+    function flipCard(card) {
+      card.classList.toggle('flipped');
+      try { playSound('flip'); } catch(e){}
+    }
+
+    // -------------------------------------------------------------
+    // BULLETPROOF 3D SLIDE NAVIGATION SYSTEM
+    // -------------------------------------------------------------
+    let currentSlideIndex = 0;
+    const slides = document.querySelectorAll('.slide');
+    const totalSlides = slides.length;
+    const slideCounter = document.getElementById('slideCounter');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+
+    function updatePresentation() {
+      slides.forEach((slide, idx) => {
+        if (idx === currentSlideIndex) {
+          slide.classList.add('active');
+          slide.classList.remove('prev-out');
+          slide.style.display = 'flex';
+        } else {
+          slide.classList.remove('active');
+          slide.style.display = 'none';
+        }
+      });
+
+      if (slideCounter) {
+        slideCounter.textContent = `Slide ${currentSlideIndex + 1} / ${totalSlides}`;
+      }
+      
+      if (prevBtn) prevBtn.disabled = (currentSlideIndex === 0);
+      if (nextBtn) nextBtn.disabled = (currentSlideIndex === totalSlides - 1);
+    }
+
+    function nextSlide() {
+      if (currentSlideIndex < totalSlides - 1) {
+        currentSlideIndex++;
+        updatePresentation();
+        try { playSound('slide'); } catch(e){}
+      }
+    }
+
+    function prevSlide() {
+      if (currentSlideIndex > 0) {
+        currentSlideIndex--;
+        updatePresentation();
+        try { playSound('slide'); } catch(e){}
+      }
+    }
+
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(err => {
+          console.log(`Error entering fullscreen: ${err.message}`);
+        });
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        }
+      }
+    }
+
+    // Direct event listener attachments
+    if (nextBtn) {
+      nextBtn.onclick = nextSlide;
+    }
+    if (prevBtn) {
+      prevBtn.onclick = prevSlide;
+    }
+
+    // Enhanced Global Keyboard Navigation
+    document.addEventListener('keydown', (e) => {
+      if (document.activeElement && document.activeElement.isContentEditable) {
+        return;
+      }
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+        nextSlide();
+      } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+        prevSlide();
+      } else if (e.key === 'f' || e.key === 'F') {
+        toggleFullscreen();
+      } else if (e.key === 's' || e.key === 'S') {
+        toggleSettingsPanel();
+      } else if (e.key === 'e' || e.key === 'E') {
+        const editCb = document.getElementById('liveEditToggle');
+        editCb.checked = !editCb.checked;
+        toggleLiveEditMode(editCb.checked);
+      } else if (e.key === '?' || e.key === 'k' || e.key === 'K') {
+        toggleShortcutsModal();
+      }
+    });
+
+    // Enhanced Interactive Quiz Logic with Confetti & Fireworks
+    let answeredCount = 0;
+    let score = 0;
+    const totalQuestions = document.querySelectorAll('.question-row').length;
+
+    document.querySelectorAll('.question-row').forEach((row) => {
+      const correctAnswer = row.getAttribute('data-answer');
+      const buttons = row.querySelectorAll('.option-btn');
+
+      buttons.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          if (row.classList.contains('answered')) return;
+          row.classList.add('answered');
+          answeredCount++;
+          const selectedValue = btn.textContent.trim();
+
+          // Progress bar update
+          const progressPercent = (answeredCount / totalQuestions) * 100;
+          document.getElementById('quizProgressFill').style.width = `${progressPercent}%`;
+
+          if (selectedValue === correctAnswer) {
+            btn.classList.add('correct');
+            try { playSound('correct'); } catch(e){}
+            triggerFireworksBurst();
+            triggerConfettiBurst();
+            score++;
+          } else {
+            btn.classList.add('wrong');
+            try { playSound('wrong'); } catch(e){}
+            buttons.forEach((b) => {
+              if (b.textContent.trim() === correctAnswer) {
+                b.classList.add('correct');
+              }
+            });
+          }
+          document.getElementById('quizScoreDisplay').textContent = `Score : ${score} / ${totalQuestions}`;
+
+          // Celebration blast on full completion!
+          if (answeredCount === totalQuestions && score >= 4) {
+            setTimeout(() => {
+              triggerConfettiBurst();
+              triggerFireworksBurst();
+              showToast(`🎉 Bravo ! Exceptional Score: ${score} / ${totalQuestions}!`);
+            }, 400);
+          }
+        });
+      });
+    });
+
+    document.querySelector('.retry-btn').addEventListener('click', () => {
+      score = 0;
+      answeredCount = 0;
+      document.getElementById('quizProgressFill').style.width = '0%';
+      document.getElementById('quizScoreDisplay').textContent = `Score : 0 / ${totalQuestions}`;
+      document.querySelectorAll('.question-row').forEach((row) => {
+        row.classList.remove('answered');
+        row.querySelectorAll('.option-btn').forEach((btn) => {
+          btn.classList.remove('correct', 'wrong');
+        });
+      });
+    });
+
+    // Initialize presentation state
+    updatePresentation();
+  </script>
+</body>
+</html>

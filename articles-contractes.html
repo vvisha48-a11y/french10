@@ -1,0 +1,1181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Les Articles Contractés — à &amp; de</title>
+<!--
+  Les Articles Contractés (à & de) — Grade 9
+  A standalone single-page deck. Zero external references: no CDN, no fonts,
+  no images. Open the file and it works, online or off.
+
+  Visual language matches the Class 10 grammar app (flag-stripe, step-ribbon,
+  slide-card, the same theme custom properties) but the engine is its own —
+  20 slides do not need Reveal.js, and inlining it would have cost 300 KB.
+
+  CONTENT NOTE: built from two lesson plans that overlapped but disagreed on
+  Rule 4. One taught quantity expressions (beaucoup de), the other taught
+  negation erasing the partitive (ne prend pas d'eau). Both are real rules, so
+  both are here, as slides 15 and 17.
+-->
+<style>
+/* ============ THEME TOKENS ============
+   Same names and values as the Class 10 app, so the two decks read as one
+   family. Every colour below is a variable: nothing hard-codes a hex outside
+   these blocks, which is what lets the dark theme work at all. */
+:root{
+  --font-body:'Segoe UI', system-ui, -apple-system, 'Helvetica Neue', Arial, sans-serif;
+  --font-head:'Segoe UI Semibold', system-ui, -apple-system, 'Helvetica Neue', Arial, sans-serif;
+  --topbar-h:56px;
+  --hud-h:54px;
+  --sidebar-w:250px;
+}
+body.theme-classic{
+  --bg-gradient: radial-gradient(circle at 50% 20%, #eef4fc 0%, #dbeafe 55%, #bfdbfe 100%);
+  --card-bg: rgba(255,255,255,0.95); --card-border: rgba(0,35,149,0.2);
+  --text-main:#0f172a; --text-muted:#475569;
+  --heading-color:#002395; --subheading-color:#ED2939;
+  --highlight-bg: rgba(0,35,149,0.12); --highlight-border:#002395; --highlight-text:#002395;
+  --box-blue-bg:#eef4fc; --box-gold-bg:#fff8eb; --box-gold-border:#f4b436;
+  --hud-bg: rgba(255,255,255,0.94); --hud-text:#002395;
+  --green:#047857; --purple:#7e22ce; --gold:#D97706; --crimson:#ED2939;
+  --ok:#047857; --err:#dc2626;
+  --on-accent:#ffffff;
+  --green-ink:#02513c; --crimson-ink:#a50f1c; --gold-ink:#8a4d04;
+}
+body.theme-slate{
+  --bg-gradient: radial-gradient(circle at 50% 20%, #1e293b 0%, #0f172a 60%, #020617 100%);
+  --card-bg: rgba(30,41,59,0.92); --card-border: rgba(148,163,184,0.32);
+  --text-main:#f1f5f9; --text-muted:#cbd5e1;
+  --heading-color:#7dd3fc; --subheading-color:#fda4af;
+  --highlight-bg: rgba(125,211,252,0.16); --highlight-border:#7dd3fc; --highlight-text:#7dd3fc;
+  --box-blue-bg: rgba(56,189,248,0.12); --box-gold-bg: rgba(251,191,36,0.12); --box-gold-border:#fbbf24;
+  --hud-bg: rgba(15,23,42,0.94); --hud-text:#7dd3fc;
+  --green:#4ade80; --purple:#d8b4fe; --gold:#fbbf24; --crimson:#fb7185;
+  --ok:#4ade80; --err:#fb7185;
+  --on-accent:#0f172a;
+  --green-ink:#6ee7a0; --crimson-ink:#fda4af; --gold-ink:#fcd34d;
+}
+
+*{ box-sizing:border-box; }
+html, body{ height:100%; margin:0; }
+body{
+  font-family:var(--font-body); background:var(--bg-gradient); background-attachment:fixed;
+  color:var(--text-main); overflow:hidden;
+}
+
+/* ============ TOP BAR ============ */
+.topbar{
+  position:fixed; top:0; left:0; right:0; height:var(--topbar-h); z-index:60;
+  display:flex; align-items:center; gap:10px; padding:0 14px;
+  background:var(--hud-bg); border-bottom:1px solid var(--card-border);
+  backdrop-filter:blur(8px);
+}
+.brand{ display:flex; align-items:center; gap:9px; font-weight:800; color:var(--heading-color); }
+.brand-logo{ width:26px; height:31px; flex:none; }
+.brand-t{ font-size:.98rem; letter-spacing:-.01em; }
+.brand-s{ font-size:.72rem; color:var(--text-muted); font-weight:600; }
+.tb-spacer{ flex:1 1 auto; }
+.tb-btn{
+  padding:7px 13px; border-radius:9px; cursor:pointer; font-family:inherit;
+  border:1.5px solid var(--card-border); background:var(--card-bg);
+  color:var(--text-main); font-size:.82rem; font-weight:700; white-space:nowrap;
+}
+.tb-btn:hover{ border-color:var(--heading-color); }
+
+/* ============ SIDEBAR ============ */
+.sidebar{
+  position:fixed; top:var(--topbar-h); right:0; bottom:var(--hud-h); width:var(--sidebar-w);
+  z-index:50; overflow-y:auto; padding:12px 10px;
+  background:var(--hud-bg); backdrop-filter:blur(14px); border-left:1px solid var(--card-border);
+  transition:transform .28s ease;
+}
+body.sb-hidden .sidebar{ transform:translateX(100%); }
+.sb-title{
+  font-size:.7rem; font-weight:800; text-transform:uppercase; letter-spacing:.07em;
+  color:var(--text-muted); margin:4px 6px 8px;
+}
+.sb-item{
+  display:block; width:100%; text-align:left; margin-bottom:3px;
+  padding:7px 10px; border-radius:8px; cursor:pointer; font-family:inherit;
+  border:1px solid transparent; background:none; color:var(--text-main);
+  font-size:.79rem; line-height:1.3;
+}
+.sb-item:hover{ background:var(--highlight-bg); }
+.sb-item.on{ background:var(--highlight-bg); border-color:var(--highlight-border); font-weight:800; }
+.sb-n{
+  display:inline-grid; place-items:center; width:19px; height:19px; margin-right:7px;
+  border-radius:50%; background:var(--card-border); color:var(--text-main);
+  font-size:.63rem; font-weight:800; vertical-align:-3px;
+}
+.sb-item.on .sb-n{ background:var(--highlight-border); color:var(--on-accent); }
+
+/* ============ STAGE ============ */
+.stage{
+  position:fixed; top:var(--topbar-h); left:0; right:var(--sidebar-w); bottom:var(--hud-h);
+  z-index:10; transition:right .28s ease;
+}
+body.sb-hidden .stage{ right:0; }
+.slide{ display:none; height:100%; padding:14px; }
+.slide.on{ display:block; animation:slideIn .32s ease; }
+@keyframes slideIn{ from{ opacity:0; transform:translateY(10px); } to{ opacity:1; transform:none; } }
+
+.slide-card{
+  position:relative; width:96%; max-width:1420px; height:100%; margin:0 auto;
+  padding:26px 40px 20px; display:flex; flex-direction:column;
+  align-items:center; justify-content:flex-start; text-align:center;
+  overflow-y:auto; overflow-x:hidden;
+  background:var(--card-bg); border:1px solid var(--card-border);
+  border-radius:22px; box-shadow:0 18px 50px rgba(0,0,0,.14);
+}
+.flag-stripe{
+  position:absolute; top:0; left:0; right:0; height:5px; border-radius:22px 22px 0 0;
+  background:linear-gradient(90deg,#002395 0 33.3%,#ffffff 33.3% 66.6%,#ED2939 66.6% 100%);
+}
+.step-ribbon{
+  display:inline-flex; align-items:center; gap:8px; flex:none;
+  padding:5px 14px; margin:2px 0 12px; border-radius:999px;
+  background:var(--highlight-bg); border:1px solid var(--highlight-border);
+  color:var(--highlight-text); font-size:.75rem; font-weight:800;
+  text-transform:uppercase; letter-spacing:.06em;
+}
+.step-ribbon .sr-n{
+  width:20px; height:20px; border-radius:50%; background:var(--highlight-border);
+  color:var(--on-accent); display:grid; place-items:center; font-size:.66rem;
+}
+h1{ font-size:clamp(2rem,5.2vh,3.4rem); margin:.1em 0 .12em; color:var(--heading-color);
+    font-family:var(--font-head); font-weight:800; line-height:1.12; }
+h2{ font-size:clamp(1.4rem,3.6vh,2.5rem); margin:.1em 0 .3em; color:var(--heading-color);
+    font-family:var(--font-head); font-weight:800; line-height:1.18; }
+.sub{ font-size:clamp(1rem,2.2vh,1.45rem); color:var(--text-muted); margin:0 0 .5em; font-weight:600; }
+.lead{ font-size:clamp(.95rem,1.95vh,1.25rem); color:var(--text-muted); margin:0 0 10px; max-width:960px; }
+
+/* ============ SHARED COMPONENTS ============ */
+.box{
+  width:100%; max-width:1180px; margin:6px auto; padding:12px 22px;
+  border:1.5px solid var(--card-border); border-radius:16px; text-align:left;
+  min-width:0; flex:0 1 auto;
+}
+.box.blue{ background:var(--box-blue-bg); border-top:4px solid var(--heading-color); }
+.box.gold{ background:var(--box-gold-bg); border-top:4px solid var(--box-gold-border); }
+.box.green{ background:var(--box-blue-bg); border-top:4px solid var(--green); }
+.box.red{ background:var(--box-gold-bg); border-top:4px solid var(--crimson); }
+.box h3{ margin:0 0 6px; font-size:clamp(1rem,2.1vh,1.35rem); color:var(--heading-color); }
+
+.tiles{ display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
+  gap:clamp(10px,1.5vw,20px); width:100%; max-width:1180px; margin:6px auto 12px; min-width:0; }
+.tile{
+  padding:clamp(12px,1.8vh,20px) 14px; border-radius:16px; text-align:center;
+  border:2px solid var(--card-border); background:var(--card-bg);
+  display:flex; flex-direction:column; gap:6px; min-width:0;
+}
+.tile.gold{ border-color:var(--gold); }
+.tile.green{ border-color:var(--green); }
+.tile.purple{ border-color:var(--purple); }
+.tile.blue{ border-color:var(--heading-color); }
+.tile.red{ border-color:var(--crimson); }
+.tile-n{ font-size:clamp(1.5rem,3.8vh,2.7rem); font-weight:900; color:var(--heading-color);
+  font-family:var(--font-head); line-height:1; }
+.tile.gold .tile-n{ color:var(--gold-ink); } .tile.green .tile-n{ color:var(--green); }
+.tile.purple .tile-n{ color:var(--purple); } .tile.red .tile-n{ color:var(--crimson); }
+.tile-l{ font-size:clamp(.78rem,1.6vh,1rem); color:var(--text-muted); font-weight:700; }
+
+/* the formula rows: à + le = au */
+.eq{ display:flex; flex-wrap:wrap; align-items:center; justify-content:center;
+  gap:clamp(6px,1vw,12px); margin:5px 0; }
+.eq-t{ padding:clamp(7px,1.2vh,13px) clamp(12px,1.6vw,22px); border-radius:12px;
+  font-size:clamp(1.05rem,2.6vh,1.9rem); font-weight:800; border:2px solid var(--card-border);
+  background:var(--card-bg); font-family:var(--font-head); }
+.eq-t.prep{ color:var(--heading-color); border-color:var(--heading-color); }
+.eq-t.art{ color:var(--purple); border-color:var(--purple); }
+.eq-t.out{ color:var(--on-accent); background:var(--green); border-color:var(--green); }
+.eq-t.keep{ color:var(--text-muted); }
+.eq-op{ font-size:clamp(1.1rem,2.4vh,1.7rem); font-weight:800; color:var(--text-muted); }
+.eq-ex{ font-size:clamp(.85rem,1.75vh,1.15rem); color:var(--text-muted); font-style:italic;
+  width:100%; text-align:center; margin-top:2px; }
+
+/* do / don't */
+.dd{ width:100%; max-width:1180px; margin:6px auto; border-collapse:collapse; }
+.dd th, .dd td{ padding:clamp(7px,1.2vh,13px) clamp(10px,1.2vw,18px); text-align:left;
+  border-bottom:1px solid var(--card-border); font-size:clamp(.88rem,1.85vh,1.2rem); }
+.dd th{ font-size:clamp(.72rem,1.4vh,.9rem); text-transform:uppercase; letter-spacing:.05em; }
+.dd .h-good{ color:var(--green-ink); } .dd .h-bad{ color:var(--crimson-ink); }
+.dd .good{ color:var(--green-ink); font-weight:700; }
+.dd .bad{ color:var(--crimson-ink); text-decoration:line-through; }
+.dd .note{ color:var(--text-muted); font-size:clamp(.78rem,1.55vh,1rem); font-style:italic; }
+
+/* callouts */
+.call{ width:100%; max-width:1180px; margin:8px auto; padding:12px 20px;
+  border-radius:14px; text-align:left; border-left:5px solid var(--gold);
+  background:var(--box-gold-bg); }
+.call.danger{ border-left-color:var(--crimson); }
+.call.win{ border-left-color:var(--green); background:var(--box-blue-bg); }
+.call-h{ margin:0 0 4px; font-weight:800; font-size:clamp(.92rem,1.9vh,1.2rem); color:var(--text-main); }
+.call-b{ margin:0; font-size:clamp(.86rem,1.75vh,1.12rem); color:var(--text-main); line-height:1.5; }
+
+/* French example lines */
+.fr{ font-family:var(--font-head); color:var(--text-main); font-weight:700; }
+.en{ color:var(--text-muted); font-style:italic; }
+mark{ background:var(--highlight-bg); color:var(--highlight-text); padding:1px 5px;
+  border-radius:5px; font-weight:800; }
+mark.no{ background:rgba(237,41,57,.13); color:var(--crimson-ink); }
+mark.yes{ background:rgba(4,120,87,.13); color:var(--green-ink); }
+
+/* ============ THE CONTRACTION MACHINE ============ */
+.machine{ width:100%; max-width:900px; margin:6px auto; }
+.mach-row{ display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-bottom:10px; }
+.mach-lbl{ font-size:.74rem; font-weight:800; text-transform:uppercase; letter-spacing:.06em;
+  color:var(--text-muted); width:100%; text-align:center; margin-bottom:4px; }
+.chip{
+  padding:clamp(8px,1.3vh,13px) clamp(14px,1.8vw,26px); border-radius:12px; cursor:pointer;
+  border:2px solid var(--card-border); background:var(--card-bg); color:var(--text-main);
+  font-family:var(--font-head); font-size:clamp(1rem,2.2vh,1.5rem); font-weight:800;
+  transition:transform .15s ease, border-color .15s ease;
+}
+.chip:hover{ transform:translateY(-2px); border-color:var(--heading-color); }
+.chip.on{ background:var(--heading-color); border-color:var(--heading-color); color:var(--on-accent); }
+.mach-out{
+  margin-top:12px; padding:clamp(14px,2.4vh,26px); border-radius:18px;
+  border:3px solid var(--card-border); background:var(--box-blue-bg); min-height:110px;
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px;
+}
+.mach-out.merge{ border-color:var(--green); }
+.mach-out.keep{ border-color:var(--gold); }
+.mach-res{ font-size:clamp(1.6rem,5vh,3.4rem); font-weight:900; font-family:var(--font-head); line-height:1; }
+.mach-out.merge .mach-res{ color:var(--green); }
+.mach-out.keep .mach-res{ color:var(--gold); }
+.mach-why{ font-size:clamp(.85rem,1.8vh,1.15rem); color:var(--text-muted); text-align:center; }
+.mach-ex{ font-size:clamp(.9rem,1.9vh,1.25rem); font-weight:700; color:var(--text-main); }
+
+/* ============ CHECKLIST ============ */
+.check{ width:100%; max-width:1000px; margin:4px auto; text-align:left; }
+.chk-in{ position:absolute; opacity:0; pointer-events:none; width:0; height:0; }
+.chk-row{ margin-bottom:8px; }
+.chk-q{
+  display:block; cursor:pointer; border-radius:12px; border:2px solid var(--card-border);
+  background:var(--card-bg); padding:clamp(9px,1.5vh,15px) clamp(14px,1.6vw,22px);
+  font-size:clamp(.92rem,1.95vh,1.28rem); font-weight:700; transition:border-color .15s ease;
+}
+.chk-q:hover{ border-color:var(--heading-color); }
+.chk-q::before{ content:'❓ '; }
+.chk-a{
+  display:none; margin:6px 0 0; padding:clamp(9px,1.4vh,14px) clamp(14px,1.6vw,22px);
+  background:var(--box-blue-bg); border-left:5px solid var(--green); border-radius:0 12px 12px 0;
+  font-size:clamp(.88rem,1.8vh,1.18rem); line-height:1.5;
+}
+.chk-in:checked + .chk-row .chk-a{ display:block; animation:slideIn .22s ease; }
+.chk-in:checked + .chk-row .chk-q{ border-color:var(--green); }
+.chk-in:checked + .chk-row .chk-q::before{ content:'✅ '; }
+
+/* ============ QUIZ ============ */
+.quiz{ width:100%; max-width:1100px; margin:4px auto; text-align:left; }
+.q-bar{ height:8px; border-radius:999px; background:var(--card-border); overflow:hidden; margin-bottom:14px; }
+.q-fill{ height:100%; width:0; background:var(--green); transition:width .35s ease; }
+.q-row{ margin-bottom:14px; padding-bottom:12px; border-bottom:1px solid var(--card-border); }
+.q-text{ margin:0 0 8px; font-weight:700; font-size:clamp(.92rem,1.9vh,1.25rem); }
+.q-opts{ display:flex; flex-wrap:wrap; gap:8px; }
+.opt{
+  padding:clamp(7px,1.2vh,12px) clamp(14px,1.7vw,24px); border-radius:10px; cursor:pointer;
+  border:2px solid var(--card-border); background:var(--card-bg); color:var(--text-main);
+  font-family:var(--font-head); font-size:clamp(.95rem,2vh,1.3rem); font-weight:800;
+  transition:transform .15s ease;
+}
+.opt:hover:not(.done){ transform:translateY(-2px); border-color:var(--heading-color); }
+.opt.ok{ background:var(--ok); border-color:var(--ok); color:var(--on-accent); }
+.opt.no{ background:var(--err); border-color:var(--err); color:var(--on-accent); }
+.opt.done{ cursor:default; }
+.q-why{ display:none; margin:8px 0 0; font-size:clamp(.82rem,1.7vh,1.05rem);
+  color:var(--text-muted); font-style:italic; }
+.q-why.show{ display:block; }
+.score{
+  margin-top:10px; padding:12px 20px; border-radius:14px; text-align:center;
+  background:var(--box-blue-bg); font-weight:800; font-size:clamp(1rem,2.1vh,1.4rem);
+  color:var(--heading-color); min-height:1.4em;
+}
+
+/* ============ HUD ============ */
+.hud{
+  position:fixed; left:0; right:0; bottom:0; height:var(--hud-h); z-index:60;
+  display:flex; align-items:center; gap:12px; padding:0 16px;
+  background:var(--hud-bg); border-top:1px solid var(--card-border); color:var(--hud-text);
+}
+.hud-bar{ flex:1 1 auto; height:7px; border-radius:999px; background:var(--card-border); overflow:hidden; }
+.hud-fill{ height:100%; background:var(--heading-color); transition:width .3s ease; }
+.hud-n{ font-size:.82rem; font-weight:800; white-space:nowrap; }
+.nav{
+  width:34px; height:34px; border-radius:50%; cursor:pointer; flex:none;
+  border:1.5px solid var(--card-border); background:var(--card-bg);
+  color:var(--text-main); font-size:1rem; font-weight:800;
+}
+.nav:hover{ border-color:var(--heading-color); }
+.nav:disabled{ opacity:.35; cursor:default; }
+
+@media (max-height:820px){
+  .slide-card{ padding:18px 32px 14px; }
+  .step-ribbon{ margin:0 0 8px; }
+}
+@media (max-width:1024px){
+  .sidebar{ transform:translateX(100%); }
+  .stage{ right:0; }
+  body.sb-open .sidebar{ transform:none; }
+  .slide-card{ padding:20px 18px 16px; }
+  .brand-s{ display:none; }
+}
+@media print{
+  .topbar, .sidebar, .hud{ display:none !important; }
+  .stage{ position:static; }
+  .slide{ display:block !important; page-break-after:always; height:auto; }
+  .slide-card{ height:auto; box-shadow:none; }
+}
+</style>
+</head>
+<body class="theme-classic">
+
+<header class="topbar">
+  <div class="brand">
+    <svg class="brand-logo" viewBox="0 0 200 240" aria-hidden="true">
+      <path d="M100 8 L188 44 L188 128 Q188 196 100 232 Q12 196 12 128 L12 44 Z"
+            fill="#ffffff" stroke="#002395" stroke-width="9"/>
+      <path d="M100 18 L64 32 L64 128 Q64 186 100 216 Z" fill="#002395" opacity=".92"/>
+      <path d="M100 18 L136 32 L136 128 Q136 186 100 216 Z" fill="#ED2939" opacity=".92"/>
+      <text x="100" y="150" text-anchor="middle" font-size="66" font-weight="800"
+            fill="#ffffff" font-family="Georgia, serif">à</text>
+    </svg>
+    <span>
+      <span class="brand-t">Les Articles Contractés</span><br>
+      <span class="brand-s">à &amp; de — Grade 9</span>
+    </span>
+  </div>
+  <span class="tb-spacer"></span>
+  <button class="tb-btn" id="themeBtn" title="Switch light / dark">🌙 Dark</button>
+  <button class="tb-btn" id="sbBtn" title="Show / hide the slide list">☰ Slides</button>
+</header>
+
+<nav class="sidebar" id="sidebar">
+  <div class="sb-title">Contents</div>
+  <div id="sbList"></div>
+</nav>
+
+<main class="stage" id="stage">
+
+<!-- ============ 1. TITLE ============ -->
+<section class="slide on">
+  <div class="slide-card">
+    <div class="flag-stripe"></div>
+    <div class="step-ribbon"><span class="sr-n">1</span> Grammaire — Grade 9</div>
+    <svg viewBox="0 0 300 120" style="width:min(420px,46vh);height:auto;margin:4px 0 2px" aria-hidden="true">
+      <rect x="4" y="38" width="74" height="44" rx="11" fill="var(--box-blue-bg)" stroke="var(--heading-color)" stroke-width="3"/>
+      <text x="41" y="66" text-anchor="middle" font-size="19" font-weight="800" fill="var(--heading-color)">verbe</text>
+      <path d="M80 60 L104 60" stroke="var(--text-muted)" stroke-width="3"/>
+      <path d="M104 60 l-8 -5 v10 z" fill="var(--text-muted)"/>
+      <rect x="108" y="38" width="74" height="44" rx="11" fill="var(--box-gold-bg)" stroke="var(--gold)" stroke-width="3"/>
+      <text x="145" y="66" text-anchor="middle" font-size="19" font-weight="800" fill="var(--gold-ink)">à / de</text>
+      <path d="M184 60 L208 60" stroke="var(--text-muted)" stroke-width="3"/>
+      <path d="M208 60 l-8 -5 v10 z" fill="var(--text-muted)"/>
+      <rect x="212" y="38" width="84" height="44" rx="11" fill="var(--green)" stroke="var(--green)" stroke-width="3"/>
+      <text x="254" y="66" text-anchor="middle" font-size="19" font-weight="800" fill="var(--on-accent)">au / du</text>
+      <text x="41" y="102" text-anchor="middle" font-size="11" fill="var(--text-muted)">picks the</text>
+      <text x="145" y="102" text-anchor="middle" font-size="11" fill="var(--text-muted)">meets the noun</text>
+      <text x="254" y="102" text-anchor="middle" font-size="11" fill="var(--text-muted)">or stays apart</text>
+    </svg>
+    <h1>Les Articles Contractés</h1>
+    <p class="sub">The Complete Guide: HOW they form, WHEN to use them, WHERE they belong</p>
+    <div class="call win">
+      <p class="call-h">🔑 Two questions, in this order</p>
+      <p class="call-b"><b>1. Which preposition?</b> The <b>verb</b> decides — à or de.<br>
+      <b>2. Does it contract?</b> The <b>word straight after the blank</b> decides.
+      Get them in the right order and the whole topic falls apart neatly.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 2. WHAT IS A CONTRACTION ============ -->
+<section class="slide">
+  <div class="slide-card">
+    <div class="flag-stripe"></div>
+    <div class="step-ribbon"><span class="sr-n">2</span> The Core Concept</div>
+    <h2>What happens when words crash?</h2>
+    <p class="lead">A contraction is a <b>mandatory</b> collision. You cannot write
+    <i>à le</i>, <i>à les</i>, <i>de le</i> or <i>de les</i> in French — they must morph into one word.</p>
+    <div class="eq">
+      <span class="eq-t prep">à / de</span>
+      <span class="eq-op">+</span>
+      <span class="eq-t art">le / les</span>
+      <span class="eq-op">=</span>
+      <span class="eq-t out">ONE new word</span>
+    </div>
+    <div class="tiles">
+      <div class="tile blue"><span class="tile-n">au</span><span class="tile-l">à + le</span></div>
+      <div class="tile blue"><span class="tile-n">aux</span><span class="tile-l">à + les</span></div>
+      <div class="tile green"><span class="tile-n">du</span><span class="tile-l">de + le</span></div>
+      <div class="tile green"><span class="tile-n">des</span><span class="tile-l">de + les</span></div>
+    </div>
+    <div class="call">
+      <p class="call-h">💡 Rule of thumb</p>
+      <p class="call-b"><b>Preposition + Definite Article = Contraction.</b>
+      Take away either half and nothing happens.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 3. THE À FORMULA ============ -->
+<section class="slide">
+  <div class="slide-card">
+    <div class="flag-stripe"></div>
+    <div class="step-ribbon"><span class="sr-n">3</span> Formula 1</div>
+    <h2>Les contractions avec « À »</h2>
+    <p class="lead">Used for <b>destination</b> (where you're going) and <b>indirect objects</b> (who you speak to).</p>
+    <div class="box blue">
+      <h3>💥 They collide — merge them</h3>
+      <div class="eq">
+        <span class="eq-t prep">à</span><span class="eq-op">+</span><span class="eq-t art">le</span>
+        <span class="eq-op">=</span><span class="eq-t out">au</span>
+        <span class="eq-ex">Je vais <mark class="yes">au</mark> cinéma. — <span class="en">I'm going to the cinema.</span></span>
+      </div>
+      <div class="eq">
+        <span class="eq-t prep">à</span><span class="eq-op">+</span><span class="eq-t art">les</span>
+        <span class="eq-op">=</span><span class="eq-t out">aux</span>
+        <span class="eq-ex">Je parle <mark class="yes">aux</mark> élèves. — <span class="en">I'm speaking to the students.</span></span>
+      </div>
+    </div>
+    <div class="box gold">
+      <h3>🤝 No collision — leave them apart</h3>
+      <div class="eq">
+        <span class="eq-t prep">à</span><span class="eq-op">+</span><span class="eq-t art">la</span>
+        <span class="eq-op">=</span><span class="eq-t keep">à la</span>
+        <span class="eq-ex">Tu vas <b>à la</b> campagne.</span>
+      </div>
+      <div class="eq">
+        <span class="eq-t prep">à</span><span class="eq-op">+</span><span class="eq-t art">l'</span>
+        <span class="eq-op">=</span><span class="eq-t keep">à l'</span>
+        <span class="eq-ex">Il est <b>à l'</b>hôtel.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 4. THE DE FORMULA ============ -->
+<section class="slide">
+  <div class="slide-card">
+    <div class="flag-stripe"></div>
+    <div class="step-ribbon"><span class="sr-n">4</span> Formula 2</div>
+    <h2>Les contractions avec « DE »</h2>
+    <p class="lead">Used for <b>origin</b> (where you're coming from) and <b>possession</b> (whose it is).</p>
+    <div class="box green">
+      <h3>💥 They collide — merge them</h3>
+      <div class="eq">
+        <span class="eq-t prep">de</span><span class="eq-op">+</span><span class="eq-t art">le</span>
+        <span class="eq-op">=</span><span class="eq-t out">du</span>
+        <span class="eq-ex">La voiture <mark class="yes">du</mark> directeur. — <span class="en">The director's car.</span></span>
+      </div>
+      <div class="eq">
+        <span class="eq-t prep">de</span><span class="eq-op">+</span><span class="eq-t art">les</span>
+        <span class="eq-op">=</span><span class="eq-t out">des</span>
+        <span class="eq-ex">Les cahiers <mark class="yes">des</mark> garçons. — <span class="en">The boys' notebooks.</span></span>
+      </div>
+    </div>
+    <div class="box gold">
+      <h3>🤝 No collision — leave them apart</h3>
+      <div class="eq">
+        <span class="eq-t prep">de</span><span class="eq-op">+</span><span class="eq-t art">la</span>
+        <span class="eq-op">=</span><span class="eq-t keep">de la</span>
+        <span class="eq-ex">Je rentre <b>de la</b> bibliothèque.</span>
+      </div>
+      <div class="eq">
+        <span class="eq-t prep">de</span><span class="eq-op">+</span><span class="eq-t art">l'</span>
+        <span class="eq-op">=</span><span class="eq-t keep">de l'</span>
+        <span class="eq-ex">L'ami <b>de l'</b>actrice.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 5. THE CONTRACTION MACHINE ============ -->
+<section class="slide">
+  <div class="slide-card">
+    <div class="flag-stripe"></div>
+    <div class="step-ribbon"><span class="sr-n">5</span> Try it yourself</div>
+    <h2>La machine à contractions</h2>
+    <p class="lead">Pick one from each row and watch what happens.</p>
+    <div class="machine" id="machine">
+      <div class="mach-row">
+        <span class="mach-lbl">1 · Choose the preposition</span>
+        <button class="chip on" data-p="à">à</button>
+        <button class="chip" data-p="de">de</button>
+      </div>
+      <div class="mach-row">
+        <span class="mach-lbl">2 · Choose what follows</span>
+        <button class="chip on" data-a="le">le</button>
+        <button class="chip" data-a="la">la</button>
+        <button class="chip" data-a="l'">l'</button>
+        <button class="chip" data-a="les">les</button>
+        <button class="chip" data-a="mon">mon</button>
+        <button class="chip" data-a="ce">ce</button>
+        <button class="chip" data-a="Marie">Marie</button>
+        <button class="chip" data-a="Paris">Paris</button>
+      </div>
+      <div class="mach-out merge" id="machOut">
+        <div class="mach-res" id="machRes">au</div>
+        <div class="mach-ex" id="machEx">Je vais au cinéma.</div>
+        <div class="mach-why" id="machWhy">à + le collide, so they merge into one word.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 6. THE SECRET IS IN THE VERB (NEW) ============ -->
+<section class="slide">
+  <div class="slide-card">
+    <div class="flag-stripe"></div>
+    <div class="step-ribbon"><span class="sr-n">6</span> Step 1 of 2</div>
+    <h2>The secret is in the verb</h2>
+    <p class="lead">Don't stare at the blank. Look <b>backwards</b> at the verb in front of it —
+    the verb is what decides whether you need <b>à</b> or <b>de</b> at all.</p>
+    <div class="box blue">
+      <h3>🔁 The two steps, always in this order</h3>
+      <div class="eq">
+        <span class="eq-t prep">STEP 1</span>
+        <span class="eq-op">→</span>
+        <span class="eq-t keep">look at the VERB</span>
+        <span class="eq-op">→</span>
+        <span class="eq-t out">à or de ?</span>
+      </div>
+      <div class="eq">
+        <span class="eq-t art">STEP 2</span>
+        <span class="eq-op">→</span>
+        <span class="eq-t keep">look at the NEXT WORD</span>
+        <span class="eq-op">→</span>
+        <span class="eq-t out">contract or not ?</span>
+      </div>
+    </div>
+    <table class="dd">
+      <tr><th class="h-good">The verb sends you TO something</th><th class="h-bad">The verb brings you FROM something</th></tr>
+      <tr>
+        <td class="good">aller · arriver · parler · téléphoner · donner<br><span class="note">→ use the <b>À</b> family</span></td>
+        <td style="color:var(--gold-ink);font-weight:700">venir · rentrer · + possession<br><span class="note">→ use the <b>DE</b> family</span></td>
+      </tr>
+    </table>
+    <div class="call danger">
+      <p class="call-h">⚠️ Why students lose marks here</p>
+      <p class="call-b">They pick <i>au</i> or <i>du</i> by guessing which <b>sounds</b> right.
+      The verb is not a matter of taste — <i>venir</i> takes <b>de</b> every single time.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 7. À TRIGGERS (NEW) ============ -->
+<section class="slide">
+  <div class="slide-card">
+    <div class="flag-stripe"></div>
+    <div class="step-ribbon"><span class="sr-n">7</span> Triggers for À</div>
+    <h2>Which verbs demand « À » ?</h2>
+    <p class="lead">Two families: verbs of <b>movement towards</b> a place, and verbs of
+    <b>communication</b> aimed at a person.</p>
+    <div class="box blue">
+      <h3>🚶 Destination — movement TOWARDS a place</h3>
+      <div class="tiles">
+        <div class="tile blue"><span class="tile-n">aller</span><span class="tile-l">to go</span></div>
+        <div class="tile blue"><span class="tile-n">arriver</span><span class="tile-l">to arrive</span></div>
+        <div class="tile blue"><span class="tile-n">entrer</span><span class="tile-l">to enter</span></div>
+      </div>
+      <p class="call-b"><span class="fr">Je vais <mark class="yes">au</mark> parc.</span> ·
+      <span class="fr">Elle arrive <mark class="yes">à l'</mark>école.</span></p>
+    </div>
+    <div class="box green">
+      <h3>🗣️ Communication — an action aimed AT a person</h3>
+      <div class="tiles">
+        <div class="tile green"><span class="tile-n">parler</span><span class="tile-l">to speak</span></div>
+        <div class="tile green"><span class="tile-n">téléphoner</span><span class="tile-l">to phone</span></div>
+        <div class="tile green"><span class="tile-n">donner</span><span class="tile-l">to give</span></div>
+      </div>
+      <p class="call-b"><span class="fr">Je donne le livre <mark class="yes">aux</mark> élèves.</span> ·
+      <span class="fr">Il téléphone <mark class="yes">au</mark> médecin.</span></p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 8. DE TRIGGERS (NEW) ============ -->
+<section class="slide">
+  <div class="slide-card">
+    <div class="flag-stripe"></div>
+    <div class="step-ribbon"><span class="sr-n">8</span> Triggers for DE</div>
+    <h2>Which verbs demand « DE » ?</h2>
+    <p class="lead">Verbs of <b>coming away from</b> a place — and the everyday job of saying
+    <b>whose something is</b>.</p>
+    <div class="box green">
+      <h3>🔙 Origin — movement AWAY FROM a place</h3>
+      <div class="tiles">
+        <div class="tile green"><span class="tile-n">venir</span><span class="tile-l">to come</span></div>
+        <div class="tile green"><span class="tile-n">rentrer</span><span class="tile-l">to return</span></div>
+        <div class="tile green"><span class="tile-n">sortir</span><span class="tile-l">to go out</span></div>
+      </div>
+      <p class="call-b"><span class="fr">Il vient <mark class="yes">du</mark> stade.</span> ·
+      <span class="fr">Elle rentre <mark class="yes">de la</mark> bibliothèque.</span></p>
+    </div>
+    <div class="box blue">
+      <h3>🔗 Possession — the "of" that links two nouns</h3>
+      <p class="call-b">English uses an apostrophe; French uses <b>de</b>.
+      <i>The director's car</i> becomes <i>the car <b>of the</b> director</i>.</p>
+      <p class="call-b"><span class="fr">C'est la voiture <mark class="yes">du</mark> directeur.</span> ·
+      <span class="fr">Le sac <mark class="yes">de la</mark> fille.</span></p>
+    </div>
+    <div class="call win">
+      <p class="call-h">🧠 Flip it into English</p>
+      <p class="call-b">If you can say it with <b>"of the"</b> or <b>"from the"</b>, you need <b>de</b>.
+      If you can say <b>"to the"</b>, you need <b>à</b>.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 9. THE BIG QUESTION ============ -->
+<section class="slide">
+  <div class="slide-card">
+    <div class="flag-stripe"></div>
+    <div class="step-ribbon"><span class="sr-n">9</span> Step 2 of 2</div>
+    <h2>Now — does it actually contract?</h2>
+    <p class="lead">The verb has given you <b>à</b> or <b>de</b>. Step 2 asks a different question:
+    is there really a <i>le</i> or <i>les</i> for it to crash into?</p>
+    <div class="box blue" style="text-align:center">
+      <h3>🔓 The secret</h3>
+      <p class="call-b" style="font-size:clamp(1rem,2.3vh,1.5rem)">
+        A contraction can only happen <b>if a definite article was going to be there in the first place.</b><br>
+        If the noun doesn't need <i>le / les</i> — or something else has taken their place —
+        there is <b>nothing to contract with</b>.</p>
+    </div>
+    <div class="tiles">
+      <div class="tile purple"><span class="tile-n">1</span><span class="tile-l">People's names</span></div>
+      <div class="tile purple"><span class="tile-n">2</span><span class="tile-l">Cities</span></div>
+      <div class="tile purple"><span class="tile-n">3</span><span class="tile-l">mon, ton, son…</span></div>
+      <div class="tile purple"><span class="tile-n">4</span><span class="tile-l">ce, cette, ces</span></div>
+      <div class="tile purple"><span class="tile-n">5</span><span class="tile-l">Quantities</span></div>
+      <div class="tile purple"><span class="tile-n">6</span><span class="tile-l">Negatives</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 10. PROPER NOUNS ============ -->
+<section class="slide">
+  <div class="slide-card">
+    <div class="flag-stripe"></div>
+    <div class="step-ribbon"><span class="sr-n">10</span> No article · names</div>
+    <h2>People don't take articles</h2>
+    <p class="lead">In French we never say <i>"the Paul"</i> or <i>"the Marie"</i>. With no
+    <b>le</b> or <b>la</b> in front of the name, there is nothing for <b>à</b> or <b>de</b> to merge with.</p>
+    <table class="dd">
+      <tr><th class="h-good">✓ Write this</th><th class="h-bad">✗ Never this</th></tr>
+      <tr><td class="good">Je parle <mark class="yes">à</mark> Paul.</td><td class="bad">au Paul</td></tr>
+      <tr><td colspan="2" class="note">Paul is a name. Names carry no article, so <b>à</b> stays alone.</td></tr>
+      <tr><td class="good">Le cahier <mark class="yes">de</mark> Marie.</td><td class="bad">du Marie</td></tr>
+      <tr><td class="good">La directrice parle <mark class="yes">à</mark> M. Minois.</td><td class="bad">au M. Minois</td></tr>
+      <tr><td class="good">Voilà le sac <mark class="yes">de</mark> Mireille.</td><td class="bad">de la Mireille</td></tr>
+    </table>
+    <div class="call win">
+      <p class="call-h">💬 English gives it away</p>
+      <p class="call-b">You'd say "Marie's bag", never "the Marie's bag".
+      If <i>the</i> sounds wrong in English, <i>le / la</i> is wrong in French too.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 11. CITIES ============ -->
+<section class="slide">
+  <div class="slide-card">
+    <div class="flag-stripe"></div>
+    <div class="step-ribbon"><span class="sr-n">11</span> No article · cities</div>
+    <h2>Most cities stand alone</h2>
+    <p class="lead">Cities almost never take <b>le</b> or <b>la</b>, so the preposition stays bare.</p>
+    <div class="box blue">
+      <h3>➡️ Destination — use <b>à</b></h3>
+      <p class="call-b"><span class="fr">Nous allons <mark class="yes">à</mark> Paris.</span> ·
+      <span class="fr">Il habite <mark class="yes">à</mark> Koweït.</span></p>
+    </div>
+    <div class="box green">
+      <h3>⬅️ Origin — use <b>de</b> (or <b>d'</b> before a vowel)</h3>
+      <p class="call-b"><span class="fr">Je viens <mark class="yes">de</mark> Lyon.</span> ·
+      <span class="fr">Il rentre <mark class="yes">d'</mark>Athènes.</span></p>
+    </div>
+    <div class="call danger">
+      <p class="call-h">⚠️ The exception: cities whose name contains the article</p>
+      <p class="call-b">A few cities keep an article inside the name itself — <b>Le Caire</b>, <b>Le Havre</b>.
+      There the article really is present, so it really does contract:
+      <span class="fr">Je vais <mark class="yes">au</mark> Caire.</span></p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 12. COUNTRIES (NEW) ============ -->
+<section class="slide">
+  <div class="slide-card">
+    <div class="flag-stripe"></div>
+    <div class="step-ribbon"><span class="sr-n">12</span> Geography · countries</div>
+    <h2>Countries are the opposite of cities</h2>
+    <p class="lead">Cities drop the article. <b>Countries keep it</b> — so with countries the
+    contraction is back on, and the form depends on the country's gender.</p>
+    <table class="dd">
+      <tr><th class="h-good">Going there — destination</th><th class="h-bad">Coming from there — origin</th></tr>
+      <tr>
+        <td class="good"><b>en</b> France · <b>en</b> Inde<br><span class="note">feminine countries</span></td>
+        <td style="color:var(--gold-ink);font-weight:700"><b>de</b> France · <b>d'</b>Inde<br><span class="note">no article at all</span></td>
+      </tr>
+      <tr>
+        <td class="good"><b>au</b> Japon · <b>au</b> Canada<br><span class="note">masculine — à + le</span></td>
+        <td style="color:var(--gold-ink);font-weight:700"><b>du</b> Japon · <b>du</b> Canada<br><span class="note">de + le</span></td>
+      </tr>
+      <tr>
+        <td class="good"><b>aux</b> États-Unis<br><span class="note">plural — à + les</span></td>
+        <td style="color:var(--gold-ink);font-weight:700"><b>des</b> États-Unis<br><span class="note">de + les</span></td>
+      </tr>
+    </table>
+    <div class="call danger">
+      <p class="call-h">⚠️ « en » is not a contraction — and that is the point</p>
+      <p class="call-b"><b>en</b> is a different preposition altogether, included here only so the
+      set is complete. Learn it with the others or you will write <i>au France</i> — the single
+      most common country mistake, made by students who were taught only <i>au</i> and <i>aux</i>.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 13. POSSESSIVES ============ -->
+<section class="slide">
+  <div class="slide-card">
+    <div class="flag-stripe"></div>
+    <div class="step-ribbon"><span class="sr-n">13</span> Blocked · possessives</div>
+    <h2>Possessives block the article</h2>
+    <p class="lead"><b>mon, ton, son, ma, ta, sa, mes, tes, ses, notre, votre, leur</b> —
+    these words take the place of <i>le / la / les</i>. The article is gone, so nothing can contract.</p>
+    <div class="eq" style="margin:10px 0 4px">
+      <span class="eq-t art" style="text-decoration:line-through;opacity:.5">le</span>
+      <span class="eq-op">→ replaced by →</span>
+      <span class="eq-t" style="color:var(--purple);border-color:var(--purple)">mon</span>
+    </div>
+    <table class="dd">
+      <tr><th class="h-good">✓ Write this</th><th class="h-bad">✗ Never this</th></tr>
+      <tr><td class="good">Je donne le stylo <mark class="yes">à</mark> mon ami.</td><td class="bad">au mon ami</td></tr>
+      <tr><td class="good">C'est la voiture <mark class="yes">de</mark> mes parents.</td><td class="bad">des mes parents</td></tr>
+      <tr><td class="good">Je parle <mark class="yes">à</mark> mon père.</td><td class="bad">au mon père</td></tr>
+    </table>
+    <div class="call danger">
+      <p class="call-h">⚠️ Careful — <i>des mes parents</i> looks almost right</p>
+      <p class="call-b">It is a very common slip, because <b>des</b> and <b>mes</b> both feel plural.
+      But you only get one determiner per noun. <b>mes</b> is already doing the job.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 14. DEMONSTRATIVES ============ -->
+<section class="slide">
+  <div class="slide-card">
+    <div class="flag-stripe"></div>
+    <div class="step-ribbon"><span class="sr-n">14</span> Blocked · demonstratives</div>
+    <h2>Demonstratives block it too</h2>
+    <p class="lead"><b>ce, cet, cette, ces</b> (this / that / these) work exactly like the possessives:
+    they stand where the article would stand, so there is no <i>le</i> or <i>les</i> left to merge.</p>
+    <div class="eq" style="margin:10px 0 4px">
+      <span class="eq-t art" style="text-decoration:line-through;opacity:.5">le</span>
+      <span class="eq-op">→ replaced by →</span>
+      <span class="eq-t" style="color:var(--purple);border-color:var(--purple)">ce</span>
+    </div>
+    <table class="dd">
+      <tr><th class="h-good">✓ Write this</th><th class="h-bad">✗ Never this</th></tr>
+      <tr><td class="good">Tu vas <mark class="yes">à</mark> cet hôtel ?</td><td class="bad">au cet hôtel</td></tr>
+      <tr><td class="good">C'est le sac <mark class="yes">de</mark> cette fille.</td><td class="bad">de la cette fille</td></tr>
+      <tr><td class="good">C'est le bureau <mark class="yes">de</mark> ce professeur.</td><td class="bad">du ce professeur</td></tr>
+      <tr><td class="good">Nous parlons <mark class="yes">à</mark> ces filles.</td><td class="bad">aux ces filles</td></tr>
+    </table>
+    <div class="call win">
+      <p class="call-h">🧠 One rule covers slides 13 and 14</p>
+      <p class="call-b">Possessives and demonstratives are both <b>determiners</b>. A French noun takes
+      <b>one</b> determiner — never two. If a determiner is already there, the article isn't.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 15. QUANTITY ============ -->
+<section class="slide">
+  <div class="slide-card">
+    <div class="flag-stripe"></div>
+    <div class="step-ribbon"><span class="sr-n">15</span> Plain de · quantity</div>
+    <h2>Quantity words take plain « de »</h2>
+    <p class="lead">After any expression of quantity, use <b>de</b> (or <b>d'</b>) on its own.
+    Never <i>du</i>, never <i>des</i>, never <i>de la</i>.</p>
+    <div class="tiles">
+      <div class="tile gold"><span class="tile-n">beaucoup</span><span class="tile-l">a lot</span></div>
+      <div class="tile gold"><span class="tile-n">un peu</span><span class="tile-l">a little</span></div>
+      <div class="tile gold"><span class="tile-n">assez</span><span class="tile-l">enough</span></div>
+      <div class="tile gold"><span class="tile-n">trop</span><span class="tile-l">too much</span></div>
+      <div class="tile gold"><span class="tile-n">combien</span><span class="tile-l">how much</span></div>
+      <div class="tile gold"><span class="tile-n">un kilo</span><span class="tile-l">a kilo</span></div>
+    </div>
+    <table class="dd">
+      <tr><th class="h-good">✓ Write this</th><th class="h-bad">✗ Never this</th></tr>
+      <tr><td class="good">Beaucoup <mark class="yes">de</mark> devoirs.</td><td class="bad">beaucoup des devoirs</td></tr>
+      <tr><td class="good">Un kilo <mark class="yes">de</mark> pommes.</td><td class="bad">un kilo des pommes</td></tr>
+      <tr><td class="good">Un litre <mark class="yes">d'</mark>eau.</td><td class="bad">un litre de l'eau</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- ============ 16. CONTRACTED vs PARTITIVE (NEW) ============ -->
+<section class="slide">
+  <div class="slide-card">
+    <div class="flag-stripe"></div>
+    <div class="step-ribbon"><span class="sr-n">16</span> The CBSE trap</div>
+    <h2>« du » and « des » have two different jobs</h2>
+    <p class="lead">They look identical on the page. They behave completely differently —
+    and telling them apart is where the exam marks are.</p>
+    <table class="dd">
+      <tr><th class="h-good">Job 1 · CONTRACTED — "of the / from the"</th><th class="h-bad">Job 2 · PARTITIVE — "some"</th></tr>
+      <tr>
+        <td class="good">Le cahier <b>du</b> garçon.<br><span class="note">the boy's notebook — de + le</span></td>
+        <td style="color:var(--gold-ink);font-weight:700">Je mange <b>du</b> pain.<br><span class="note">I'm eating some bread</span></td>
+      </tr>
+      <tr>
+        <td class="good">Les jouets <b>des</b> enfants.<br><span class="note">the children's toys — de + les</span></td>
+        <td style="color:var(--gold-ink);font-weight:700">J'achète <b>des</b> fruits.<br><span class="note">I'm buying some fruit</span></td>
+      </tr>
+    </table>
+    <div class="call danger">
+      <p class="call-h">⚠️ Why it matters — the negative test</p>
+      <p class="call-b">Make the sentence negative and the two split apart:<br>
+      Partitive <b>collapses</b> → <span class="fr">Je ne mange pas <mark class="yes">de</mark> pain.</span><br>
+      Contracted <b>never moves</b> → <span class="fr">Ce n'est pas le cahier <mark class="yes">du</mark> garçon.</span></p>
+    </div>
+    <div class="call win">
+      <p class="call-h">🧠 How to tell them apart in one second</p>
+      <p class="call-b">Try replacing it with <b>"some"</b>. If the sentence still makes sense,
+      it's partitive. If you need <b>"of the"</b>, it's contracted.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 17. NEGATION ============ -->
+<section class="slide">
+  <div class="slide-card">
+    <div class="flag-stripe"></div>
+    <div class="step-ribbon"><span class="sr-n">17</span> Plain de · negation</div>
+    <h2>The quantity eraser: negation</h2>
+    <p class="lead">The partitive articles <b>du, de la, de l', des</b> mean "some".
+    Make the sentence negative and they are <b>erased</b> — only <b>de</b> or <b>d'</b> survives.</p>
+    <div class="box green">
+      <h3>➕ Positive — the partitive is there</h3>
+      <p class="call-b"><span class="fr">Mon frère prend <mark class="yes">de l'</mark>eau
+      et <mark class="yes">des</mark> œufs.</span><br>
+      <span class="en">My brother is having some water and some eggs.</span></p>
+    </div>
+    <div class="box red">
+      <h3>➖ Negative — it collapses to <b>de / d'</b></h3>
+      <p class="call-b"><span class="fr">Il ne prend pas <mark class="yes">d'</mark>eau
+      et il ne prend pas <mark class="yes">d'</mark>œufs.</span><br>
+      <span class="en">He isn't having any water or any eggs.</span></p>
+    </div>
+    <div class="call danger">
+      <p class="call-h">⚠️ One famous exception</p>
+      <p class="call-b">After <b>être</b>, nothing is erased:
+      <span class="fr">Ce n'est pas <b>du</b> lait.</span> — <i>It isn't milk.</i>
+      The eraser works on objects of ordinary verbs, not on descriptions after <i>être</i>.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 18. SPOT THE DIFFERENCE ============ -->
+<section class="slide">
+  <div class="slide-card">
+    <div class="flag-stripe"></div>
+    <div class="step-ribbon"><span class="sr-n">18</span> Side by side</div>
+    <h2>Spot the difference</h2>
+    <p class="lead">Same verb, same meaning, one small change — and the contraction appears or vanishes.</p>
+    <table class="dd">
+      <tr>
+        <th class="h-good">Article present → CONTRACT</th>
+        <th class="h-bad">Article replaced → PREPOSITION ONLY</th>
+      </tr>
+      <tr>
+        <td class="good">Je parle <mark class="yes">au</mark> professeur.<br><span class="note">à + <b>le</b></span></td>
+        <td style="color:var(--gold-ink);font-weight:700">Je parle <mark>à</mark> mon professeur.<br><span class="note">à + <b>mon</b></span></td>
+      </tr>
+      <tr>
+        <td class="good">Le livre <mark class="yes">du</mark> garçon.<br><span class="note">de + <b>le</b></span></td>
+        <td style="color:var(--gold-ink);font-weight:700">Le livre <mark>de</mark> ce garçon.<br><span class="note">de + <b>ce</b></span></td>
+      </tr>
+      <tr>
+        <td class="good">Il vient <mark class="yes">du</mark> Japon.<br><span class="note">country keeps its article</span></td>
+        <td style="color:var(--gold-ink);font-weight:700">Il vient <mark>de</mark> Lyon.<br><span class="note">city — no article</span></td>
+      </tr>
+      <tr>
+        <td class="good">J'achète <mark class="yes">des</mark> pommes.<br><span class="note">de + <b>les</b></span></td>
+        <td style="color:var(--gold-ink);font-weight:700">J'achète un kilo <mark>de</mark> pommes.<br><span class="note">quantity word</span></td>
+      </tr>
+    </table>
+    <div class="call win">
+      <p class="call-h">🔍 Where to look</p>
+      <p class="call-b">The <b>verb</b> already told you à or de. Now look only at
+      <b>the word straight after the blank</b> — that word decides the rest.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 19. CHECKLIST ============ -->
+<section class="slide">
+  <div class="slide-card">
+    <div class="flag-stripe"></div>
+    <div class="step-ribbon"><span class="sr-n">19</span> Summary</div>
+    <h2>The 5-second checklist</h2>
+    <p class="lead">Two steps, five questions. Tap each one to see the answer.</p>
+    <div class="check">
+      <input type="checkbox" id="ck0" class="chk-in">
+      <div class="chk-row">
+        <label class="chk-q" for="ck0">STEP 1 · What is the verb?</label>
+        <p class="chk-a"><b>aller, arriver, parler, téléphoner, donner</b> → you need <b>à</b>.<br>
+        <b>venir, rentrer, sortir</b>, or "of / whose" → you need <b>de</b>.
+        Decide this before you look at the noun at all.</p>
+      </div>
+      <input type="checkbox" id="ck1" class="chk-in">
+      <div class="chk-row">
+        <label class="chk-q" for="ck1">STEP 2a · Is the next word a city or a person's name?</label>
+        <p class="chk-a">Then use plain <b>à</b> or <b>de</b>. Names and cities carry no article.
+        <span class="fr">à Paris · de Marie</span> — but a <b>country</b> does keep its article:
+        <span class="fr">au Japon · en France</span>.</p>
+      </div>
+      <input type="checkbox" id="ck2" class="chk-in">
+      <div class="chk-row">
+        <label class="chk-q" for="ck2">STEP 2b · Is there a possessive or demonstrative — mon, ces… ?</label>
+        <p class="chk-a">Then use plain <b>à</b> or <b>de</b>. The determiner has already replaced the article.
+        <span class="fr">à mon ami · de cette fille</span></p>
+      </div>
+      <input type="checkbox" id="ck3" class="chk-in">
+      <div class="chk-row">
+        <label class="chk-q" for="ck3">STEP 2c · Is it a quantity word, or a negative sentence?</label>
+        <p class="chk-a">Then use <b>de</b> / <b>d'</b> on its own.
+        <span class="fr">beaucoup de devoirs · pas d'eau</span> —
+        unless the <i>du</i> is <b>contracted</b>, which never changes.</p>
+      </div>
+      <input type="checkbox" id="ck4" class="chk-in">
+      <div class="chk-row">
+        <label class="chk-q" for="ck4">If the answer to all of Step 2 is NO…</label>
+        <p class="chk-a">…then a real definite article is there, and you contract as normal:
+        <b>à + le = au</b>, <b>à + les = aux</b>, <b>de + le = du</b>, <b>de + les = des</b>.
+        And remember <i>la</i> and <i>l'</i> never contract at all.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 20. QUIZ ============ -->
+<section class="slide">
+  <div class="slide-card">
+    <div class="flag-stripe"></div>
+    <div class="step-ribbon"><span class="sr-n">20</span> Test yourself</div>
+    <h2>Quiz — 12 questions</h2>
+    <p class="lead">Choose the right form. The reason appears as soon as you answer.</p>
+    <div class="quiz" id="quiz">
+      <div class="q-bar"><div class="q-fill" id="qFill"></div></div>
+      <div id="qList"></div>
+      <div class="score" id="score">Answer the questions to see your score.</div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="hud">
+  <button class="nav" id="prevBtn" title="Previous slide">‹</button>
+  <button class="nav" id="nextBtn" title="Next slide">›</button>
+  <span class="hud-n" id="hudN">1 / 15</span>
+  <div class="hud-bar"><div class="hud-fill" id="hudFill"></div></div>
+  <span class="hud-n" id="hudT">Les Articles Contractés</span>
+</footer>
+
+<script>
+/* ============================================================
+   A deliberately small engine. 15 slides do not need a framework,
+   and this file has to stay dependency-free so it works offline.
+   ============================================================ */
+(function(){
+  'use strict';
+  var $  = function(s, r){ return (r || document).querySelector(s); };
+  var $$ = function(s, r){ return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+
+  var slides = $$('.slide');
+  var titles = slides.map(function(s){
+    var h = $('h1', s) || $('h2', s);
+    return h ? h.textContent.trim() : 'Slide';
+  });
+  var i = 0;
+
+  /* ---- sidebar ---- */
+  var list = $('#sbList');
+  titles.forEach(function(t, n){
+    var b = document.createElement('button');
+    b.className = 'sb-item' + (n === 0 ? ' on' : '');
+    b.innerHTML = '<span class="sb-n">' + (n + 1) + '</span>' + t;
+    b.onclick = function(){ go(n); };
+    list.appendChild(b);
+  });
+  var items = $$('.sb-item');
+
+  function go(n){
+    if (n < 0 || n >= slides.length) return;
+    slides[i].classList.remove('on');
+    items[i].classList.remove('on');
+    i = n;
+    slides[i].classList.add('on');
+    items[i].classList.add('on');
+    items[i].scrollIntoView({ block: 'nearest' });
+    $('#hudN').textContent = (i + 1) + ' / ' + slides.length;
+    $('#hudT').textContent = titles[i];
+    $('#hudFill').style.width = ((i + 1) / slides.length * 100) + '%';
+    $('#prevBtn').disabled = (i === 0);
+    $('#nextBtn').disabled = (i === slides.length - 1);
+    try { slides[i].querySelector('.slide-card').scrollTop = 0; } catch (e){}
+  }
+
+  $('#prevBtn').onclick = function(){ go(i - 1); };
+  $('#nextBtn').onclick = function(){ go(i + 1); };
+  $('#sbBtn').onclick = function(){
+    document.body.classList.toggle('sb-hidden');
+    document.body.classList.toggle('sb-open');
+  };
+  $('#themeBtn').onclick = function(){
+    var dark = document.body.classList.toggle('theme-slate');
+    document.body.classList.toggle('theme-classic', !dark);
+    this.textContent = dark ? '☀️ Light' : '🌙 Dark';
+  };
+
+  document.addEventListener('keydown', function(e){
+    if (/^(INPUT|TEXTAREA)$/.test(e.target.tagName)) return;
+    if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' '){ e.preventDefault(); go(i + 1); }
+    else if (e.key === 'ArrowLeft' || e.key === 'PageUp'){ e.preventDefault(); go(i - 1); }
+    else if (e.key === 'Home'){ e.preventDefault(); go(0); }
+    else if (e.key === 'End'){ e.preventDefault(); go(slides.length - 1); }
+  });
+
+  /* ============================================================
+     THE CONTRACTION MACHINE
+     The table below is the whole lesson in data form: for each
+     preposition + follower, does it merge, and WHY.
+     ============================================================ */
+  var TABLE = {
+    'à': {
+      "le":    ['au',      'Je vais au cinéma.',            'merge', 'à + le collide, so they merge into one word.'],
+      "la":    ['à la',    'Tu vas à la campagne.',         'keep',  'la is feminine — it never contracts. Leave both words.'],
+      "l'":    ["à l'",    "Il est à l'hôtel.",             'keep',  "l' never contracts either. Leave both words."],
+      "les":   ['aux',     'Je parle aux élèves.',          'merge', 'à + les collide, so they merge into aux.'],
+      "mon":   ['à mon',   'Je donne le stylo à mon ami.',  'keep',  'mon has replaced the article. No le, so nothing to contract.'],
+      "ce":    ['à ce',    'Tu vas à ce magasin ?',         'keep',  'ce has replaced the article. No le, so nothing to contract.'],
+      "Marie": ['à Marie', 'Je parle à Marie.',             'keep',  'Names take no article at all. à stays alone.'],
+      "Paris": ['à Paris', 'Nous allons à Paris.',          'keep',  'Cities take no article. à stays alone.']
+    },
+    'de': {
+      "le":    ['du',       'La voiture du directeur.',        'merge', 'de + le collide, so they merge into du.'],
+      "la":    ['de la',    'Je rentre de la bibliothèque.',   'keep',  'la is feminine — it never contracts. Leave both words.'],
+      "l'":    ["de l'",    "L'ami de l'actrice.",             'keep',  "l' never contracts either. Leave both words."],
+      "les":   ['des',      'Les cahiers des garçons.',        'merge', 'de + les collide, so they merge into des.'],
+      "mon":   ['de mon',   "C'est le vélo de mon frère.",     'keep',  'mon has replaced the article. Nothing to contract.'],
+      "ce":    ['de ce',    'Le prix de ce sac est cher.',     'keep',  'ce has replaced the article. Nothing to contract.'],
+      "Marie": ['de Marie', 'Le cahier de Marie.',             'keep',  'Names take no article at all. de stays alone.'],
+      "Paris": ['de Paris', 'Je viens de Paris.',              'keep',  'Cities take no article. de stays alone.']
+    }
+  };
+
+  var mach = $('#machine');
+  if (mach){
+    var p = 'à', a = 'le';
+    var draw = function(){
+      var row = TABLE[p][a];
+      $('#machRes').textContent = row[0];
+      $('#machEx').textContent  = row[1];
+      $('#machWhy').textContent = row[3];
+      $('#machOut').className = 'mach-out ' + row[2];
+    };
+    $$('.chip', mach).forEach(function(c){
+      c.onclick = function(){
+        var group = c.dataset.p ? '[data-p]' : '[data-a]';
+        $$(group, mach).forEach(function(x){ x.classList.remove('on'); });
+        c.classList.add('on');
+        if (c.dataset.p) p = c.dataset.p; else a = c.dataset.a;
+        draw();
+      };
+    });
+    draw();
+  }
+
+  /* ============================================================
+     QUIZ — both source quizzes merged, 8 questions.
+     ============================================================ */
+  /* Twelve questions, each tagged with the rule it tests so a wrong answer points
+     straight back at the slide that explains it. Step 1 (which preposition) and
+     Step 2 (does it contract) are both represented. */
+  var Q = [
+    { q: 'Nous allons ____ cinéma ce soir.',        o: ['au', 'à la', 'du'],   a: 0,
+      w: 'DESTINATION — aller sends you towards a place, so à; cinéma is masculine, so à + le = au.' },
+    { q: "C'est le vélo ____ frère de Paul.",       o: ['de la', 'des', 'du'], a: 2,
+      w: 'POSSESSION — whose bike it is, so de; frère is masculine, so de + le = du.' },
+    { q: 'Elle téléphone ____ grands-parents.',     o: ['des', 'aux', 'à'],    a: 1,
+      w: 'COMMUNICATION — téléphoner aims at a person, so à; plural, so à + les = aux.' },
+    { q: 'Je viens ____ Koweït (the city).',        o: ['du', 'de', 'des'],    a: 1,
+      w: 'CITY + ORIGIN — venir takes de, and a city carries no article. Careful: the COUNTRY is le Koweït, so that one would be du Koweït.' },
+    { q: 'Donne ce stylo ____ mon ami.',            o: ['au', 'du', 'à'],      a: 2,
+      w: 'BLOCKER — donner takes à, but mon has already replaced the article, so nothing contracts.' },
+    { q: 'Elle habite ____ Japon.',                 o: ['au', 'en', 'à'],      a: 0,
+      w: 'COUNTRY — countries keep their article. Japon is masculine, so à + le = au. (en is for feminine countries: en France.)' },
+    { q: 'Il ne mange pas ____ pain.',              o: ['du', 'des', 'de'],    a: 2,
+      w: 'NEGATION — du pain here is PARTITIVE ("some bread"), and the negative erases it down to de.' },
+    { q: "J'achète beaucoup ____ fruits.",          o: ['des', 'de', 'du'],    a: 1,
+      w: 'QUANTITY — beaucoup is a quantity word, so always plain de.' },
+    { q: 'Je donne la pomme ____ garçon. (le)',     o: ['au', 'à', 'à la'],    a: 0,
+      w: 'REAL ARTICLE — nothing is blocking it, so à + le = au.' },
+    { q: "C'est le stylo ____ Marc.",               o: ['du', 'de', 'des'],    a: 1,
+      w: 'NAME — people take no article, so de stays alone.' },
+    { q: 'Nous parlons ____ ces filles.',           o: ['aux', 'des', 'à'],    a: 2,
+      w: 'BLOCKER — parler takes à, but ces has replaced the article, so there is no les to merge with.' },
+    { q: 'Je rentre ____ États-Unis. (les)',        o: ['des', 'de', 'du'],    a: 0,
+      w: 'COUNTRY + ORIGIN — rentrer takes de, and les États-Unis keeps its article, so de + les = des.' }
+  ];
+
+  var qList = $('#qList');
+  if (qList){
+    var answered = 0, right = 0;
+    Q.forEach(function(item, n){
+      var row = document.createElement('div');
+      row.className = 'q-row';
+      var opts = item.o.map(function(o){
+        return '<button class="opt">' + o + '</button>';
+      }).join('');
+      row.innerHTML =
+        '<p class="q-text">' + (n + 1) + '. ' + item.q + '</p>' +
+        '<div class="q-opts">' + opts + '</div>' +
+        '<p class="q-why">' + item.w + '</p>';
+      qList.appendChild(row);
+
+      $$('.opt', row).forEach(function(btn, k){
+        btn.onclick = function(){
+          if (row.dataset.done) return;
+          row.dataset.done = '1';
+          answered++;
+          if (k === item.a) right++;
+          $$('.opt', row).forEach(function(b, j){
+            b.classList.add('done');
+            if (j === item.a) b.classList.add('ok');
+          });
+          if (k !== item.a) btn.classList.add('no');
+          $('.q-why', row).classList.add('show');
+          $('#qFill').style.width = (answered / Q.length * 100) + '%';
+          var msg = right + ' / ' + answered + ' correct';
+          if (answered === Q.length){
+            msg = 'Final score: ' + right + ' / ' + Q.length +
+              (right === Q.length ? ' — parfait ! 🎉'
+                : right >= 10 ? ' — très bien ! Check the two you missed.'
+                : right >= 7 ? ' — a solid pass. Re-read the rules behind the ones you missed.'
+                : ' — revise slides 6 to 17, then try again.');
+          }
+          $('#score').textContent = msg;
+        };
+      });
+    });
+  }
+
+  go(0);
+})();
+</script>
+</body>
+</html>
