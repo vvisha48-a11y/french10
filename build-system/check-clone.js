@@ -75,6 +75,33 @@ if (app.indexOf('pointer-events:none;   /* never steals a click from the lesson 
 if (app.indexOf('spinPick') !== -1 && app.indexOf('stopImmediatePropagation') === -1)
   problems.push('[pick] the engine spinPick is not intercepted');
 
+// 4b. the vocabulary is MERGED natively into both files, not linked out
+[['index', index], ['app', app]].forEach(pair => {
+  const name = pair[0], docHtml = pair[1];
+  if (docHtml.indexOf('id="leconsMenu"') === -1)
+    problems.push('[lecons] the Lecons dropdown is missing from docs/' + name + '.html');
+  if (docHtml.indexOf('href="lecons.html"') !== -1)
+    problems.push('[lecons] docs/' + name + '.html still links out to lecons.html');
+  // all 8 lessons must have merged, not just some
+  ['l2','l3','l4','l5','l6','l7','l8','l10'].forEach(k => {
+    if (docHtml.indexOf('data-topic="' + k + '"') === -1)
+      problems.push('[lecons] lesson ' + k + ' is missing from docs/' + name + '.html');
+  });
+  // THE GUARD: every photo must be embedded, or the offline promise is broken
+  const wm = (docHtml.match(/upload.wikimedia.org/g) || []).length;
+  if (wm) problems.push('[lecons] docs/' + name + '.html still has ' + wm + ' wikimedia reference(s)');
+  // the lesson CSS must never be able to restyle a grammar slide in projector mode
+  const bare = (docHtml.match(/body.projector-mode .(?!lecon-slide)(slide-card|question-row|accent-bar|fib-actions|quiz-container)/g) || []);
+  if (bare.length > 30) problems.push('[lecons] unscoped projector rules leaked: ' + bare.length);
+});
+
+// the standalone backup keeps its own memory: same 217 slide ids in two files
+const LECONS = 'C:/claude/10 th/docs/lecons.html';
+if (fs.existsSync(LECONS)){
+  const lec = fs.readFileSync(LECONS, 'utf8');
+  if (lec.indexOf('cbse_fr_lecons_') === -1)
+    problems.push('[lecons] the standalone backup lost its own storage prefix');
+}
 // 5. the clone may reach Firebase and nothing else
 const ALLOW = ['www.gstatic.com', 'firebasejs', 'googleapis.com', 'firebaseio.com', 'firebaseapp.com'];
 const ext = [];

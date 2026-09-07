@@ -23,6 +23,7 @@ PARTS=(
   t-conjlab.html
   t11-lettre.html
   t12-messages.html
+  t13-lecons.html
   t10-revision.html
 )
 
@@ -32,6 +33,9 @@ node "$SP/gen-letter-slides.js"
 # La Nominalisation slides are generated from nomdata.js
 node "$SP/gen-nom-slides.js"
 node "$SP/gen-message-slides.js"
+
+# Les Lecons slides are generated from the 10th-lessons content files
+node "$SP/gen-lecon-slides.js"
 
 cat "$SP/a-head.html" > "$OUT"
 sed -n '17p' "$SRC" >> "$OUT"
@@ -55,7 +59,12 @@ cat "$SP/e-engine.html" >> "$OUT"
 # Splice Usage slides in after each Description slide (additive; sources untouched)
 node "$SP/insert-usages.js"
 
+# Lesson photos: downloaded once into vendor/, downscaled, embedded as data: URIs
+# so the shipped file still makes zero network requests.
+node "$SP/inline-lecon-photos.js"
+
 node "$SP/inline-photos.js"
+
 
 # Inline the last external deps (Google Fonts, GSAP, Lucide) -> zero network requests
 node "$SP/inline-assets.js"
@@ -64,6 +73,13 @@ node "$SP/inline-assets.js"
 mkdir -p "$PROJ/docs"
 cp "$OUT" "$PROJ/docs/index.html"
 touch "$PROJ/docs/.nojekyll"
+
+# The vocabulary app is built by its own project; copy the finished file in so the
+# topbar link resolves. Conditional on purpose: this build must not fail because a
+# separate project moved.
+LECONS="C:/10th lessons/lecons.html"
+if [ -f "$LECONS" ]; then cp "$LECONS" "$PROJ/docs/lecons.html";
+else echo "  note: $LECONS not found - docs/lecons.html left as-is"; fi
 
 # Firebase clone -> docs/app.html. Post-processing: it READS the finished
 # docs/index.html and writes a second file, so the offline deck is untouched.

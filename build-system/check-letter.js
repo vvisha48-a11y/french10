@@ -28,7 +28,17 @@ const re = /<section data-topic="lettre"[^>]*data-sub="([^"]*)"/g;
 let m;
 while ((m = re.exec(html)) !== null) marks.push({ idx: m.index, sub: m[1] });
 const first = marks.length ? marks[0].idx : -1;
-const region = first < 0 ? '' : html.slice(first, html.indexOf('<section data-topic="revision"', first) + 1 || html.length);
+/* End at the first stack belonging to a DIFFERENT topic. Hard-coding "revision"
+   as the boundary broke the moment Les Lecons was inserted between this module
+   and Revision: the region silently swallowed 217 foreign slides. */
+const endOfTopic = (h, from, topic) => {
+  const re = /<section data-topic="([^"]+)"/g;
+  re.lastIndex = from + 1;
+  let m2;
+  while ((m2 = re.exec(h)) !== null) if (m2[1] !== topic) return m2.index;
+  return h.length;
+};
+const region = first < 0 ? '' : html.slice(first, endOfTopic(html, first, 'lettre'));
 
 // 1. structure
 if (marks.length !== D.length) problems.push(`[stacks] ${marks.length} lettre stacks in the build, expected ${D.length}`);

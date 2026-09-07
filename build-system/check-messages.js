@@ -48,11 +48,20 @@ const dup = slideIds.filter((x, i) => slideIds.indexOf(x) !== i);
 if (dup.length) problems.push('[slides] duplicate ids: ' + [...new Set(dup)].join(', '));
 
 /* ---- 2. the exemptions that keep verify.js's 8-step rule at 49 ---- */
+/* End at the first stack belonging to a DIFFERENT topic. Hard-coding "revision"
+   as the boundary broke the moment Les Lecons was inserted between this module
+   and Revision: the region silently swallowed 217 foreign slides. */
+const endOfTopic = (h, from, topic) => {
+  const re = /<section data-topic="([^"]+)"/g;
+  re.lastIndex = from + 1;
+  let m2;
+  while ((m2 = re.exec(h)) !== null) if (m2[1] !== topic) return m2.index;
+  return h.length;
+};
 const region = (() => {
   const a = html.indexOf('<section data-topic="messages"');
   if (a === -1) return '';
-  const b = html.indexOf('data-topic="revision"', a);
-  return html.slice(a, b === -1 ? html.length : b);
+  return html.slice(a, endOfTopic(html, a, 'messages'));
 })();
 if (!region) problems.push('[exempt] no messages region found');
 const steps = [...region.matchAll(/data-step="([^"]*)"/g)].map(m => m[1]);
@@ -135,7 +144,10 @@ if (quiz !== score || quiz !== fill)
   problems.push('[quiz] ' + quiz + ' containers but ' + score + ' score-display / ' + fill + ' progress-fill');
 if (html.indexOf('id="messagesBtn"') === -1) problems.push('[topbar] Messages button missing');
 if (html.indexOf("topicByKey['messages']") === -1) problems.push('[topbar] Messages button not wired in the engine');
-if (html.indexOf('MENU_HIDE = { lettre: 1, messages: 1 }') === -1)
+/* Assert the BEHAVIOUR, not one exact literal: the hide-list grew when Les
+   Lecons was merged, and pinning the old string made a correct change look
+   like a regression. */
+if (!/MENU_HIDE = {[^}]*messages: 1/.test(html))
   problems.push('[topbar] Messages is not hidden from the Grammar dropdown');
 
 /* ---- report ---- */

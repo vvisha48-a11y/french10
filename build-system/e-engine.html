@@ -140,6 +140,7 @@ function markVisited(h, v){
     visited[t.key][k] = 1;
     ls.setJSON('visited', visited);
     renderTopicMenu();
+    renderLeconMenu();
   }
 }
 function topicPct(t){
@@ -148,6 +149,31 @@ function topicPct(t){
 }
 
 /* ---------------- Topic menu ---------------- */
+/* The vocabulary lessons get their own dropdown, exactly as La Lettre and Les
+   Messages get their own toolbar buttons. LECON_KEYS drives both this menu and
+   the Grammar menu’s hide-list, so the two can never disagree. Accueil is the
+   vocabulary hub slide and is reached from the first lesson, not listed here. */
+const LECON_KEYS = ['l2','l3','l4','l5','l6','l7','l8','l10'];
+
+function renderLeconMenu(){
+  const menu = $('#leconsMenu');
+  if (!menu) return;
+  menu.innerHTML = '';
+  LECON_KEYS.forEach(key => {
+    const t = topicByKey[key];
+    if (!t) return;
+    const b = document.createElement('button');
+    b.className = 'topic-menu-item';
+    b.innerHTML = `<span class="tm-num">${key.slice(1)}</span><span>${t.name}</span>` +
+                  `<span class="tm-pct">${topicPct(t)}%</span>`;
+    b.addEventListener('click', () => {
+      Deck.slide(t.indices[0], 0);
+      menu.classList.remove('open');
+    });
+    menu.appendChild(b);
+  });
+}
+
 function renderTopicMenu(){
   const menu = $('#topicMenu');
   menu.innerHTML = '';
@@ -155,7 +181,8 @@ function renderTopicMenu(){
      is redundant here. MENU_HIDE only filters this dropdown — the topic, its
      slides and every other entry point are untouched. Numbering below uses the
      filtered index, so the remaining items renumber automatically. */
-  const MENU_HIDE = { lettre: 1, messages: 1 };
+  const MENU_HIDE = { lettre: 1, messages: 1, accueil: 1 };
+  LECON_KEYS.forEach(k => { MENU_HIDE[k] = 1; });
   topics.filter(t => !MENU_HIDE[t.key]).forEach((t, i) => {
     const b = document.createElement('button');
     b.className = 'topic-menu-item';
@@ -768,7 +795,7 @@ function speakFrench(text, btn){
   try {
     speechSynthesis.cancel();
     const u = new SpeechSynthesisUtterance(text);
-    u.lang = 'fr-FR'; u.rate = 0.92; if (frVoice) u.voice = frVoice;
+    u.lang = 'fr-FR'; u.rate = (window.__frRate || 0.92); if (frVoice) u.voice = frVoice;
     if (btn){ btn.classList.add('speaking'); u.onend = u.onerror = () => btn.classList.remove('speaking'); }
     speechSynthesis.speak(u);
   } catch(e){}
@@ -1076,8 +1103,21 @@ const DRILL = [
   {q:'<span class="clue">Maintenant</span>, vous _____ (comprendre) la règle.', a:'comprenez'},
   {q:'<span class="clue">Bien qu’</span>il _____ (avoir) tort, il continue.', a:'ait'}
 ];
+/* The deck's own bank, captured before initSpeedDrill shadows the name. */
+const DRILL_DEFAULT = DRILL;
+
 function initSpeedDrill(container){
   if (!container) return;
+  /* Per-container question bank. A lesson supplies its own words through
+     data-drill; the grammar slides carry none and use the shared bank. */
+  const DRILL = (function(){
+    try {
+      const d = JSON.parse(container.dataset.drill || 'null');
+      if (Array.isArray(d) && d.length) return d;
+    } catch(err){ console.warn('drill data parse failed', err); }
+    return DRILL_DEFAULT;
+  })();
+  if (!DRILL.length) return;
   const setup = $('.drill-setup', container), play = $('.drill-play', container), done = $('.drill-done', container);
   const qEl = $('.drill-q', container), inp = $('.drill-input', container), fb = $('.drill-feedback', container);
   const idxEl = $('.drill-idx', container), scoreEl = $('.drill-score', container), totEl = $('.drill-tot', container),
@@ -1170,6 +1210,7 @@ $('#prevBtn').onclick = () => Deck.prev();
 $('#nextBtn').onclick = () => Deck.next();
 $('#fsBtn').onclick = toggleFullscreen;
 $('#topicMenuBtn').onclick = e => { e.stopPropagation(); $('#topicMenu').classList.toggle('open'); };
+if ($('#leconsBtn')) $('#leconsBtn').onclick = e => { e.stopPropagation(); $('#leconsMenu').classList.toggle('open'); };
 $('#searchBtn').onclick = openSearch;
 $('#modeBtn').onclick = toggleMode;
 $('#lightBtn').onclick = toggleLight;
@@ -1251,7 +1292,7 @@ $('#liveEditToggle').onchange = e => setLiveEdit(e.target.checked);
 $('#saveEditsBtn').onclick = saveEdits;
 $$('#settingsPanel [data-add]').forEach(b => b.addEventListener('click', () => addElement(b.dataset.add)));
 $('#resetBtn').onclick = () => {
-  ['theme','font_family','font_scale','text_color','slide_edits','visited','known','mode','sound','lightTheme','darkTheme']
+  ['theme','font_family','font_scale','text_color','slide_edits','visited','known','mode','sound','lightTheme','darkTheme','speech_rate','speak_flip']
     .forEach(k => ls.del(k));
   location.reload();
 };
@@ -1262,6 +1303,7 @@ $('#searchInput').addEventListener('keydown', e => {
 });
 document.addEventListener('click', e => {
   if (!e.target.closest('#topicMenu') && !e.target.closest('#topicMenuBtn')) $('#topicMenu').classList.remove('open');
+  if ($('#leconsMenu') && !e.target.closest('#leconsMenu') && !e.target.closest('#leconsBtn')) $('#leconsMenu').classList.remove('open');
   if (!e.target.closest('#settingsPanel') && !e.target.closest('#settingsBtn')) $('#settingsPanel').classList.remove('open');
   if (!e.target.closest('#shortcutsModal') && !e.target.closest('#shortcutsBtn')) $('#shortcutsModal').classList.remove('open');
   if (!e.target.closest('.search-modal') && !e.target.closest('#searchBtn')) $('#searchModal').classList.remove('open');
@@ -1283,6 +1325,506 @@ document.addEventListener('keydown', e => {
   else if (k === 'e'){ const cb = $('#liveEditToggle'); cb.checked = !cb.checked; setLiveEdit(cb.checked); }
   else if (e.key === '?') $('#shortcutsModal').classList.toggle('open');
 });
+
+/* ================= LESSON WIDGETS (from the 10th-lessons project) =================
+   Bare top-level code by design: it lives INSIDE this IIFE so its 17 declarations
+   -- tween, shake, flash among them -- stay function-scoped instead of becoming
+   window globals. It depends on $, $$, ls, speakFrench, speechOK, frVoice, reduced
+   and playSound, all defined above. ============================================ */
+/* ================================================================
+   LESSON APP — ADDITIVE MODULES
+   Vocabulary audio, list reading, mask-and-check, photo fallback.
+   Everything here is guarded: on a slide with none of these
+   elements every function is a no-op, so this block is safe to
+   paste into the Master Grammar App unchanged.
+   ================================================================ */
+
+/* ---------------- Speech rate (settings-driven) ---------------- */
+window.__frRate = parseFloat(ls.get('speech_rate', '0.92')) || 0.92;
+
+/* ---------------- The French text of a vocabulary cell ----------------
+   Strips the gender badge, the injected 🔊 and any English gloss, so the
+   voice reads the word and nothing else. */
+function vocText(el){
+  const clone = el.cloneNode(true);
+  clone.querySelectorAll('.nom-g, .audio-btn, .gloss, .voc-en').forEach(n => n.remove());
+  return (clone.textContent || '')
+    .replace(/[«»→]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+/* ---------------- 🔊 on every vocabulary word ---------------- */
+function injectVocabAudio(){
+  if (!speechOK) return;
+  $$('.voc-fr').forEach(el => {
+    if (el.dataset.audio) return;
+    el.dataset.audio = '1';
+    const b = document.createElement('button');
+    b.className = 'audio-btn'; b.type = 'button';
+    b.title = 'Écouter en français'; b.textContent = '🔊';
+    b.addEventListener('click', ev => { ev.stopPropagation(); speakFrench(vocText(el), b); });
+    el.appendChild(b);
+  });
+}
+
+/* ---------------- ▶ Read the whole list ----------------
+   One utterance per row, chained on `onend`, so the class can repeat
+   after each word. Clicking again stops it. */
+let readingBtn = null;
+function stopReading(){
+  try { speechSynthesis.cancel(); } catch(e){}
+  $$('.voc-btn.reading').forEach(b => { b.classList.remove('reading'); b.textContent = '▶ Lire'; });
+  $$('.voc-fr.speaking-now').forEach(el => el.classList.remove('speaking-now'));
+  readingBtn = null;
+}
+function speakSequence(cells, btn){
+  if (!speechOK || !cells.length) return;
+  stopReading();
+  readingBtn = btn;
+  if (btn){ btn.classList.add('reading'); btn.textContent = '■ Stop'; }
+  let i = 0;
+  const step = () => {
+    if (readingBtn !== btn){ return; }             /* stopped or replaced */
+    if (i >= cells.length){ stopReading(); return; }
+    const el = cells[i++];
+    const txt = vocText(el);
+    if (!txt){ step(); return; }
+    cells.forEach(c => c.classList.remove('speaking-now'));
+    el.classList.add('speaking-now');
+    try {
+      const u = new SpeechSynthesisUtterance(txt);
+      u.lang = 'fr-FR';
+      u.rate = (window.__frRate || 0.92);
+      if (frVoice) u.voice = frVoice;
+      u.onend = () => setTimeout(step, 320);       /* a beat to repeat after */
+      u.onerror = () => setTimeout(step, 120);
+      speechSynthesis.speak(u);
+    } catch(e){ step(); }
+  };
+  step();
+}
+
+/* ---------------- Mask-and-check + list reading (delegated) ---------------- */
+document.addEventListener('click', e => {
+  /* ▶ Lire — read every French word in this box */
+  const sp = e.target.closest('.voc-speak');
+  if (sp){
+    e.stopPropagation();
+    if (sp.classList.contains('reading')){ stopReading(); return; }
+    const box = sp.closest('.voc-box') || sp.closest('.box');
+    speakSequence($$('.voc-fr', box), sp);
+    return;
+  }
+  /* 🙈 Masquer — hide the meanings for self-testing */
+  const mk = e.target.closest('.voc-mask');
+  if (mk){
+    e.stopPropagation();
+    const box = mk.closest('.voc-box') || mk.closest('.box');
+    if (!box) return;
+    const on = box.classList.toggle('masked');
+    mk.classList.toggle('is-on', on);
+    mk.textContent = on ? '👁️ Révéler' : '🙈 Masquer';
+    if (!on) $$('.voc-en.shown', box).forEach(c => c.classList.remove('shown'));
+    playSound('pop');
+    return;
+  }
+  /* a masked meaning: reveal just that one */
+  const cell = e.target.closest('.voc-en');
+  if (cell && cell.closest('.voc-box.masked')){
+    cell.classList.toggle('shown');
+    playSound('flip');
+  }
+});
+
+/* ---------------- Speak the word when a card is flipped ----------------
+   Runs after the engine's own flip handler, so .flipped is already set. */
+document.addEventListener('click', e => {
+  if (!speechOK) return;
+  if (ls.get('speak_flip', '0') !== '1') return;
+  if (e.target.closest('.fc-mark')) return;
+  const card = e.target.closest('.flip-card');
+  if (!card || !card.classList.contains('flipped')) return;
+  const front = $('.flip-card-front', card);
+  if (front) speakFrench(vocText(front), null);
+});
+
+/* ---------------- Photographs: never leave a hole ----------------
+   Every <img> carries the caption it should fall back to. If the link
+   fails — a dead URL, or a classroom laptop with no network — the photo
+   is replaced by a themed panel that still says what it was showing. */
+/* A hung request, not a dead one — `error` already covers dead links, and it
+   fires at once. This only has to outlast a slow classroom connection loading
+   a screenful of photographs, so it is deliberately patient. */
+const PHOTO_TIMEOUT_MS = 20000;
+
+/* The placeholder is shown ALONGSIDE the image, never in place of it, so that
+   a photo which arrives late can still take over. Replacing the <img> was a
+   one-way door: a slow connection meant the picture was gone for the rest of
+   the lesson even once it had downloaded. */
+function photoSwap(img){
+  if (img.dataset.fbDone || !img.parentNode) return;
+  img.dataset.fbDone = '1';
+  const div = document.createElement('div');
+  div.className = 'img-fallback';
+  /* In the photo→word game the caption IS the answer, so those images ask for
+     a neutral placeholder. Everywhere else, naming what the photo showed is
+     the whole point of having a placeholder at all. */
+  const cap = img.dataset.fb;
+  div.innerHTML = cap
+    ? '<span><b>🖼️ ' + cap + '</b>La photo n&#39;a pas pu être chargée — pas de connexion ?</span>'
+    : '<span><b>🖼️ Photo indisponible</b>Pas de connexion ?</span>';
+  img.classList.add('is-missing');
+  img.parentNode.insertBefore(div, img);
+}
+function photoRestore(img){
+  if (!img.dataset.fbDone) return;
+  delete img.dataset.fbDone;
+  img.classList.remove('is-missing');
+  const prev = img.previousElementSibling;
+  if (prev && prev.classList.contains('img-fallback')) prev.remove();
+}
+function initPhotoFallback(){
+  /* Wire an error handler on every photo, once. A late `load` takes the
+     placeholder back down again. */
+  $$('img[data-fb]').forEach(img => {
+    if (img.dataset.fbWired) return;
+    img.dataset.fbWired = '1';
+    img.addEventListener('error', () => photoSwap(img));
+    img.addEventListener('load', () => { if (img.naturalWidth > 0) photoRestore(img); });
+    if (img.complete && img.naturalWidth === 0) photoSwap(img);   /* failed before wiring */
+  });
+
+  /* A watchdog, but only for the slide actually on screen. A dead link fires
+     `error`; a school network behind a captive portal, or one that has simply
+     gone away, leaves the request hanging for ever and fires nothing at all —
+     which would leave an empty frame in front of the class. The timer is
+     started only for the current slide, because `loading="lazy"` means an
+     off-screen photo has not begun loading and would trip it falsely. */
+  const cur = (typeof Deck !== 'undefined' && Deck.getCurrentSlide) ? Deck.getCurrentSlide() : null;
+  if (!cur) return;
+  $$('img[data-fb]', cur).forEach(img => {
+    if (img.dataset.fbWatch || img.dataset.fbDone) return;
+    if (img.complete && img.naturalWidth > 0) return;
+    img.dataset.fbWatch = '1';
+    const t = setTimeout(() => {
+      if (!img.dataset.fbDone && img.naturalWidth === 0) photoSwap(img);
+    }, PHOTO_TIMEOUT_MS);
+    img.addEventListener('load', () => clearTimeout(t), { once: true });
+  });
+}
+
+/* ---------------- Settings wiring for the new controls ---------------- */
+function initLessonSettings(){
+  const rate = $('#speechRateSelect');
+  if (rate){
+    rate.value = String(window.__frRate);
+    rate.addEventListener('change', e => {
+      window.__frRate = parseFloat(e.target.value) || 0.92;
+      ls.set('speech_rate', e.target.value);
+      stopReading();
+      speakFrench('Voilà, on parle à cette vitesse.', null);
+    });
+  }
+  const flip = $('#speakOnFlipToggle');
+  if (flip){
+    flip.checked = ls.get('speak_flip', '0') === '1';
+    flip.addEventListener('change', e => ls.set('speak_flip', e.target.checked ? '1' : '0'));
+  }
+  /* leaving a slide must not leave a voice running into the next one */
+  if (typeof Deck !== 'undefined' && Deck.on) Deck.on('slidechanged', stopReading);
+}
+
+/* ================================================================
+   THE MOTION CONTRACT
+   app.html learned these four rules the hard way (see its comments on
+   nomCardPop and __enhanceTimeline) and everything below obeys them:
+
+     1. Never animate opacity on a Reveal .fragment — Reveal owns fragment
+        opacity, and a tween that fights it leaves the content faint for
+        good. Transform only, on anything Reveal controls.
+     2. gsap.fromTo with an EXPLICIT end value, never gsap.from, plus
+        clearProps so CSS governs once the tween is done.
+     3. Run-once guards, so a re-shown fragment does not re-animate.
+     4. A settle timeout that strips inline styles whatever happened. A
+        missing flourish is fine; invisible text is not.
+
+   Every call is additionally guarded on `reduced` and on GSAP existing.
+   ================================================================ */
+/* Motion runs only when it can actually finish. A hidden tab freezes
+   requestAnimationFrame, so a tween started there sets its FROM state — opacity
+   0 — and then never advances, stranding the diagram invisible until the tab
+   comes back. Checking visibility up front is what stops that. */
+const motionOK = () => !reduced &&
+  typeof gsap !== 'undefined' &&
+  document.visibilityState === 'visible';
+
+/* Undo everything a tween can leave behind. GSAP writes SVG transforms to the
+   transform ATTRIBUTE, not to style, so clearing style properties alone is not
+   enough — that is what left the school-ladder diagram at scale 0.97, opacity 0.
+   Any authored transform is captured first and put back. */
+function settleEls(list){
+  list.forEach(el => {
+    if (!el || !el.style) return;
+    ['opacity', 'transform', 'translate', 'rotate', 'scale', 'transform-origin']
+      .forEach(p => el.style.removeProperty(p));
+    if (el.namespaceURI === 'http://www.w3.org/2000/svg'){
+      const orig = el.dataset.tfOrig;
+      if (orig) el.setAttribute('transform', orig);
+      else el.removeAttribute('transform');
+    }
+  });
+}
+
+/* Animate, then guarantee the elements end up plainly visible. */
+function tween(targets, from, to){
+  const list = (Array.isArray(targets) ? targets : [targets]).filter(Boolean);
+  if (!list.length) return;
+  list.forEach(el => {
+    if (el.namespaceURI === 'http://www.w3.org/2000/svg' &&
+        el.hasAttribute('transform') && el.dataset.tfOrig === undefined){
+      el.dataset.tfOrig = el.getAttribute('transform');
+    }
+  });
+  const settle = () => settleEls(list);
+  if (!motionOK()){ settle(); return; }
+  try {
+    gsap.fromTo(list, from, Object.assign({ onComplete: settle }, to));
+  } catch(e){ settle(); }
+  setTimeout(settle, 2200);          /* last-resort net, as the reference does */
+}
+
+/* If the tab was hidden mid-tween, settle everything the moment it returns. */
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState !== 'visible') return;
+  try {
+    if (typeof gsap !== 'undefined') gsap.globalTimeline.getChildren().forEach(t => { try { t.progress(1); } catch(e){} });
+    settleEls($$('.anim-svg [data-step]'));
+  } catch(e){}
+});
+
+/* ---------------- Animated SVG diagrams ----------------
+   Each <g data-step="n"> inside .anim-svg is revealed in order the first
+   time its slide is shown. The groups are visible in CSS, so a browser
+   without GSAP — or a viewer who asked for reduced motion — simply sees
+   the finished diagram. These are SVG groups, not Reveal fragments, so
+   animating their opacity is safe. */
+function initAnimSvg(root){
+  $$('.anim-svg', root || document).forEach(box => {
+    if (box.dataset.animDone) return;
+    box.dataset.animDone = '1';
+    const steps = $$('[data-step]', box)
+      .sort((a, b) => (+a.dataset.step) - (+b.dataset.step));
+    if (!steps.length) return;
+    tween(steps,
+      { opacity: 0, y: 14, scale: 0.97, transformOrigin: '50% 50%' },
+      { opacity: 1, y: 0, scale: 1, duration: 0.42, stagger: 0.13, ease: 'back.out(1.5)' });
+  });
+}
+
+/* ---------------- Widget 1 · Trier les mots ----------------
+   Click a chip, then click the bucket it belongs in. Feedback is
+   immediate, the way the QCM already behaves: a right answer lands in the
+   bucket, a wrong one shakes and stays in the pool, so the exercise
+   self-corrects in front of the class. Degrades to a readable list of
+   words and headings if the script never runs. */
+function initTrier(box){
+  if (!box || box.dataset.trierOn) return;
+  box.dataset.trierOn = '1';
+  const pool    = $('.trier-pool', box);
+  const buckets = $$('.trier-bucket', box);
+  const msg     = $('.trier-msg', box);
+  const scoreEl = $('.trier-score', box);
+  if (!pool || !buckets.length) return;
+
+  const chips = $$('.trier-chip', pool);
+  const total = chips.length;
+  let placed = 0, wrong = 0, sel = null;
+
+  const paint = () => {
+    if (scoreEl) scoreEl.textContent = `${placed} / ${total}`;
+    if (!msg) return;
+    if (placed < total){ msg.textContent = ''; msg.className = 'trier-msg'; return; }
+    msg.className = 'trier-msg ' + (wrong ? 'no' : 'ok');
+    msg.textContent = wrong
+      ? `Terminé — ${wrong} erreur${wrong > 1 ? 's' : ''} en route. Refaites-le pour un sans-faute.`
+      : 'Sans faute ! Tous les mots sont dans la bonne colonne.';
+    if (!wrong){ try { burstConfetti(); burstFireworks(); } catch(e){} }
+  };
+
+  const select = chip => {
+    if (chip.classList.contains('used')) return;
+    chips.forEach(c => c.classList.remove('sel'));
+    sel = (sel === chip) ? null : chip;
+    if (sel) sel.classList.add('sel');
+    playSound('pop');
+  };
+
+  const drop = bucket => {
+    if (!sel) { flash(bucket); return; }
+    const chip = sel;
+    if (chip.dataset.k === bucket.dataset.k){
+      chip.classList.remove('sel');
+      chip.classList.add('used');
+      const li = document.createElement('li');
+      li.textContent = chip.textContent.trim();
+      $('ul', bucket).appendChild(li);
+      tween([li], { y: 10, scale: 0.9 }, { y: 0, scale: 1, duration: 0.28, ease: 'back.out(1.7)' });
+      placed++; sel = null;
+      playSound('correct');
+    } else {
+      wrong++;
+      chip.classList.remove('sel');
+      shake(chip); shake(bucket);
+      sel = null;
+      playSound('wrong');
+    }
+    paint();
+  };
+
+  chips.forEach(c => c.addEventListener('click', ev => { ev.stopPropagation(); select(c); }));
+  buckets.forEach(b => b.addEventListener('click', ev => { ev.stopPropagation(); drop(b); }));
+
+  const reset = $('.trier-reset', box);
+  if (reset) reset.addEventListener('click', ev => {
+    ev.stopPropagation();
+    placed = 0; wrong = 0; sel = null;
+    chips.forEach(c => c.classList.remove('used', 'sel'));
+    buckets.forEach(b => { const u = $('ul', b); if (u) u.innerHTML = ''; });
+    if (msg){ msg.textContent = ''; msg.className = 'trier-msg'; }
+    paint();
+  });
+  paint();
+}
+function shake(el){
+  if (!el) return;
+  el.classList.remove('shake');
+  void el.offsetWidth;                 /* restart the CSS animation */
+  el.classList.add('shake');
+  setTimeout(() => el.classList.remove('shake'), 600);
+}
+function flash(el){
+  if (!el) return;
+  el.classList.add('flash');
+  setTimeout(() => el.classList.remove('flash'), 380);
+}
+
+/* ---------------- Widget 2 · Diagramme cliquable ----------------
+   A themed SVG scene with numbered hotspots. Clicking one names the thing
+   in French, with its gender, the English and a 🔊. Same shape as the
+   grammar app's tense timeline: click a node, fill a detail panel. */
+function initHotspot(box){
+  if (!box || box.dataset.hsOn) return;
+  box.dataset.hsOn = '1';
+  let data = {};
+  try { data = JSON.parse(box.dataset.hs || '{}'); }
+  catch(e){ console.warn('Hotspot data parse failed', e); return; }
+  const detail = $('.hs-detail', box);
+  const dots   = $$('.hs-dot', box);
+  if (!detail || !dots.length) return;
+
+  const show = k => {
+    const d = data[k];
+    if (!d) return;
+    dots.forEach(n => n.classList.toggle('active', n.dataset.k === k));
+    const g = d.g ? `<span class="nom-g nom-${d.g}">${d.g}</span>` : '';
+    detail.innerHTML =
+      `<p class="hs-fr voc-fr">${d.fr}${g}</p>` +
+      `<p class="hs-en">${d.en || ''}</p>` +
+      (d.note ? `<p class="gloss">${d.note}</p>` : '');
+    const fr = $('.hs-fr', detail);
+    if (fr){ fr.dataset.audio = ''; injectVocabAudio(); }
+    tween([detail], { y: 8, scale: 0.98 }, { y: 0, scale: 1, duration: 0.24, ease: 'power2.out' });
+    playSound('pop');
+  };
+
+  dots.forEach(n => {
+    n.setAttribute('tabindex', '0');
+    n.addEventListener('click', ev => { ev.stopPropagation(); show(n.dataset.k); });
+    n.addEventListener('keydown', ev => { if (ev.key === 'Enter' || ev.key === ' '){ ev.preventDefault(); show(n.dataset.k); } });
+  });
+
+  const all = $('.hs-all', box);
+  if (all) all.addEventListener('click', ev => {
+    ev.stopPropagation();
+    const on = box.classList.toggle('labels-on');
+    all.textContent = on ? '🙈 Cacher les mots' : '🏷️ Tout étiqueter';
+  });
+
+  show(dots[0].dataset.k);
+}
+
+/* ---------------- Widget 3 · Photo → mot ----------------
+   Click a word, then the photograph it names. This is what a page full of
+   photographs is actually for: recognition, not decoration. */
+function initPhotoMatch(box){
+  if (!box || box.dataset.pmOn) return;
+  box.dataset.pmOn = '1';
+  const words  = $$('.pm-word', box);
+  const photos = $$('.pm-photo', box);
+  const msg    = $('.pm-msg', box);
+  const scoreEl= $('.pm-score', box);
+  if (!words.length || !photos.length) return;
+
+  const total = words.length;
+  let done = 0, misses = 0, sel = null;
+
+  const paint = () => {
+    if (scoreEl) scoreEl.textContent = `${done} / ${total}`;
+    if (!msg) return;
+    if (done < total){ msg.textContent = ''; msg.className = 'pm-msg'; return; }
+    msg.className = 'pm-msg ' + (misses ? 'no' : 'ok');
+    msg.textContent = misses
+      ? `Toutes appariées — avec ${misses} essai${misses > 1 ? 's' : ''} en trop.`
+      : 'Parfait — chaque mot du premier coup !';
+    if (!misses){ try { burstConfetti(); } catch(e){} }
+  };
+
+  words.forEach(w => w.addEventListener('click', ev => {
+    ev.stopPropagation();
+    if (w.classList.contains('used')) return;
+    words.forEach(x => x.classList.remove('sel'));
+    sel = (sel === w) ? null : w;
+    if (sel) sel.classList.add('sel');
+    playSound('pop');
+  }));
+
+  photos.forEach(p => p.addEventListener('click', ev => {
+    ev.stopPropagation();
+    if (p.classList.contains('done')) return;
+    if (!sel){ flash(p); return; }
+    if (sel.dataset.k === p.dataset.k){
+      p.classList.add('done');
+      sel.classList.add('used');
+      sel.classList.remove('sel');
+      const cap = document.createElement('span');
+      cap.className = 'pm-label';
+      cap.textContent = sel.textContent.trim();
+      p.appendChild(cap);
+      tween([cap], { y: 8 }, { y: 0, duration: 0.24, ease: 'power2.out' });
+      done++; sel = null;
+      playSound('correct');
+    } else {
+      misses++;
+      shake(p);
+      sel.classList.remove('sel'); sel = null;
+      playSound('wrong');
+    }
+    paint();
+  }));
+  paint();
+}
+
+/* Slides render lazily (viewDistance), so re-wire whatever just entered. */
+function refreshLessonSlide(){
+  const cur = (typeof Deck !== 'undefined' && Deck.getCurrentSlide) ? Deck.getCurrentSlide() : document;
+  try { injectVocabAudio(); } catch(e){ console.warn('vocab audio:', e); }
+  try { initPhotoFallback(); } catch(e){ console.warn('photo fallback:', e); }
+  try { $$('.trier').forEach(initTrier); } catch(e){ console.warn('Trier:', e); }
+  try { $$('.hotspot').forEach(initHotspot); } catch(e){ console.warn('Hotspot:', e); }
+  try { $$('.photo-match').forEach(initPhotoMatch); } catch(e){ console.warn('PhotoMatch:', e); }
+  try { initAnimSvg(cur); } catch(e){ console.warn('AnimSvg:', e); }
+}
 
 /* ---------------- Boot ---------------- */
 /* Default theme is French Tricolor Classic, a LIGHT theme (DARK = slate, cyber).
@@ -1921,6 +2463,7 @@ function boot(){
   initLabs();
   buildSearchIndex();
   renderTopicMenu();
+  renderLeconMenu();
   applyMode(ls.get('mode','mode-teacher'));   // re-apply: enables/disables the widgets just wired
   restoreFromHash();
   updateHud();
@@ -1935,6 +2478,8 @@ function boot(){
   try { initMsgToggle(); } catch(e){ console.warn('Msg toggle init:', e); }
   try { $$('.msg-build').forEach(initMsgBuilder); } catch(e){ console.warn('MsgBuilder init:', e); }
   injectAudioButtons();
+  try { refreshLessonSlide(); } catch(e){ console.warn('Lesson slide init:', e); }
+  try { initLessonSettings(); } catch(e){ console.warn('Lesson settings init:', e); }
   if (ls.get('projector','0') === '1') setProjector(true);
   if (window.lucide) { try { lucide.createIcons(); } catch(e){} }
   if (typeof gsap !== 'undefined' && window.__enhanceTimeline) window.__enhanceTimeline();
@@ -1945,7 +2490,8 @@ function boot(){
   if (document.fonts && document.fonts.ready){
     document.fonts.ready.then(() => { try { Deck.layout(); } catch(e){} });
   }
-  Deck.on('slidechanged', () => { updateHud(); syncHash(); playSound('slide'); injectAudioButtons(); });
+  Deck.on('slidechanged', () => { updateHud(); syncHash(); playSound('slide'); injectAudioButtons();
+    try { refreshLessonSlide(); } catch(e){} });
   Deck.on('fragmentshown', ev => { updateHud(); updateStepHint(); if (ev && ev.fragment) nomCardPop(ev.fragment); });
   Deck.on('fragmenthidden', () => { updateHud(); updateStepHint(); });
 }
