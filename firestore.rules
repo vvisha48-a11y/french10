@@ -1,0 +1,117 @@
+rules_version = '2';
+
+// Firestore security rules for the Master Grammar app.
+//
+// PASTE THIS whole file into: Firebase console -> Firestore Database -> Rules -> Publish.
+//
+// Why this file matters more than the login screen: the sign-in overlay is only a
+// convenience. Anyone can edit the JavaScript in their own browser and remove it.
+// These rules run on Google's servers, cannot be edited by a student, and are the
+// real reason a pending account cannot read anything.
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ---- who is the teacher ----
+    // The Admin is recognised by the email on the verified sign-in token.
+    function isAdmin() {
+      return request.auth != null
+          && request.auth.token.email.lower() == 'vvisha48@gmail.com';
+    }
+
+    function isSignedIn() { return request.auth != null; }
+
+    function myDoc() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+
+    // A student counts as approved only once the teacher has flipped their status.
+    function isApproved() {
+      return isSignedIn()
+          && exists(/databases/$(database)/documents/users/$(request.auth.uid))
+          && myDoc().status == 'approved';
+    }
+
+    // ---- accounts ----
+    match /users/{uid} {
+      // You may read your own record; the teacher may read everyone's.
+      allow read: if isSignedIn() && (request.auth.uid == uid || isAdmin());
+
+      // THE KEY RULE: a new account may only ever create itself as a PENDING
+      // STUDENT. A student who edits the app in their browser and tries to write
+      // status:'approved' or role:'teacher' is refused here, on the server.
+      allow create: if isAdmin()
+                    || (isSignedIn()
+                        && request.auth.uid == uid
+                        && request.resource.data.status == 'pending'
+                        && request.resource.data.role == 'student');
+
+      // Approving, renaming, linking to the class list, deleting: teacher only.
+      allow update, delete: if isAdmin();
+    }
+
+    // ---- feedback ----
+    // Deliberately open to CREATE, because the Provide Feedback button sits under
+    // the login area and a student who cannot get in is exactly the person most
+    // likely to need it. The validation below is what keeps that safe: only these
+    // four fields, and the text is capped at the same 150 characters as the form.
+    // Nobody but the teacher can ever READ it back.
+    match /feedback/{id} {
+      allow create: if request.resource.data.keys().hasOnly(['text','name','uid','createdAt'])
+                    && request.resource.data.text is string
+                    && request.resource.data.text.size() > 0
+                    && request.resource.data.text.size() <= 150
+                    && (!('name' in request.resource.data)
+                        || request.resource.data.name == null
+                        || (request.resource.data.name is string
+                            && request.resource.data.name.size() <= 60));
+      allow read, update, delete: if isAdmin();
+    }
+
+    // ---- the class list, and the answer/quiz log ----
+    // Approved students may read the roster and write their OWN records only.
+    match /students/{id} {
+      allow read:  if isApproved() || isAdmin();
+      allow write: if isAdmin();
+    }
+
+    match /records/{id} {
+      allow read:   if isAdmin();
+      allow create, update: if isApproved() || isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    // ---- the weekly pick ledger ----
+    // One document per class per week (e.g. 2026-W36__10E) holding the names
+    // already called. Approved students may read it so the count they see is
+    // honest; only the teacher writes it.
+    match /picks/{id} {
+      allow read:  if isApproved() || isAdmin();
+      allow write: if isAdmin();
+    }
+
+    // ---- the weekly score sheet (Features 4 and 5) ----
+    // One document per class per week, e.g. scores/2026-W36__10E, holding
+    // { counts: {student: n}, wrong: {student: n}, names: {slug: "Full Name"} }.
+    // Approved students may READ it so the leaderboard is visible to the class;
+    // only the teacher writes, so nobody can inflate their own score.
+    match /scores/{id} {
+      allow read:  if isApproved() || isAdmin();
+      allow write: if isAdmin();
+    }
+
+    // ---- the assistant switch ----
+    // One document: { enabled: true }. Any signed-in user may READ it, because
+    // the app and the proxy both consult it before spending anything. Only the
+    // teacher may WRITE it, so no student can switch their own access back on.
+    match /config/{id} {
+      allow read:  if isSignedIn();
+      allow write: if isAdmin();
+    }
+
+    // Anything not named above is denied outright.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
