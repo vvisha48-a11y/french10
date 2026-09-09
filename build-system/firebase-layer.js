@@ -897,7 +897,7 @@ function lbSetClass(cls, render){
    ===================================================================== */
 
 const AI_ENDPOINT = 'https://generativelanguage.googleapis.com/v1beta/models/';
-const AI_MODELS = ['gemini-2.5-flash-lite', 'gemini-2.5-flash'];
+const AI_MODELS = ['gemini-3.5-flash-lite', 'gemini-3.5-flash'];
 
 /* The engine's ls helper is inside its IIFE and invisible to this module (the
    picker and score sheet use localStorage directly for the same reason). Same
@@ -927,7 +927,13 @@ let aiMode = false;
 let aiKeyHandler = null;
 
 const aiKey   = () => aiLS.get('ai_key', '');
-const aiModel = () => aiLS.get('ai_model', AI_MODELS[0]);
+const aiModel = () => {
+  const v = aiLS.get('ai_model', '');
+  if (!v) return AI_MODELS[0];
+  /* gemini-1.x and 2.x are retired or gated: they 404 on every call */
+  if (v.indexOf('gemini-1.') === 0 || v.indexOf('gemini-2.') === 0) return AI_MODELS[0];
+  return v;
+};
 
 /* Whitespace without backslashes: tab, newline, carriage return, space. */
 const AI_WS = new RegExp('[' + String.fromCharCode(9,10,13,32) + ']+', 'g');
@@ -972,6 +978,11 @@ async function aiAsk(promptText, timeoutMs){
     });
     if (!res.ok){
       const body = await res.text().catch(() => '');
+      if (res.status === 404)
+        throw new Error('The model "' + aiModel() + '" is not available to this key. ' +
+          'Open Admin then AI and press Detect models.');
+      if (res.status === 400)
+        throw new Error('The API key was rejected. Check it in Admin then AI. ' + aiFlat(body).slice(0, 90));
       throw new Error('HTTP ' + res.status + ' ' + aiFlat(body).slice(0, 140));
     }
     const j = await res.json();
@@ -980,6 +991,26 @@ async function aiAsk(promptText, timeoutMs){
     if (!out) throw new Error('The model returned nothing. Try a different prompt.');
     return out;
   } finally { clearTimeout(t); }
+}
+
+/* Which models can THIS key use? Hardcoding ids has now broken twice (1.5-flash
+   was retired, the 2.5 family is gated for newer keys), so the Admin tab can read
+   the real list from the API instead of trusting a constant. */
+async function aiListModels(){
+  const key = aiKey();
+  if (!key) throw new Error('Save a key first.');
+  const res = await fetch(AI_ENDPOINT.replace('/models/', '/models') +
+    '?pageSize=200&key=' + encodeURIComponent(key));
+  if (!res.ok){
+    const b = await res.text().catch(() => '');
+    throw new Error('HTTP ' + res.status + ' ' + aiFlat(b).slice(0, 120));
+  }
+  const j = await res.json();
+  return (j.models || [])
+    .filter(m => (m.supportedGenerationMethods || []).indexOf('generateContent') > -1)
+    .map(m => String(m.name || '').split('/').pop())
+    .filter(x => x.indexOf('gemini') === 0 && x.indexOf('vision') === -1)
+    .sort();
 }
 
 /* ---- cache: a repeat click is instant, free, and works with no network ---- */
@@ -1339,8 +1370,9 @@ function adAI(){
   row.appendChild(inp);
   const save = adEl('button', 'ad-approve', 'Save'); save.type = 'button';
   const test = adEl('button', 'fb-btn', 'Test'); test.type = 'button';
+  const detect = adEl('button', 'fb-btn', 'Detect models'); detect.type = 'button';
   const forget = adEl('button', 'fb-btn', 'Forget key'); forget.type = 'button';
-  row.appendChild(save); row.appendChild(test); row.appendChild(forget);
+  row.appendChild(save); row.appendChild(test); row.appendChild(detect); row.appendChild(forget);
   body.appendChild(row);
 
   const msg = adEl('p', 'ai-hint', saved ? 'A key is saved on this device.' : 'No key saved yet.');
@@ -1352,6 +1384,7 @@ function adAI(){
   AI_MODELS.forEach(m => {
     const o = document.createElement('option');
     o.value = m; o.textContent = m + (m.indexOf('lite') > -1 ? '  (fastest, cheapest)' : '  (stronger reasoning)');
+    /* a model saved earlier but no longer offered would otherwise vanish silently */
     if (m === aiModel()) o.selected = true;
     sel.appendChild(o);
   });
@@ -1360,6 +1393,31 @@ function adAI(){
 
   body.appendChild(adEl('p', 'ai-hint',
     'The key is billable and is stored in this browser only. Anyone who can open developer tools on this machine can read it, so do not save it on a shared student computer. AI Mode always starts OFF when the page loads.'));
+
+  detect.onclick = async () => {
+    detect.disabled = true;
+    msg.textContent = 'Asking Google which models this key can use...';
+    try {
+      const pending = String(inp.value || "").trim();
+      if (pending) aiLS.set('ai_key', pending);
+      const list = await aiListModels();
+      if (!list.length){ msg.textContent = 'That key returned no usable models.'; return; }
+      const keep = aiModel();
+      sel.innerHTML = '';
+      list.forEach(m => {
+        const o = document.createElement('option');
+        o.value = m; o.textContent = m;
+        if (m === keep) o.selected = true;
+        sel.appendChild(o);
+      });
+      if (list.indexOf(keep) === -1){
+        sel.value = list[0];
+        aiLS.set('ai_model', list[0]);
+      }
+      msg.textContent = list.length + ' model(s) available. Using ' + sel.value + '.';
+    } catch (e){ msg.textContent = 'Could not list models: ' + e.message; }
+    finally { detect.disabled = false; }
+  };
 
   save.onclick = () => {
     const v = String(inp.value || "").trim();
