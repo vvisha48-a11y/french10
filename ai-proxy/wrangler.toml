@@ -1,0 +1,17 @@
+name = "cbse-french-ai"
+main = "src/worker.js"
+compatibility_date = "2026-09-01"
+
+[vars]
+# Your Firebase project id. Public — it only identifies which project's sign-ins
+# the proxy will trust.
+FIREBASE_PROJECT_ID = "frenchgrammar-84e33"
+
+# Comma-separated list of sites allowed to call this proxy. Leave empty to allow
+# any origin. Set it once GitHub Pages is live so nobody else can point their own
+# page at your proxy.
+# ALLOWED_ORIGINS = "https://vvisha48.github.io,http://localhost:8099"
+
+# GEMINI_KEY is NOT set here. It is a secret:
+#   npx wrangler secret put GEMINI_KEY
+# Anything in this file is committed to git; secrets never are.

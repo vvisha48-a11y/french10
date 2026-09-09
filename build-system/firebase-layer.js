@@ -394,12 +394,37 @@ function gateMsg(t, cls){
   const m = $('#fbGateMsg'); if (!m) return;
   m.textContent = t || ''; m.className = 'fb-gate-msg ' + (cls || ''); m.hidden = !t;
 }
+/* The switch is a single Firestore document the whole class can read and only
+   the admin can write, so turning it off mid-lesson stops every request at once
+   -- in the app AND in the Worker, which checks it too. */
+async function aiLoadSwitch(){
+  if (!db) return;
+  try {
+    const snap = await getDoc(doc(db, 'config', 'ai'));
+    aiGlobalOn = snap.exists() ? (snap.data() || {}).enabled !== false : true;
+  } catch (e){ aiGlobalOn = true; }        // never lock a lesson out on a read error
+  aiRevealButton();
+}
+
+function aiRevealButton(){
+  const b = $('#aiBtn');
+  if (!b) return;
+  const approved = !!(ME && (ME.role === 'teacher' || ME.status === 'approved'));
+  const show = approved && aiGlobalOn && (aiDirect() || !!aiProxy());
+  b.hidden = !show;
+  if (!show){ aiSet(false); return; }
+  /* Students start with it ON, as asked; the teacher keeps starting OFF.
+     Either way the choice is remembered per browser. */
+  const dflt = (ME && ME.role === 'teacher') ? '0' : '1';
+  if (aiLS.get('ai_on', dflt) === '1') aiSet(true);
+}
+
 function applyGate(){
   /* the admin trigger follows the account, never the other way round */
   const ab = $('#adBtn');
   if (ab) ab.hidden = !(ME && ME.role === 'teacher');
-  const aib = $('#aiBtn');
-  if (aib) aib.hidden = !(ME && ME.role === 'teacher' && aiKey());
+  aiRevealButton();
+  aiLoadSwitch();
   if (!ME){ gateShow('form'); return; }
   if (ME.role === 'teacher' || ME.status === 'approved'){ gateHide(); return; }
   const w = $('#fbWaitWho'); if (w) w.textContent = ME.label || ME.email || '';
@@ -689,8 +714,8 @@ async function psVerdict(v){
               ' - ' + student + ' (' + cls + ', ' + week + ')');
   bar.classList.add(correct ? 'is-ok' : 'is-err');
   setTimeout(psHideBar, 1200);
-  const count = await afRecord(week, cls, student, correct);
-  if (correct) afShow(student, count);
+  const rec = await afRecord(week, cls, student, correct);
+  if (correct) afShow(student, rec.correct, rec.streak);
   lbSetClass(cls, false);
   lbRender(true);
 }
@@ -763,9 +788,9 @@ function afLocalKey(week, cls){ return 'cbse_fr_master_scores_' + week + '_' + c
 function afLocalGet(week, cls){
   try {
     const v = JSON.parse(localStorage.getItem(afLocalKey(week, cls)) || 'null');
-    if (v && v.counts) return { counts: v.counts, names: v.names || {}, wrong: v.wrong || {} };
+    if (v && v.counts) return { counts: v.counts, names: v.names || {}, wrong: v.wrong || {}, streak: v.streak || {} };
   } catch (_){}
-  return { counts: {}, names: {}, wrong: {} };
+  return { counts: {}, names: {}, wrong: {}, streak: {} };
 }
 function afLocalSet(week, cls, data){
   try { localStorage.setItem(afLocalKey(week, cls), JSON.stringify(data)); } catch (_){}
@@ -779,7 +804,7 @@ async function afLoadScores(week, cls){
     const snap = await Promise.race([getDoc(doc(db, 'scores', week + '__' + cls)), bail]);
     if (!snap.exists()) return local;
     const d = snap.data();
-    return { counts: d.counts || {}, names: d.names || {}, wrong: d.wrong || {} };
+    return { counts: d.counts || {}, names: d.names || {}, wrong: d.wrong || {}, streak: d.streak || {} };
   } catch (e){ console.warn('[Scores] cloud read failed, using this device:', e.message); return local; }
 }
 
@@ -791,8 +816,11 @@ async function afRecord(week, cls, student, isCorrect){
   const data = await afLoadScores(week, cls);
   const nextCorrect = (Number(data.counts[slug]) || 0) + (isCorrect ? 1 : 0);
   const nextWrong   = (Number(data.wrong[slug])  || 0) + (isCorrect ? 0 : 1);
+  const nextStreak  = isCorrect ? ((Number((data.streak || {})[slug]) || 0) + 1) : 0;
   data.counts[slug] = nextCorrect;
   data.wrong[slug]  = nextWrong;
+  data.streak = data.streak || {};
+  data.streak[slug] = nextStreak;
   data.names[slug]  = student;
   afLocalSet(week, cls, data);
   if (db){
@@ -800,27 +828,33 @@ async function afRecord(week, cls, student, isCorrect){
     patch.names  = {}; patch.names[slug] = student;
     if (isCorrect){ patch.counts = {}; patch.counts[slug] = increment(1); }
     else          { patch.wrong  = {}; patch.wrong[slug]  = increment(1); }
+    /* absolute, not increment(): a wrong answer must be able to reset it to 0 */
+    patch.streak = {}; patch.streak[slug] = nextStreak;
     setDoc(doc(db, 'scores', week + '__' + cls), patch, { merge: true })
       .catch(e => console.warn('[Scores] cloud write failed, kept on this device:', e.message));
   }
-  return nextCorrect;
+  return { correct: nextCorrect, streak: nextStreak };
 }
 
 /* ---- the affirmation pop ---- */
 let afTimer = null;
-function afShow(student, count){
+function afShow(student, count, streak){
   const pop = $('#afPop'); if (!pop) return;
-  const t = afTierFor(count);
+  /* Escalate on the streak: five in a row is an achievement, five spread over
+     a week is ordinary. Falls back to the weekly count if no streak was passed. */
+  const run = (streak === undefined || streak === null) ? count : streak;
+  const t = afTierFor(run);
   const set = (id, v) => { const el = $(id); if (el) el.textContent = v; };
   set('#afEmoji', t.emoji); set('#afWord', t.word); set('#afWho', student);
-  set('#afSub', t.sub + ' — ' + count + (count === 1 ? ' bonne réponse' : ' bonnes réponses') + ' cette semaine');
+  set('#afSub', run > 1 ? (t.sub + ' — ' + run + ' de suite !')
+                        : (t.sub + ' — ' + count + (count === 1 ? ' bonne réponse' : ' bonnes réponses') + ' cette semaine'));
   pop.className = 'af-pop t' + t.tier;
   pop.hidden = false;
   /* the deck own effects, handed over by make-firebase-clone.js */
   const fx = window.__fx || {};
   try { if (t.tier === 3 && fx.confetti) fx.confetti(); } catch (_){}
   try { if (fx.sound) fx.sound('correct'); } catch (_){}
-  try { afEnrich(student, count, t); } catch (e){}
+  try { afEnrich(student, run, t); } catch (e){}
   clearTimeout(afTimer);
   afTimer = setTimeout(() => { pop.hidden = true; }, t.tier === 3 ? 2800 : 2000);
 }
@@ -925,6 +959,12 @@ const AI_SKIP = '.flip-card, .option-btn, .fib-input, .accent-key, .drill, .voc-
 
 let aiMode = false;
 let aiKeyHandler = null;
+let aiGlobalOn = true;      // the teacher global switch, from Firestore config/ai
+
+const aiProxy = () => aiLS.get('ai_proxy', '').trim();
+/* The teacher may still use their own key directly; everyone else goes through
+   the Worker, which is the only place the billable key exists. */
+const aiDirect = () => !!(aiKey() && ME && ME.role === 'teacher');
 
 const aiKey   = () => aiLS.get('ai_key', '');
 const aiModel = () => {
@@ -939,33 +979,61 @@ const aiModel = () => {
 const AI_WS = new RegExp('[' + String.fromCharCode(9,10,13,32) + ']+', 'g');
 const aiFlat = t => String(t == null ? '' : t).replace(AI_WS, ' ').trim();
 
-const AI_SYS = 'You are helping a CBSE Class 10 French teacher in India. Answer in simple English that a 15-year-old can follow. Keep French words, examples and quotations in French. Be brief and concrete. No preamble, no markdown headings, no bullet characters. ';
+const AI_SYS = 'You are helping with CBSE Class 10 French (Entre Jeunes) in India. The board paper has Section A reading, Section B writing (letters and messages), Section C grammar and Section D culture. Pitch every answer at that syllabus and that difficulty, and at a 15-year-old. Answer in simple English; keep French words, examples and quotations in French, with correct accents. Be brief and concrete: three short lines unless a list is asked for. Where a board examiner would award or deduct a mark, say so in a few words. No preamble, no markdown headings, no bullet characters. ';
 
 const AI_PROMPTS = [
   { id:'simplify', label:'Simplify this rule', build: c =>
     'Rewrite this grammar explanation so a 15-year-old can understand it. At most 3 short lines. Keep the French examples in French. Explanation: ' + c.text },
   { id:'word', label:'Explain this word', needsWord:true, build: c =>
     'Explain the French word or phrase "' + c.word + '" as it is used on a slide about ' + c.topic + '. Give the word with its gender article if it is a noun, a simple English meaning, and one short French example with its English translation. At most 3 lines.' },
+  { id:'phrase', label:'Explain this line', build: c =>
+    'Explain this French text simply for a CBSE Class 10 student, in at most 3 lines: give what it means in English, and name any grammar point a board examiner would expect them to notice. Text: "' + c.phrase + '" Slide topic: ' + c.topic },
   { id:'examples', label:'3 more examples', build: c =>
     'Give exactly 3 new French example sentences for this rule, at CBSE Class 10 level, about school, family or food. Each with a short English translation. Rule: ' + c.text },
   { id:'wrong', label:'Why is this wrong?', build: c =>
-    'A student got this wrong. In one sentence give the correct answer and why, then one short encouraging sentence saying this mistake is common and how to remember it. Material: ' + c.answers + ' Slide: ' + c.text },
+    'A CBSE Class 10 student answered this wrongly. What they entered: ' + c.given + '. The expected answers: ' + c.answers + '. In one sentence say what is wrong with THEIR answer specifically and give the correct form; then one short encouraging sentence saying this slip is common and how to remember it. Slide: ' + c.text },
   { id:'coldcall', label:'Cold-call questions', build: c =>
     'Write 3 quick oral questions on this rule, numbered and tiered: (1) a true/false or either-or warm-up, (2) a fill-in-the-blank conjugation, (3) an open sentence for the student to build. Rule: ' + c.text },
   { id:'dialogue', label:'Micro-dialogue', build: c =>
     'Write a 2-line French mini-dialogue, marked A: and B:, that two students can read aloud in about 10 seconds using the vocabulary on this slide. Add a one-line English gloss. Slide: ' + c.text },
   { id:'exit', label:'Exit ticket', build: c =>
     'Write one multiple-choice exit-ticket question with 3 options labelled a, b, c that checks whether the class understood this slide, and state which option is correct. Slide: ' + c.text },
+  { id:'exam', label:'Board-style questions', build: c =>
+    'Write 2 or 3 questions on this material in CBSE Class 10 French board format, with the marks each would carry and a model answer for each. Use the phrasing the board actually uses. Material: ' + c.text },
+  { id:'coach', label:'Mark my letter', needsDraft:true, build: c =>
+    'You are marking a CBSE Class 10 French Section B answer out of 5. Check, in this order: the date and place line, the salutation, a body that does the three things the task asks, the closing formula, and the signature. Also check tense agreement and accents. Give: the mark out of 5, then the single most valuable correction, then one line the student should add. Be brief. The task: ' + c.text + ' The student wrote: ' + c.draft },
   { id:'traps', label:'Trap detector', build: c =>
     'List the top 2 mistakes English-speaking learners make with this rule. One line each, each with a correct French example. Rule: ' + c.text }
 ];
 
 /* ---- the call ---- */
 async function aiAsk(promptText, timeoutMs){
-  const key = aiKey();
-  if (!key) throw new Error('No API key saved. Open Admin and add one.');
   const ctrl = new AbortController();
   const t = setTimeout(() => ctrl.abort(), timeoutMs || 20000);
+  /* Students never hold a key. Their request carries their Firebase sign-in and
+     the Worker adds the key server-side, so nothing billable reaches a browser. */
+  if (!aiDirect()){
+    const url = aiProxy();
+    if (!url) throw new Error('The assistant is not set up yet. Ask your teacher.');
+    if (!aiGlobalOn) throw new Error('Your teacher has turned the assistant off.');
+    try {
+      const user = auth && auth.currentUser;
+      if (!user) throw new Error('Sign in to use the assistant.');
+      const token = await user.getIdToken();
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+        signal: ctrl.signal,
+        body: JSON.stringify({ prompt: promptText, model: aiModel() })
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || ('The assistant is unavailable (HTTP ' + res.status + ').'));
+      if (!data.text) throw new Error('The model returned nothing. Try a different prompt.');
+      return data.text;
+    } finally { clearTimeout(t); }
+  }
+  const key = aiKey();
+  if (!key) throw new Error('No API key saved. Open Admin and add one.');
   try {
     const res = await fetch(AI_ENDPOINT + aiModel() + ':generateContent?key=' + encodeURIComponent(key), {
       method: 'POST',
@@ -1035,12 +1103,19 @@ function aiContext(word){
   const answers = sec
     ? [...sec.querySelectorAll('[data-answer]')].slice(0, 8).map(e => aiFlat(e.getAttribute('data-answer'))).join(' | ')
     : '';
+  /* what the student actually put: typed blanks, and any option they picked */
+  const typed = sec ? [...sec.querySelectorAll('.fib-input')].map(i => aiFlat(i.value)).filter(Boolean) : [];
+  const picked = sec
+    ? [...sec.querySelectorAll('.option-btn')].filter(b => /\b(sel|chosen|is-wrong|wrong|picked)\b/.test(b.className)).map(b => aiFlat(b.textContent))
+    : [];
+  const given = typed.concat(picked).slice(0, 8).join(' | ');
   return {
     word: word || '',
     topic: stack ? aiFlat(stack.getAttribute('data-topic-name') || stack.getAttribute('data-topic')) : 'French',
     step: sec ? aiFlat(sec.getAttribute('data-step')) : '',
     text: aiFlat(card ? card.innerText : (sec ? sec.innerText : '')).slice(0, 1500),
     answers: answers || '(none on this slide)',
+    given: given || '(the student has not entered anything yet)',
     slideId: sec ? (sec.getAttribute('data-slide-id') || '') : ''
   };
 }
@@ -1085,7 +1160,29 @@ async function aiRun(promptId, ctx){
   const body = $('#aiTipBody'); if (!body) return;
   const p = AI_PROMPTS.filter(x => x.id === promptId)[0];
   if (!p) return;
-  const ck = ctx.slideId + '|' + promptId + '|' + (p.needsWord ? ctx.word : '');
+  /* Some prompts mark the student own writing: collect it before spending a call. */
+  if (p.needsDraft && !ctx.draft){
+    body.innerHTML = '';
+    const ta = document.createElement('textarea');
+    ta.className = 'fb-input ai-draft';
+    ta.rows = 6;
+    ta.placeholder = 'Write your letter or message here, then press Mark it.';
+    body.appendChild(ta);
+    const go = document.createElement('button');
+    go.type = 'button'; go.className = 'ai-p'; go.textContent = 'Mark it';
+    go.style.marginTop = '8px';
+    body.appendChild(go);
+    go.addEventListener('click', () => {
+      const d = aiFlat(ta.value).slice(0, 1500);
+      if (!d){ ta.focus(); return; }
+      ctx.draft = d;
+      aiRun(promptId, ctx);
+    });
+    setTimeout(() => ta.focus(), 30);
+    return;
+  }
+  const ck = ctx.slideId + '|' + promptId + '|' +
+    (ctx.draft ? String(ctx.draft.length) + ':' + ctx.draft.slice(0, 60) : (ctx.phrase || (p.needsWord ? ctx.word : '')));
   const hit = aiCacheGet(ck);
   if (hit){
     body.textContent = hit;
@@ -1109,15 +1206,18 @@ async function aiRun(promptId, ctx){
     $$('#aiTipMenu .ai-p').forEach(b => { b.disabled = false; });
   }
 }
-function aiOpen(x, y, word){
+function aiOpen(x, y, word, phrase){
   const tip = $('#aiTip'); if (!tip) return;
   const ctx = aiContext(word);
-  const w = $('#aiTipWord'); if (w) w.textContent = word || ctx.step || 'This slide';
+  ctx.phrase = phrase || '';
+  const w = $('#aiTipWord');
+  if (w) w.textContent = phrase ? (phrase.length > 48 ? phrase.slice(0, 48) + '...' : phrase)
+                                : (word || ctx.step || 'This slide');
   const menu = $('#aiTipMenu');
   if (menu){
     menu.innerHTML = '';
     AI_PROMPTS.forEach(p => {
-      if (p.needsWord && !word) return;
+      if (p.needsWord && !word && !phrase) return;
       const b = document.createElement('button');
       b.type = 'button'; b.className = 'ai-p'; b.textContent = p.label;
       b.addEventListener('click', () => aiRun(p.id, ctx));
@@ -1126,7 +1226,7 @@ function aiOpen(x, y, word){
     const tag = document.createElement('span'); tag.className = 'ai-cached'; menu.appendChild(tag);
   }
   aiPlace(tip, x, y);
-  aiRun(word ? 'word' : 'simplify', ctx);
+  aiRun(phrase ? 'phrase' : (word ? 'word' : 'simplify'), ctx);
   /* bound on open, unbound on close: nothing lingers in the key path */
   aiKeyHandler = ev => {
     if (ev.key === 'Escape'){ ev.preventDefault(); ev.stopImmediatePropagation(); aiClose(); }
@@ -1134,11 +1234,44 @@ function aiOpen(x, y, word){
   document.addEventListener('keydown', aiKeyHandler, true);
 }
 
+/* ---- selection: an explicit tap, never an automatic call ----
+   Highlighting text is something students do while reading. Firing a request on
+   every selection would spend the teacher key constantly and surprise the reader,
+   so the chip appears and nothing leaves the browser until it is tapped. */
+function aiHideChip(){
+  const c = $('#aiChip'); if (c) c.hidden = true;
+}
+function aiSelectedText(){
+  let sel = null;
+  try { sel = window.getSelection(); } catch (e){ return null; }
+  if (!sel || sel.isCollapsed || !sel.rangeCount) return null;
+  const txt = aiFlat(sel.toString());
+  if (txt.length < 2) return null;
+  const node = sel.anchorNode;
+  const el = node && (node.nodeType === 1 ? node : node.parentElement);
+  if (!el || !el.closest || !el.closest('.slide-card')) return null;
+  if (el.closest(AI_SKIP)) return null;
+  return { text: txt.slice(0, 600), rect: sel.getRangeAt(0).getBoundingClientRect() };
+}
+function onAiSelect(){
+  const c = $('#aiChip'); if (!c) return;
+  const hit = aiSelectedText();
+  if (!hit){ c.hidden = true; return; }
+  c.hidden = false;
+  const r = c.getBoundingClientRect();
+  let left = hit.rect.left + (hit.rect.width / 2) - (r.width / 2);
+  let top = hit.rect.top - r.height - 8;
+  if (top < 8) top = hit.rect.bottom + 8;
+  left = Math.max(8, Math.min(left, innerWidth - r.width - 8));
+  c.style.left = left + 'px';
+  c.style.top = top + 'px';
+}
+
 /* ---- the click listener: exists ONLY while AI Mode is on ---- */
 function onAiClick(ev){
   const t = ev.target;
   if (!t || !t.closest) return;
-  if (t.closest('#aiTip') || t.closest('#aiBtn')) return;
+  if (t.closest('#aiTip') || t.closest('#aiBtn') || t.closest('#aiChip')) return;
   if (t.closest(AI_SKIP)) return;                  // the lesson owns this click
   if (!t.closest('.slide-card')) return;           // only slide content
   const word = aiWordAt(ev);
@@ -1146,15 +1279,25 @@ function onAiClick(ev){
 }
 
 function aiSet(on){
-  const want = !!on && !!aiKey();
+  /* Students hold no key: their access is the proxy plus the class switch. The
+     teacher may also use their own key directly. Requiring aiKey() here meant a
+     student could never switch it on at all. */
+  const want = !!on && aiGlobalOn && (aiDirect() || !!aiProxy());
   if (want === aiMode) return;
   aiMode = want;
   document.body.classList.toggle('ai-mode', aiMode);
   const b = $('#aiBtn'); if (b) b.setAttribute('aria-pressed', aiMode ? 'true' : 'false');
-  if (aiMode) document.addEventListener('click', onAiClick);
-  else {
+  aiLS.set('ai_on', aiMode ? '1' : '0');
+  if (aiMode){
+    document.addEventListener('click', onAiClick);
+    document.addEventListener('mouseup', onAiSelect);
+    document.addEventListener('selectionchange', onAiSelect);
+  } else {
     document.removeEventListener('click', onAiClick);
+    document.removeEventListener('mouseup', onAiSelect);
+    document.removeEventListener('selectionchange', onAiSelect);
     aiClose();
+    aiHideChip();
   }
 }
 
@@ -1183,7 +1326,7 @@ function afEnrich(student, count, tier){
   };
   const hit = aiCacheGet(ck);
   if (hit) return apply(hit);
-  const p = 'Give ONE short French exclamation praising a student who has just answered correctly for the ' + count + ' time this week. Two to four words, ending in an exclamation mark. It MUST be gender-neutral: never use a word that changes between masculine and feminine (so never champion, meilleur, fier, fort, doue). Output only the exclamation.';
+  const p = 'A CBSE Class 10 French student has just answered correctly ' + count + ' times IN A ROW. Give ONE short French exclamation of praise whose enthusiasm matches that streak length: quiet for 1, warm for 3, triumphant for 6 or more. Two to five words, ending in an exclamation mark. It MUST be gender-neutral: never use a word that changes between masculine and feminine (so never champion, meilleur, fier, fort, doue). Output only the exclamation.';
   Promise.race([
     aiAsk(p, 4000),
     new Promise(r => setTimeout(() => r(null), 1500))   // the class never waits
@@ -1192,6 +1335,15 @@ function afEnrich(student, count, tier){
 }
 
 (function wireAI(){
+  const chip = $('#aiChip');
+  if (chip) chip.addEventListener('click', ev => {
+    ev.stopPropagation();
+    const hit = aiSelectedText();
+    chip.hidden = true;
+    if (!hit) return;
+    const r = hit.rect;
+    aiOpen(r.left + (r.width / 2), r.bottom, null, hit.text);
+  });
   const b = $('#aiBtn');
   if (b) b.addEventListener('click', () => aiSet(!aiMode));
   const x = $('#aiTipClose');
@@ -1377,6 +1529,48 @@ function adAI(){
 
   const msg = adEl('p', 'ai-hint', saved ? 'A key is saved on this device.' : 'No key saved yet.');
   body.appendChild(msg);
+
+  /* --- the class switch: one document, read by everyone, written by the admin.
+     The Worker checks the same document, so turning it off really does stop the
+     spending rather than only hiding the button. --- */
+  body.appendChild(adEl('h4', 'ad-h4', 'Class access'));
+  const swRow = adEl('div', 'ai-row');
+  const cb = document.createElement('input');
+  cb.type = 'checkbox'; cb.id = 'aiGlobalCb'; cb.checked = aiGlobalOn;
+  const lab = adEl('span', null, 'Students may use the assistant');
+  swRow.appendChild(cb); swRow.appendChild(lab);
+  body.appendChild(swRow);
+  cb.onchange = async () => {
+    cb.disabled = true;
+    try {
+      await setDoc(doc(db, 'config', 'ai'),
+        { enabled: cb.checked, updatedAt: serverTimestamp() }, { merge: true });
+      aiGlobalOn = cb.checked;
+      aiRevealButton();
+      msg.textContent = cb.checked ? 'Students can use the assistant.' : 'Turned off for the whole class.';
+    } catch (e){ cb.checked = !cb.checked; msg.textContent = 'Could not save: ' + e.message; }
+    finally { cb.disabled = false; }
+  };
+
+  /* --- where the key actually lives --- */
+  body.appendChild(adEl('h4', 'ad-h4', 'Assistant server (Cloudflare Worker)'));
+  const pRow = adEl('div', 'ai-row');
+  const pIn = document.createElement('input');
+  pIn.className = 'fb-input'; pIn.type = 'url'; pIn.id = 'aiProxyInput';
+  pIn.placeholder = 'https://cbse-french-ai.<you>.workers.dev';
+  pIn.value = aiProxy();
+  pRow.appendChild(pIn);
+  const pSave = adEl('button', 'ad-approve', 'Save'); pSave.type = 'button';
+  pRow.appendChild(pSave);
+  body.appendChild(pRow);
+  pSave.onclick = () => {
+    const v = String(pIn.value || "").trim();
+    aiLS.set('ai_proxy', v);
+    aiRevealButton();
+    msg.textContent = v ? 'Server saved. Students will use it.' : 'Server cleared.';
+  };
+  body.appendChild(adEl('p', 'ai-hint',
+    'Students never hold a key: their browser sends only their sign-in, and the server adds the key. The key below is yours alone and is used only when you are signed in as teacher.'));
 
   body.appendChild(adEl('h4', 'ad-h4', 'Model'));
   const sel = document.createElement('select');
@@ -2123,6 +2317,8 @@ module.exports.AI_HTML = `
 <button class="ai-btn" id="aiBtn" type="button" hidden aria-pressed="false"
         title="AI Mode — click a word on a slide">&#129302; AI Mode</button>
 
+<button class="ai-chip" id="aiChip" type="button" hidden>&#10024; Explain</button>
+
 <div class="ai-tip" id="aiTip" hidden>
   <div class="ai-tip-head">
     <span class="ai-tip-word" id="aiTipWord"></span>
@@ -2181,6 +2377,18 @@ body.ai-mode .slide-card{ cursor:help; }
 .ai-p:hover{ background:var(--heading-color); color:#fff; border-color:var(--heading-color); }
 .ai-p[disabled]{ opacity:.5; cursor:default; }
 .ai-cached{ font-size:.66rem; color:var(--text-muted); margin-left:auto; align-self:center; }
+
+.ai-draft{ width:100%; resize:vertical; min-height:96px; font-family:inherit;
+  font-size:.84rem; line-height:1.45; }
+/* the selection chip: appears on a highlight, spends nothing until tapped */
+.ai-chip{
+  position:fixed; z-index:10040; padding:5px 11px; border-radius:999px; cursor:pointer;
+  font-family:inherit; font-weight:700; font-size:.74rem; line-height:1;
+  background:var(--heading-color); color:#fff; border:0;
+  box-shadow:0 5px 16px rgba(0,0,0,.28);
+}
+.ai-chip[hidden]{ display:none !important; }
+.ai-chip:hover{ transform:translateY(-1px); }
 
 /* admin AI tab */
 .ai-row{ display:flex; gap:6px; align-items:center; margin-top:8px; flex-wrap:wrap; }

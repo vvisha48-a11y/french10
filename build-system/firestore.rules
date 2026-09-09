@@ -100,6 +100,15 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
+    // ---- the assistant switch ----
+    // One document: { enabled: true }. Any signed-in user may READ it, because
+    // the app and the proxy both consult it before spending anything. Only the
+    // teacher may WRITE it, so no student can switch their own access back on.
+    match /config/{id} {
+      allow read:  if isSignedIn();
+      allow write: if isAdmin();
+    }
+
     // Anything not named above is denied outright.
     match /{document=**} {
       allow read, write: if false;
