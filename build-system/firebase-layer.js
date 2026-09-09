@@ -263,6 +263,8 @@ if (auth) onAuthStateChanged(auth, async (user) => {
     if (inn) inn.hidden = true;
     msg('');
     const ab = $('#adBtn'); if (ab) ab.hidden = true;   // signed out: no trigger
+    const aib = $('#aiBtn'); if (aib) aib.hidden = true;
+    aiSet(false);
     gateShow('form');
     return;
   }
@@ -396,6 +398,8 @@ function applyGate(){
   /* the admin trigger follows the account, never the other way round */
   const ab = $('#adBtn');
   if (ab) ab.hidden = !(ME && ME.role === 'teacher');
+  const aib = $('#aiBtn');
+  if (aib) aib.hidden = !(ME && ME.role === 'teacher' && aiKey());
   if (!ME){ gateShow('form'); return; }
   if (ME.role === 'teacher' || ME.status === 'approved'){ gateHide(); return; }
   const w = $('#fbWaitWho'); if (w) w.textContent = ME.label || ME.email || '';
@@ -816,6 +820,7 @@ function afShow(student, count){
   const fx = window.__fx || {};
   try { if (t.tier === 3 && fx.confetti) fx.confetti(); } catch (_){}
   try { if (fx.sound) fx.sound('correct'); } catch (_){}
+  try { afEnrich(student, count, t); } catch (e){}
   clearTimeout(afTimer);
   afTimer = setTimeout(() => { pop.hidden = true; }, t.tier === 3 ? 2800 : 2000);
 }
@@ -880,6 +885,286 @@ function lbSetClass(cls, render){
   on('lbCls10E', () => lbSetClass('10E'));
   on('lbCls10J', () => lbSetClass('10J'));
   setTimeout(() => lbRender(false), 1200);   // first paint of the counter
+})();
+
+/* ================= TEACHER AI ASSISTANT (BYOK Gemini) =================
+   THE GOVERNING RULE: with AI Mode off the app behaves exactly as it did before
+   this feature existed, for teachers as well as students. The click listener is
+   ADDED in aiSet(true) and REMOVED in aiSet(false) -- never registered and then
+   early-returning, which would still sit in every click event path. The single
+   style that reaches slide content lives under body.ai-mode. No engine function
+   is patched. AI Mode always starts OFF on load; nothing restores it.
+   ===================================================================== */
+
+const AI_ENDPOINT = 'https://generativelanguage.googleapis.com/v1beta/models/';
+const AI_MODELS = ['gemini-2.5-flash-lite', 'gemini-2.5-flash'];
+
+/* The engine's ls helper is inside its IIFE and invisible to this module (the
+   picker and score sheet use localStorage directly for the same reason). Same
+   cbse_fr_master_ prefix, so these keys sit alongside the deck own settings, and
+   the same swallow-everything contract so a locked-down browser cannot throw. */
+const AI_STORE = 'cbse_fr_master_';
+const aiLS = {
+  get(k, d){ try { const v = localStorage.getItem(AI_STORE + k); return v === null ? d : v; } catch (e){ return d; } },
+  set(k, v){ try { localStorage.setItem(AI_STORE + k, v); } catch (e){} },
+  del(k){ try { localStorage.removeItem(AI_STORE + k); } catch (e){} },
+  getJSON(k, d){ try { const v = localStorage.getItem(AI_STORE + k); return v === null ? d : JSON.parse(v); } catch (e){ return d; } },
+  setJSON(k, v){ try { localStorage.setItem(AI_STORE + k, JSON.stringify(v)); } catch (e){} }
+};
+
+/* Anything the lesson already owns. The deck holds 1,567 flip-cards, 424 fill-ins
+   and 147 quizzes -- hijacking a click on those would break the lesson. */
+const AI_SKIP = '.flip-card, .option-btn, .fib-input, .accent-key, .drill, .voc-mask,' +
+  '.voc-speak, .voc-tools, .audio-btn, .trier-chip, .trier-bucket, .hs-dot, .hs-all,' +
+  '.pm-word, .pm-photo, .quiz-container button, .topbar, .hud,' +
+    /* NOT .editable-field: 1,652 of the deck's paragraphs carry that class, so
+       skipping it blanket-excluded almost all slide text -- the very thing the
+       assistant reads. setLiveEdit() sets contenteditable=true on exactly those
+       elements while editing is on, and the guard below catches that case. */
+  '.sidebar, button, a, input, select, textarea, [contenteditable="true"]';
+
+let aiMode = false;
+let aiKeyHandler = null;
+
+const aiKey   = () => aiLS.get('ai_key', '');
+const aiModel = () => aiLS.get('ai_model', AI_MODELS[0]);
+
+/* Whitespace without backslashes: tab, newline, carriage return, space. */
+const AI_WS = new RegExp('[' + String.fromCharCode(9,10,13,32) + ']+', 'g');
+const aiFlat = t => String(t == null ? '' : t).replace(AI_WS, ' ').trim();
+
+const AI_SYS = 'You are helping a CBSE Class 10 French teacher in India. Answer in simple English that a 15-year-old can follow. Keep French words, examples and quotations in French. Be brief and concrete. No preamble, no markdown headings, no bullet characters. ';
+
+const AI_PROMPTS = [
+  { id:'simplify', label:'Simplify this rule', build: c =>
+    'Rewrite this grammar explanation so a 15-year-old can understand it. At most 3 short lines. Keep the French examples in French. Explanation: ' + c.text },
+  { id:'word', label:'Explain this word', needsWord:true, build: c =>
+    'Explain the French word or phrase "' + c.word + '" as it is used on a slide about ' + c.topic + '. Give the word with its gender article if it is a noun, a simple English meaning, and one short French example with its English translation. At most 3 lines.' },
+  { id:'examples', label:'3 more examples', build: c =>
+    'Give exactly 3 new French example sentences for this rule, at CBSE Class 10 level, about school, family or food. Each with a short English translation. Rule: ' + c.text },
+  { id:'wrong', label:'Why is this wrong?', build: c =>
+    'A student got this wrong. In one sentence give the correct answer and why, then one short encouraging sentence saying this mistake is common and how to remember it. Material: ' + c.answers + ' Slide: ' + c.text },
+  { id:'coldcall', label:'Cold-call questions', build: c =>
+    'Write 3 quick oral questions on this rule, numbered and tiered: (1) a true/false or either-or warm-up, (2) a fill-in-the-blank conjugation, (3) an open sentence for the student to build. Rule: ' + c.text },
+  { id:'dialogue', label:'Micro-dialogue', build: c =>
+    'Write a 2-line French mini-dialogue, marked A: and B:, that two students can read aloud in about 10 seconds using the vocabulary on this slide. Add a one-line English gloss. Slide: ' + c.text },
+  { id:'exit', label:'Exit ticket', build: c =>
+    'Write one multiple-choice exit-ticket question with 3 options labelled a, b, c that checks whether the class understood this slide, and state which option is correct. Slide: ' + c.text },
+  { id:'traps', label:'Trap detector', build: c =>
+    'List the top 2 mistakes English-speaking learners make with this rule. One line each, each with a correct French example. Rule: ' + c.text }
+];
+
+/* ---- the call ---- */
+async function aiAsk(promptText, timeoutMs){
+  const key = aiKey();
+  if (!key) throw new Error('No API key saved. Open Admin and add one.');
+  const ctrl = new AbortController();
+  const t = setTimeout(() => ctrl.abort(), timeoutMs || 20000);
+  try {
+    const res = await fetch(AI_ENDPOINT + aiModel() + ':generateContent?key=' + encodeURIComponent(key), {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      signal: ctrl.signal,
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: AI_SYS + promptText }] }],
+        generationConfig: { temperature: 0.4, maxOutputTokens: 400 }
+      })
+    });
+    if (!res.ok){
+      const body = await res.text().catch(() => '');
+      throw new Error('HTTP ' + res.status + ' ' + aiFlat(body).slice(0, 140));
+    }
+    const j = await res.json();
+    const parts = (((j.candidates || [])[0] || {}).content || {}).parts || [];
+    const out = parts.map(p => p.text || '').join(' ').trim();
+    if (!out) throw new Error('The model returned nothing. Try a different prompt.');
+    return out;
+  } finally { clearTimeout(t); }
+}
+
+/* ---- cache: a repeat click is instant, free, and works with no network ---- */
+function aiCacheGet(k){ try { return (aiLS.getJSON('ai_cache', {}) || {})[k]; } catch (e){ return null; } }
+function aiCacheSet(k, v){
+  try {
+    const c = aiLS.getJSON('ai_cache', {}) || {};
+    const keys = Object.keys(c);
+    if (keys.length > 200) delete c[keys[0]];
+    c[k] = v;
+    aiLS.setJSON('ai_cache', c);
+  } catch (e){}
+}
+
+/* ---- what is on screen ---- */
+function aiContext(word){
+  let sec = null;
+  try { sec = (typeof Deck !== 'undefined' && Deck.getCurrentSlide) ? Deck.getCurrentSlide() : null; } catch (e){}
+  if (!sec) sec = document.querySelector('section.present');
+  const card = sec ? sec.querySelector('.slide-card') : null;
+  const stack = sec ? sec.closest('section[data-topic]') : null;
+  const answers = sec
+    ? [...sec.querySelectorAll('[data-answer]')].slice(0, 8).map(e => aiFlat(e.getAttribute('data-answer'))).join(' | ')
+    : '';
+  return {
+    word: word || '',
+    topic: stack ? aiFlat(stack.getAttribute('data-topic-name') || stack.getAttribute('data-topic')) : 'French',
+    step: sec ? aiFlat(sec.getAttribute('data-step')) : '',
+    text: aiFlat(card ? card.innerText : (sec ? sec.innerText : '')).slice(0, 1500),
+    answers: answers || '(none on this slide)',
+    slideId: sec ? (sec.getAttribute('data-slide-id') || '') : ''
+  };
+}
+
+/* ---- the word under the pointer, read without touching the DOM ---- */
+const AI_WORD = /[A-Za-z0-9À-ſ'’-]/;
+function aiWordAt(ev){
+  let range = null;
+  if (document.caretRangeFromPoint) range = document.caretRangeFromPoint(ev.clientX, ev.clientY);
+  else if (document.caretPositionFromPoint){
+    const p = document.caretPositionFromPoint(ev.clientX, ev.clientY);
+    if (p){ range = document.createRange(); range.setStart(p.offsetNode, p.offset); }
+  }
+  if (!range) return null;
+  const node = range.startContainer;
+  if (!node || node.nodeType !== 3) return null;
+  const text = node.nodeValue || '';
+  let i = range.startOffset;
+  if (!AI_WORD.test(text.charAt(i)) && !AI_WORD.test(text.charAt(i - 1))) return null;
+  let a = i, b = i;
+  while (a > 0 && AI_WORD.test(text.charAt(a - 1))) a--;
+  while (b < text.length && AI_WORD.test(text.charAt(b))) b++;
+  const w = text.slice(a, b);
+  return w.length > 1 ? w : null;
+}
+
+/* ---- the tooltip ---- */
+function aiClose(){
+  const tip = $('#aiTip'); if (tip) tip.hidden = true;
+  if (aiKeyHandler){ document.removeEventListener('keydown', aiKeyHandler, true); aiKeyHandler = null; }
+}
+function aiPlace(tip, x, y){
+  tip.hidden = false;
+  const r = tip.getBoundingClientRect();
+  let left = x + 14, top = y + 16;
+  if (left + r.width > innerWidth - 12) left = Math.max(12, x - r.width - 14);
+  if (top + r.height > innerHeight - 12) top = Math.max(12, y - r.height - 16);
+  tip.style.left = left + 'px';
+  tip.style.top = top + 'px';
+}
+async function aiRun(promptId, ctx){
+  const body = $('#aiTipBody'); if (!body) return;
+  const p = AI_PROMPTS.filter(x => x.id === promptId)[0];
+  if (!p) return;
+  const ck = ctx.slideId + '|' + promptId + '|' + (p.needsWord ? ctx.word : '');
+  const hit = aiCacheGet(ck);
+  if (hit){
+    body.textContent = hit;
+    const tag = $('#aiTipMenu .ai-cached'); if (tag) tag.textContent = 'cached';
+    return;
+  }
+  body.innerHTML = '';
+  body.appendChild(Object.assign(document.createElement('em'), { textContent: 'Thinking...' }));
+  $$('#aiTipMenu .ai-p').forEach(b => { b.disabled = true; });
+  try {
+    const out = await aiAsk(p.build(ctx));
+    aiCacheSet(ck, out);
+    body.textContent = out;
+  } catch (e){
+    body.innerHTML = '';
+    const err = document.createElement('span');
+    err.className = 'ai-err';
+    err.textContent = e.message;
+    body.appendChild(err);
+  } finally {
+    $$('#aiTipMenu .ai-p').forEach(b => { b.disabled = false; });
+  }
+}
+function aiOpen(x, y, word){
+  const tip = $('#aiTip'); if (!tip) return;
+  const ctx = aiContext(word);
+  const w = $('#aiTipWord'); if (w) w.textContent = word || ctx.step || 'This slide';
+  const menu = $('#aiTipMenu');
+  if (menu){
+    menu.innerHTML = '';
+    AI_PROMPTS.forEach(p => {
+      if (p.needsWord && !word) return;
+      const b = document.createElement('button');
+      b.type = 'button'; b.className = 'ai-p'; b.textContent = p.label;
+      b.addEventListener('click', () => aiRun(p.id, ctx));
+      menu.appendChild(b);
+    });
+    const tag = document.createElement('span'); tag.className = 'ai-cached'; menu.appendChild(tag);
+  }
+  aiPlace(tip, x, y);
+  aiRun(word ? 'word' : 'simplify', ctx);
+  /* bound on open, unbound on close: nothing lingers in the key path */
+  aiKeyHandler = ev => {
+    if (ev.key === 'Escape'){ ev.preventDefault(); ev.stopImmediatePropagation(); aiClose(); }
+  };
+  document.addEventListener('keydown', aiKeyHandler, true);
+}
+
+/* ---- the click listener: exists ONLY while AI Mode is on ---- */
+function onAiClick(ev){
+  const t = ev.target;
+  if (!t || !t.closest) return;
+  if (t.closest('#aiTip') || t.closest('#aiBtn')) return;
+  if (t.closest(AI_SKIP)) return;                  // the lesson owns this click
+  if (!t.closest('.slide-card')) return;           // only slide content
+  const word = aiWordAt(ev);
+  aiOpen(ev.clientX, ev.clientY, word);
+}
+
+function aiSet(on){
+  const want = !!on && !!aiKey();
+  if (want === aiMode) return;
+  aiMode = want;
+  document.body.classList.toggle('ai-mode', aiMode);
+  const b = $('#aiBtn'); if (b) b.setAttribute('aria-pressed', aiMode ? 'true' : 'false');
+  if (aiMode) document.addEventListener('click', onAiClick);
+  else {
+    document.removeEventListener('click', onAiClick);
+    aiClose();
+  }
+}
+
+/* Praise must never misgender a student: the roster carries no gender field, so
+   any adjective or noun that inflects is rejected and the static tier stands. */
+const AI_GENDERED = ['champion','championne','meilleur','meilleure','fier','fiere','fière','doue','douee','doué','douée','fort','forte','intelligent','intelligente','heureux','heureuse','beau','belle','premier','premiere','première','pret','prete','prêt','prête','seul','seule'];
+function aiGenderSafe(txt){
+  const low = ' ' + String(txt).toLowerCase().replace(new RegExp('[^a-zà-ÿ]+', 'g'), ' ') + ' ';
+  return !AI_GENDERED.some(w => low.indexOf(' ' + w + ' ') !== -1);
+}
+
+/* Feature 4 praise, enriched. The static tier is ALREADY on screen when this runs;
+   it is only ever REPLACED, and only by a line that arrives in time and passes the
+   gender check. Off, keyless or offline, this is a no-op and the class sees today’s
+   behaviour exactly. */
+function afEnrich(student, count, tier){
+  if (!aiMode || !aiKey()) return;
+  const ck = 'af|' + tier.tier + '|' + count;
+  const apply = txt => {
+    if (!txt) return;
+    const line = aiFlat(txt).slice(0, 44);
+    if (!aiGenderSafe(line)) return;
+    const pop = $('#afPop'), w = $('#afWord');
+    if (!pop || pop.hidden || !w) return;          // already dismissed: leave it alone
+    w.textContent = line;
+  };
+  const hit = aiCacheGet(ck);
+  if (hit) return apply(hit);
+  const p = 'Give ONE short French exclamation praising a student who has just answered correctly for the ' + count + ' time this week. Two to four words, ending in an exclamation mark. It MUST be gender-neutral: never use a word that changes between masculine and feminine (so never champion, meilleur, fier, fort, doue). Output only the exclamation.';
+  Promise.race([
+    aiAsk(p, 4000),
+    new Promise(r => setTimeout(() => r(null), 1500))   // the class never waits
+  ]).then(t => { if (t && aiGenderSafe(aiFlat(t))){ aiCacheSet(ck, t); apply(t); } })
+    .catch(() => {});
+}
+
+(function wireAI(){
+  const b = $('#aiBtn');
+  if (b) b.addEventListener('click', () => aiSet(!aiMode));
+  const x = $('#aiTipClose');
+  if (x) x.addEventListener('click', aiClose);
 })();
 
 /* ---------------- Feature 6: the admin dashboard ----------------
@@ -1034,16 +1319,91 @@ async function adFeedback(){
   } catch (e){ adSay('Could not read the feedback: ' + e.message); }
 }
 
+/* --- tab 4: the AI key ---
+   The key stays on this machine. It is never sent to Firestore, never logged, and
+   only its last 4 characters are ever displayed back. "Reset everything" does NOT
+   clear it -- that list lives in the engine and this feature patches no engine code
+   -- so Forget key is the way to remove it. */
+function adAI(){
+  const body = $('#adBody'); if (!body) return;
+  body.innerHTML = '';
+
+  const saved = aiKey();
+  body.appendChild(adEl('h4', 'ad-h4', 'Gemini API key (this device only)'));
+
+  const row = adEl('div', 'ai-row');
+  const inp = document.createElement('input');
+  inp.className = 'fb-input'; inp.type = 'password'; inp.id = 'aiKeyInput';
+  inp.autocomplete = 'off'; inp.spellcheck = false;
+  inp.placeholder = saved ? ('saved, ending ' + saved.slice(-4)) : 'Paste your key';
+  row.appendChild(inp);
+  const save = adEl('button', 'ad-approve', 'Save'); save.type = 'button';
+  const test = adEl('button', 'fb-btn', 'Test'); test.type = 'button';
+  const forget = adEl('button', 'fb-btn', 'Forget key'); forget.type = 'button';
+  row.appendChild(save); row.appendChild(test); row.appendChild(forget);
+  body.appendChild(row);
+
+  const msg = adEl('p', 'ai-hint', saved ? 'A key is saved on this device.' : 'No key saved yet.');
+  body.appendChild(msg);
+
+  body.appendChild(adEl('h4', 'ad-h4', 'Model'));
+  const sel = document.createElement('select');
+  sel.className = 'fb-input'; sel.id = 'aiModelSel';
+  AI_MODELS.forEach(m => {
+    const o = document.createElement('option');
+    o.value = m; o.textContent = m + (m.indexOf('lite') > -1 ? '  (fastest, cheapest)' : '  (stronger reasoning)');
+    if (m === aiModel()) o.selected = true;
+    sel.appendChild(o);
+  });
+  body.appendChild(sel);
+  sel.addEventListener('change', () => { aiLS.set('ai_model', sel.value); msg.textContent = 'Model set to ' + sel.value + '.'; });
+
+  body.appendChild(adEl('p', 'ai-hint',
+    'The key is billable and is stored in this browser only. Anyone who can open developer tools on this machine can read it, so do not save it on a shared student computer. AI Mode always starts OFF when the page loads.'));
+
+  save.onclick = () => {
+    const v = String(inp.value || "").trim();
+    if (!v){ msg.textContent = "Paste a key first."; return; }
+    aiLS.set('ai_key', v);
+    inp.value = "";
+    inp.placeholder = 'saved, ending ' + v.slice(-4);
+    msg.textContent = 'Saved. The AI Mode button is now available on the slides.';
+    const aib = $('#aiBtn');
+    if (aib) aib.hidden = !(ME && ME.role === 'teacher');
+  };
+
+  forget.onclick = () => {
+    aiLS.del('ai_key');
+    aiSet(false);
+    inp.value = ""; inp.placeholder = "Paste your key";
+    msg.textContent = 'Key removed from this device.';
+    const aib = $('#aiBtn'); if (aib) aib.hidden = true;
+  };
+
+  test.onclick = async () => {
+    test.disabled = true;
+    msg.textContent = 'Testing ' + aiModel() + '...';
+    try {
+      const pending = String(inp.value || "").trim();
+      if (pending) aiLS.set('ai_key', pending);
+      const out = await aiAsk('Reply with the single word: ok', 15000);
+      msg.textContent = 'Working. The model replied: ' + aiFlat(out).slice(0, 60);
+    } catch (e){ msg.textContent = 'Failed: ' + e.message; }
+    finally { test.disabled = false; }
+  };
+}
+
 /* --- open / close / tabs --- */
 let adTab = 'approve';
 function adRender(){
   if (adTab === 'approve') return adApprovals();
   if (adTab === 'scores')  return adScores();
+  if (adTab === 'ai')      return adAI();
   return adFeedback();
 }
 function adSetTab(t){
   adTab = t;
-  [['adTab1','approve'],['adTab2','scores'],['adTab3','feedback']].forEach(pair => {
+  [['adTab1','approve'],['adTab2','scores'],['adTab3','feedback'],['adTab4','ai']].forEach(pair => {
     const el = $('#' + pair[0]);
     if (el) el.className = 'ad-tab' + (pair[1] === t ? ' is-on' : '');
   });
@@ -1068,6 +1428,7 @@ function adOpen(on){
   on('adTab1',  () => adSetTab('approve'));
   on('adTab2',  () => adSetTab('scores'));
   on('adTab3',  () => adSetTab('feedback'));
+  on('adTab4',  () => adSetTab('ai'));
   const d = $('#adDash');
   if (d) d.addEventListener('click', ev => { if (ev.target === d) adOpen(false); });
   /* Escape must close the dashboard, not reach Reveal and open the overview. */
@@ -1625,6 +1986,7 @@ module.exports.ADMIN_HTML = `
       <button class="ad-tab is-on" id="adTab1" type="button" data-tab="approve">Approvals <span class="ad-badge zero" id="adPendN">0</span></button>
       <button class="ad-tab"       id="adTab2" type="button" data-tab="scores">Scores &amp; Activity</button>
       <button class="ad-tab"       id="adTab3" type="button" data-tab="feedback">Feedback</button>
+      <button class="ad-tab"       id="adTab4" type="button" data-tab="ai">AI</button>
     </div>
     <div class="ad-body" id="adBody"></div>
   </div>
@@ -1695,4 +2057,77 @@ module.exports.CSS += `
 .ad-fb{ padding:10px 12px; border-radius:10px; background:var(--highlight-bg); }
 .ad-fbtext{ margin:0; font-size:.88rem; line-height:1.45; white-space:pre-wrap; word-break:break-word; }
 @media print{ .ad-btn, .ad-dash{ display:none !important; } }
+`;
+
+/* ---- Teacher AI assistant. Both nodes ship hidden; the button is revealed only
+       for the admin account WITH a key saved, and the tooltip only on demand. ---- */
+module.exports.AI_HTML = `
+<button class="ai-btn" id="aiBtn" type="button" hidden aria-pressed="false"
+        title="AI Mode — click a word on a slide">&#129302; AI Mode</button>
+
+<div class="ai-tip" id="aiTip" hidden>
+  <div class="ai-tip-head">
+    <span class="ai-tip-word" id="aiTipWord"></span>
+    <button class="ai-tip-x" id="aiTipClose" type="button" title="Close (Esc)">&#10005;</button>
+  </div>
+  <div class="ai-tip-body" id="aiTipBody"></div>
+  <div class="ai-tip-menu" id="aiTipMenu"></div>
+</div>
+`;
+
+module.exports.CSS += `
+/* ===== TEACHER AI ASSISTANT ===== */
+.ai-btn{
+  /* right:16px belongs to .ad-btn; sit beside it, never on top of it */
+  position:fixed; right:60px; bottom:calc(var(--hud-h,54px) + 12px); z-index:10030;
+  padding:7px 13px; border-radius:999px; cursor:pointer;
+  font-family:inherit; font-weight:700; font-size:.78rem; line-height:1;
+  background:var(--hud-bg,#fff); color:var(--text-muted);
+  border:1.5px solid var(--card-border); box-shadow:0 5px 16px rgba(0,0,0,.15);
+  opacity:.55; transition:opacity .18s ease, transform .18s ease;
+}
+.ai-btn:hover{ opacity:1; transform:translateY(-1px); }
+.ai-btn:focus-visible{ opacity:1; outline:2px solid var(--heading-color); outline-offset:2px; }
+.ai-btn[hidden]{ display:none !important; }
+.ai-btn[aria-pressed="true"]{
+  opacity:1; background:var(--heading-color); color:#fff; border-color:var(--heading-color);
+}
+
+/* the only rule that touches slide content, and only while the mode is ON */
+body.ai-mode .slide-card{ cursor:help; }
+
+.ai-tip{
+  position:fixed; z-index:10040; width:min(340px, calc(100vw - 32px));
+  max-height:min(56vh, 460px); overflow-y:auto;
+  background:var(--card-bg); color:var(--text-main);
+  border:1.5px solid var(--card-border); border-radius:14px;
+  box-shadow:0 14px 44px rgba(0,0,0,.26); padding:11px 13px 12px;
+  font-family:inherit;   /* inherit the active theme font, never introduce one */
+  font-size:.86rem; line-height:1.5;
+}
+.ai-tip[hidden]{ display:none !important; }
+.ai-tip-head{ display:flex; align-items:center; gap:8px; margin-bottom:7px; }
+.ai-tip-word{ flex:1 1 auto; min-width:0; font-weight:800; font-size:.92rem;
+  color:var(--heading-color); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.ai-tip-x{ flex:0 0 auto; width:24px; height:24px; border-radius:50%; cursor:pointer;
+  border:1.5px solid var(--card-border); background:var(--card-bg); color:var(--text-muted);
+  font-family:inherit; font-size:.7rem; line-height:1; }
+.ai-tip-body{ white-space:pre-wrap; word-break:break-word; min-height:1.4em; }
+.ai-tip-body em{ color:var(--text-muted); font-style:italic; }
+.ai-tip-body .ai-err{ color:var(--crimson); }
+.ai-tip-menu{ display:flex; flex-wrap:wrap; gap:5px; margin-top:10px;
+  padding-top:9px; border-top:1px solid var(--card-border); }
+.ai-p{ padding:4px 9px; border-radius:999px; cursor:pointer;
+  border:1.5px solid var(--card-border); background:var(--highlight-bg);
+  color:var(--text-main); font-family:inherit; font-weight:600; font-size:.7rem; }
+.ai-p:hover{ background:var(--heading-color); color:#fff; border-color:var(--heading-color); }
+.ai-p[disabled]{ opacity:.5; cursor:default; }
+.ai-cached{ font-size:.66rem; color:var(--text-muted); margin-left:auto; align-self:center; }
+
+/* admin AI tab */
+.ai-row{ display:flex; gap:6px; align-items:center; margin-top:8px; flex-wrap:wrap; }
+.ai-row .fb-input{ flex:1 1 12ch; margin:0; }
+.ai-hint{ margin:8px 0 0; font-size:.75rem; line-height:1.5; color:var(--text-muted); }
+.ai-saved{ font-weight:700; color:var(--green); }
+@media print{ .ai-btn, .ai-tip{ display:none !important; } }
 `;

@@ -102,8 +102,65 @@ if (fs.existsSync(LECONS)){
   if (lec.indexOf('cbse_fr_lecons_') === -1)
     problems.push('[lecons] the standalone backup lost its own storage prefix');
 }
+// 4c. the Teacher AI assistant, and the guarantee that turning it OFF changes nothing
+
+// it must never reach the offline student deck
+['aiTip', 'aiBtn', 'generativelanguage', 'AI_PROMPTS'].forEach(t => {
+  if (index.indexOf(t) !== -1)
+    problems.push('[ai] docs/index.html contains "' + t + '" -- the AI must stay out of the offline deck');
+});
+
+// and it must be present in the clone
+['aiBtn', 'aiTip', 'aiSet', 'onAiClick', 'aiAsk', 'adAI', 'afEnrich', 'aiGenderSafe'].forEach(t => {
+  if (app.indexOf(t) === -1) problems.push('[ai] "' + t + '" missing from the clone');
+});
+
+// THE GUARD: every AI style must be scoped, or turning AI Mode off would still
+// leave the deck restyled. Same discipline that caught the unscoped
+// body.projector-mode rules during the vocabulary merge.
+(() => {
+  const a = app.indexOf('/* ===== TEACHER AI ASSISTANT ===== */');
+  if (a === -1) { problems.push('[ai] the AI CSS block is missing from the clone'); return; }
+  const end = app.indexOf('</style>', a);
+  const bad = app.slice(a, end === -1 ? a + 4000 : end).split(String.fromCharCode(10))
+    .map(l => l.trim())
+    .filter(l => l.indexOf('{') > -1 && /^[.#a-z]/i.test(l))
+    .filter(l => !/^(body\.ai-mode|\.ai-|#aiBtn|#aiTip|@media)/.test(l));
+  if (bad.length) problems.push('[ai] unscoped AI selector(s) could restyle the deck: ' + bad.slice(0, 3).join(' | '));
+})();
+
+// the click listener must be added only inside the ON path, never at top level
+(() => {
+  const a = app.indexOf('function aiSet(on)');
+  const decl = app.indexOf("document.addEventListener('click', onAiClick)");
+  if (decl === -1) { problems.push('[ai] onAiClick is never registered'); return; }
+  if (a === -1 || decl < a)
+    problems.push('[ai] the AI click listener is registered outside aiSet() -- OFF would not be clean');
+})();
+
+// placement: must not collide with the admin trigger, and must sit on its own rung
+if (app.indexOf('z-index:10040') === -1) problems.push('[ai] the tooltip is not at z-index 10040');
+if (app.indexOf('position:fixed; right:60px;') === -1)
+  problems.push('[ai] the AI button is not at right:60px -- .ad-btn owns right:16px');
+
+// No Gemini key may ever be baked into a published file. Two refinements matter:
+// base64 image payloads contain "AIza" by sheer chance (measured: exactly one such
+// run in 23 MB of photos), so data: URIs are stripped first; and only a real
+// 39-character Google key shape counts. The Firebase web config carries one legitimately.
+(() => {
+  const KEYRE = /AIza[0-9A-Za-z_-]{35}/g;
+  const strip = h => h.replace(/data:[a-z/+.-]+;base64,[A-Za-z0-9+/=]+/g, 'DATA_URI');
+  [['index', index, 0], ['app', app, 1]].forEach(t => {
+    const hits = strip(t[1]).match(KEYRE) || [];
+    if (hits.length > t[2])
+      problems.push('[ai] docs/' + t[0] + '.html holds ' + hits.length +
+                    ' API-key literal(s), expected at most ' + t[2]);
+  });
+})();
+
 // 5. the clone may reach Firebase and nothing else
-const ALLOW = ['www.gstatic.com', 'firebasejs', 'googleapis.com', 'firebaseio.com', 'firebaseapp.com'];
+const ALLOW = ['www.gstatic.com', 'firebasejs', 'googleapis.com', 'firebaseio.com',
+               'firebaseapp.com', 'generativelanguage.googleapis.com'];
 const ext = [];
 const push = u => { if (/^(https?:)?\/\//i.test(u.trim())) ext.push(u.trim()); };
 let m;

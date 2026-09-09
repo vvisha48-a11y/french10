@@ -81,8 +81,8 @@ if (fxIdx > -1){
 /* 4. dashboard modal + the module script, just before </body> */
 const bIdx = html.lastIndexOf('</body>');
 if (bIdx < 0){ console.error('no </body> found'); process.exit(1); }
-html = html.slice(0, bIdx) + MARK + '\n' + FB.GATE_HTML + FB.PICK_HTML + FB.AFFIRM_HTML + FB.ADMIN_HTML + FB.DASH_HTML + FB.JS(config) + MARK_END + '\n' + html.slice(bIdx);
-steps.push('gate + picker + affirmations + admin + dashboard + sdk');
+html = html.slice(0, bIdx) + MARK + '\n' + FB.GATE_HTML + FB.PICK_HTML + FB.AFFIRM_HTML + FB.ADMIN_HTML + FB.AI_HTML + FB.DASH_HTML + FB.JS(config) + MARK_END + '\n' + html.slice(bIdx);
+steps.push('gate + picker + affirmations + admin + ai + dashboard + sdk');
 
 fs.writeFileSync(OUT, html);
 console.log('  source           :', SRC, '(' + (srcBytes / 1048576).toFixed(2) + ' MB, untouched)');
