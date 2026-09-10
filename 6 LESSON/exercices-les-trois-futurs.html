@@ -1,0 +1,3878 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Les 3 Futurs — 15 Questions CBSE Board Exam Master Deck & Diagram Studio</title>
+  
+  <!-- Google Fonts: Modern, Geometric & High Readability -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&family=Poppins:wght@400;600;700;800&family=Playfair+Display:ital,wght@0,600;0,800;1,600&display=swap" rel="stylesheet">
+
+  <style>
+    /* =============================================================
+       THEMES & BIG TYPOGRAPHY DESIGN SYSTEM
+       ============================================================= */
+    :root {
+      --font-body: 'Plus Jakarta Sans', sans-serif;
+      --font-heading: 'Outfit', sans-serif;
+      --font-mono: 'Space Grotesk', monospace;
+      --font-scale: 1.15; /* Extra large readable font scale */
+
+      /* Theme 1: French Tricolor Classic (Default) */
+      --bg-gradient: radial-gradient(circle at 50% 25%, #f1f5fd 0%, #e0ebfb 50%, #c7ddfc 100%);
+      --card-bg: rgba(255, 255, 255, 0.96);
+      --card-border: rgba(0, 35, 149, 0.18);
+      --card-shadow: 0 24px 50px rgba(0, 35, 149, 0.12);
+      --text-main: #0a1128;
+      --text-muted: #334155;
+      --primary: #002395;
+      --primary-hover: #00196e;
+      --secondary: #ed2939;
+      --secondary-hover: #c41827;
+      --accent: #f4b436;
+      --highlight-bg: rgba(0, 35, 149, 0.08);
+      --highlight-border: #002395;
+      
+      /* Tense Colors */
+      --fp-color: #059669;
+      --fp-bg: #ecfdf5;
+      --fp-border: #10b981;
+
+      --fs-color: #002395;
+      --fs-bg: #eff6ff;
+      --fs-border: #3b82f6;
+
+      --fa-color: #7e22ce;
+      --fa-bg: #faf5ff;
+      --fa-border: #a855f7;
+
+      --hud-bg: rgba(255, 255, 255, 0.95);
+      --hud-text: #002395;
+    }
+
+    body.theme-cyber {
+      --bg-gradient: radial-gradient(circle at 50% 25%, #0d1527 0%, #060b14 60%, #020408 100%);
+      --card-bg: rgba(15, 23, 42, 0.95);
+      --card-border: rgba(0, 242, 254, 0.35);
+      --card-shadow: 0 24px 50px rgba(0, 242, 254, 0.15);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --primary: #00f2fe;
+      --primary-hover: #38bdf8;
+      --secondary: #ff2a4b;
+      --secondary-hover: #e11d48;
+      --accent: #ffbe0b;
+      --highlight-bg: rgba(0, 242, 254, 0.12);
+      --highlight-border: #00f2fe;
+
+      --fp-color: #10b981;
+      --fp-bg: rgba(16, 185, 129, 0.15);
+      --fp-border: #10b981;
+
+      --fs-color: #38bdf8;
+      --fs-bg: rgba(56, 189, 248, 0.15);
+      --fs-border: #38bdf8;
+
+      --fa-color: #c084fc;
+      --fa-bg: rgba(192, 132, 252, 0.15);
+      --fa-border: #c084fc;
+
+      --hud-bg: rgba(15, 23, 42, 0.96);
+      --hud-text: #00f2fe;
+    }
+
+    body.theme-sunrise {
+      --bg-gradient: radial-gradient(circle at 50% 25%, #fffbeb 0%, #fef3c7 50%, #fde68a 100%);
+      --card-bg: rgba(255, 255, 255, 0.96);
+      --card-border: rgba(217, 119, 6, 0.25);
+      --card-shadow: 0 24px 48px rgba(217, 119, 6, 0.12);
+      --text-main: #451a03;
+      --text-muted: #78350f;
+      --primary: #b45309;
+      --primary-hover: #92400e;
+      --secondary: #dc2626;
+      --secondary-hover: #b91c1c;
+      --accent: #d97706;
+      --highlight-bg: rgba(217, 119, 6, 0.12);
+      --highlight-border: #b45309;
+
+      --fp-color: #047857;
+      --fp-bg: #ecfdf5;
+      --fp-border: #059669;
+
+      --fs-color: #b45309;
+      --fs-bg: #fffbeb;
+      --fs-border: #d97706;
+
+      --fa-color: #991b1b;
+      --fa-bg: #fef2f2;
+      --fa-border: #ef4444;
+
+      --hud-bg: rgba(255, 255, 255, 0.95);
+      --hud-text: #b45309;
+    }
+
+    body.theme-emerald {
+      --bg-gradient: radial-gradient(circle at 50% 25%, #ecfdf5 0%, #d1fae5 50%, #a7f3d0 100%);
+      --card-bg: rgba(255, 255, 255, 0.96);
+      --card-border: rgba(16, 185, 129, 0.28);
+      --card-shadow: 0 24px 48px rgba(16, 185, 129, 0.14);
+      --text-main: #064e3b;
+      --text-muted: #047857;
+      --primary: #047857;
+      --primary-hover: #065f46;
+      --secondary: #e11d48;
+      --secondary-hover: #be123c;
+      --accent: #10b981;
+      --highlight-bg: rgba(16, 185, 129, 0.12);
+      --highlight-border: #047857;
+
+      --fp-color: #047857;
+      --fp-bg: #d1fae5;
+      --fp-border: #10b981;
+
+      --fs-color: #0369a1;
+      --fs-bg: #e0f2fe;
+      --fs-border: #38bdf8;
+
+      --fa-color: #6b21a8;
+      --fa-bg: #f3e8ff;
+      --fa-border: #c084fc;
+
+      --hud-bg: rgba(255, 255, 255, 0.96);
+      --hud-text: #047857;
+    }
+
+    body.theme-purple {
+      --bg-gradient: radial-gradient(circle at 50% 25%, #faf5ff 0%, #f3e8ff 50%, #e9d5ff 100%);
+      --card-bg: rgba(255, 255, 255, 0.96);
+      --card-border: rgba(147, 51, 234, 0.28);
+      --card-shadow: 0 24px 48px rgba(147, 51, 234, 0.14);
+      --text-main: #3b0764;
+      --text-muted: #6b21a8;
+      --primary: #7e22ce;
+      --primary-hover: #6b21a8;
+      --secondary: #ec4899;
+      --secondary-hover: #db2777;
+      --accent: #a855f7;
+      --highlight-bg: rgba(147, 51, 234, 0.12);
+      --highlight-border: #7e22ce;
+
+      --fp-color: #059669;
+      --fp-bg: #ecfdf5;
+      --fp-border: #10b981;
+
+      --fs-color: #2563eb;
+      --fs-bg: #eff6ff;
+      --fs-border: #3b82f6;
+
+      --fa-color: #7e22ce;
+      --fa-bg: #f3e8ff;
+      --fa-border: #9333ea;
+
+      --hud-bg: rgba(255, 255, 255, 0.96);
+      --hud-text: #7e22ce;
+    }
+
+    body.theme-minimal {
+      --bg-gradient: radial-gradient(circle at 50% 25%, #f8fafc 0%, #f1f5f9 50%, #e2e8f0 100%);
+      --card-bg: #ffffff;
+      --card-border: #cbd5e1;
+      --card-shadow: 0 16px 36px rgba(0, 0, 0, 0.08);
+      --text-main: #0f172a;
+      --text-muted: #475569;
+      --primary: #1e293b;
+      --primary-hover: #0f172a;
+      --secondary: #0284c7;
+      --secondary-hover: #0369a1;
+      --accent: #64748b;
+      --highlight-bg: #e2e8f0;
+      --highlight-border: #334155;
+
+      --fp-color: #059669;
+      --fp-bg: #f0fdf4;
+      --fp-border: #22c55e;
+
+      --fs-color: #1d4ed8;
+      --fs-bg: #eff6ff;
+      --fs-border: #3b82f6;
+
+      --fa-color: #7e22ce;
+      --fa-bg: #faf5ff;
+      --fa-border: #a855f7;
+
+      --hud-bg: #ffffff;
+      --hud-text: #0f172a;
+    }
+
+    /* Reset & Base Setup */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      width: 100%;
+      min-height: 100vh;
+      font-family: var(--font-body);
+      background: var(--bg-gradient);
+      color: var(--text-main);
+      overflow-x: hidden;
+      transition: background 0.4s ease;
+      font-size: calc(16px * var(--font-scale));
+    }
+
+    /* Background Fireworks Canvas */
+    #fireworksCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 999999;
+    }
+
+    /* =============================================================
+       TOP NAVIGATION BAR & HUD
+       ============================================================= */
+    .deck-header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: var(--hud-bg);
+      backdrop-filter: blur(14px);
+      border-bottom: 1.5px solid var(--card-border);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+      padding: 10px 24px;
+    }
+
+    .header-inner {
+      max-width: 1320px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .brand-section {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-icon-box {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 900;
+      font-size: 1.25rem;
+      box-shadow: 0 4px 12px rgba(0, 35, 149, 0.25);
+    }
+
+    .brand-title-wrap h1 {
+      font-family: var(--font-heading);
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: var(--primary);
+      line-height: 1.15;
+    }
+
+    .brand-title-wrap p {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .ctrl-btn {
+      background: var(--card-bg);
+      border: 1.5px solid var(--card-border);
+      color: var(--text-main);
+      padding: 7px 14px;
+      border-radius: 20px;
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 0.85rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+    }
+
+    .ctrl-btn:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+      transform: translateY(-1px);
+    }
+
+    .ctrl-btn.btn-primary {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    .ctrl-btn.btn-primary:hover {
+      background: var(--primary-hover);
+      color: white;
+    }
+
+    /* Progress Bar */
+    .progress-bar-wrap {
+      width: 100%;
+      height: 6px;
+      background: rgba(0,0,0,0.06);
+      position: relative;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--fp-color), var(--fs-color), var(--fa-color));
+      width: 6.66%;
+      transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* Stats Strip */
+    .hud-stats-strip {
+      max-width: 1320px;
+      margin: 12px auto 0 auto;
+      padding: 0 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .stats-chip-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .stat-chip {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-family: var(--font-mono);
+      font-weight: 700;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+
+    .stat-chip.score-chip {
+      color: #166534;
+      border-color: #86efac;
+      background: #f0fdf4;
+    }
+
+    .stat-chip.streak-chip {
+      color: #c2410c;
+      border-color: #fdba74;
+      background: #fff7ed;
+    }
+
+    .stat-chip.slide-chip {
+      color: var(--primary);
+      border-color: var(--card-border);
+    }
+
+    /* Jump Pills */
+    .jump-pills-container {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .jump-pill {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 2px solid var(--card-border);
+      background: var(--card-bg);
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      font-weight: 800;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .jump-pill:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+      transform: scale(1.1);
+    }
+
+    .jump-pill.active {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+      box-shadow: 0 0 10px rgba(0, 35, 149, 0.4);
+    }
+
+    .jump-pill.correct {
+      background: #22c55e;
+      color: #fff;
+      border-color: #16a34a;
+    }
+
+    .jump-pill.incorrect {
+      background: #ef4444;
+      color: #fff;
+      border-color: #dc2626;
+    }
+
+    /* =============================================================
+       MAIN CONTAINER & SLIDE CARDS
+       ============================================================= */
+    .main-wrapper {
+      max-width: 1320px;
+      margin: 18px auto 60px auto;
+      padding: 0 20px;
+    }
+
+    .question-slide {
+      display: none;
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity 0.35s ease, transform 0.35s ease;
+    }
+
+    .question-slide.active {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .slide-card {
+      background: var(--card-bg);
+      border: 2.5px solid var(--card-border);
+      border-radius: 28px;
+      padding: 34px 40px;
+      box-shadow: var(--card-shadow);
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+
+    @media (max-width: 768px) {
+      .slide-card {
+        padding: 22px 18px;
+      }
+    }
+
+    /* Slide Header Meta */
+    .slide-meta-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+      padding-bottom: 14px;
+      border-bottom: 1.5px dashed var(--card-border);
+    }
+
+    .slide-badge-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .category-badge {
+      font-family: var(--font-heading);
+      font-weight: 800;
+      font-size: 0.95rem;
+      padding: 6px 16px;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .badge-fa {
+      background: var(--fa-bg);
+      color: var(--fa-color);
+      border: 1.5px solid var(--fa-border);
+    }
+
+    .badge-fs {
+      background: var(--fs-bg);
+      color: var(--fs-color);
+      border: 1.5px solid var(--fs-border);
+    }
+
+    .badge-fp {
+      background: var(--fp-bg);
+      color: var(--fp-color);
+      border: 1.5px solid var(--fp-border);
+    }
+
+    .year-tag {
+      font-family: var(--font-mono);
+      font-weight: 800;
+      font-size: 0.95rem;
+      color: #92400e;
+      background: #fef3c7;
+      border: 1.5px solid #f59e0b;
+      padding: 6px 14px;
+      border-radius: 20px;
+    }
+
+    .listen-btn {
+      background: #eff6ff;
+      border: 1.5px solid #93c5fd;
+      color: #1d4ed8;
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 0.92rem;
+      padding: 7px 16px;
+      border-radius: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .listen-btn:hover {
+      background: #1d4ed8;
+      color: #fff;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(29, 78, 216, 0.25);
+    }
+
+    /* GIGANTIC SENTENCE DISPLAY */
+    .sentence-hero-container {
+      margin: 18px 0 24px 0;
+      padding: 26px 30px;
+      background: rgba(255, 255, 255, 0.7);
+      border: 2px solid var(--card-border);
+      border-radius: 22px;
+      text-align: center;
+      box-shadow: inset 0 2px 6px rgba(0,0,0,0.02);
+      transition: all 0.3s ease;
+    }
+
+    body.theme-cyber .sentence-hero-container {
+      background: rgba(30, 41, 59, 0.6);
+    }
+
+    .french-sentence-text {
+      font-family: var(--font-heading);
+      font-size: 2.25rem; /* EXTRA BIG FONT */
+      font-weight: 800;
+      color: var(--text-main);
+      line-height: 1.5;
+      letter-spacing: -0.5px;
+      margin-bottom: 10px;
+    }
+
+    @media (max-width: 768px) {
+      .french-sentence-text {
+        font-size: 1.6rem;
+      }
+    }
+
+    /* Interactive Blank Slot */
+    .interactive-blank {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 170px;
+      height: 56px;
+      padding: 0 18px;
+      margin: 0 6px;
+      border: 3px dashed var(--primary);
+      border-radius: 16px;
+      background: var(--highlight-bg);
+      color: var(--primary);
+      font-family: var(--font-mono);
+      font-weight: 900;
+      font-size: 1.95rem;
+      vertical-align: middle;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 4px 14px rgba(0, 35, 149, 0.08);
+      position: relative;
+    }
+
+    .interactive-blank.filled-correct {
+      border: 3px solid #22c55e;
+      background: #dcfce7;
+      color: #15803d;
+      box-shadow: 0 0 20px rgba(34, 197, 94, 0.35);
+      animation: popSuccess 0.4s ease;
+    }
+
+    .interactive-blank.filled-wrong {
+      border: 3px solid #ef4444;
+      background: #fee2e2;
+      color: #b91c1c;
+      animation: shakeWrong 0.4s ease;
+    }
+
+    @keyframes popSuccess {
+      0% { transform: scale(0.9); }
+      60% { transform: scale(1.12); }
+      100% { transform: scale(1); }
+    }
+
+    @keyframes shakeWrong {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-8px); }
+      40%, 80% { transform: translateX(8px); }
+    }
+
+    .sentence-english-hint {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      font-style: italic;
+    }
+
+    /* =============================================================
+       OPTIONS SELECTION PANEL (INTERACTIVE PICKER)
+       ============================================================= */
+    .options-picker-section {
+      margin: 22px 0;
+      text-align: center;
+    }
+
+    .picker-label {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 1.05rem;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .options-button-grid {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .option-btn {
+      background: var(--card-bg);
+      border: 2.5px solid var(--card-border);
+      border-radius: 18px;
+      padding: 12px 28px;
+      font-family: var(--font-heading);
+      font-weight: 800;
+      font-size: 1.45rem; /* BIG OPTION TEXT */
+      color: var(--text-main);
+      cursor: pointer;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.04);
+      transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+      min-width: 140px;
+    }
+
+    .option-btn:hover {
+      border-color: var(--primary);
+      transform: translateY(-3px) scale(1.03);
+      box-shadow: 0 10px 24px rgba(0, 35, 149, 0.15);
+      color: var(--primary);
+    }
+
+    .option-btn:active {
+      transform: translateY(-1px);
+    }
+
+    .option-btn.btn-correct {
+      background: #22c55e !important;
+      border-color: #16a34a !important;
+      color: #fff !important;
+      box-shadow: 0 8px 24px rgba(34, 197, 94, 0.4) !important;
+    }
+
+    .option-btn.btn-wrong {
+      background: #ef4444 !important;
+      border-color: #dc2626 !important;
+      color: #fff !important;
+      opacity: 0.75;
+    }
+
+    /* Feedback Toast */
+    .feedback-toast {
+      display: none;
+      margin: 14px auto;
+      max-width: 680px;
+      padding: 12px 22px;
+      border-radius: 14px;
+      font-family: var(--font-heading);
+      font-weight: 800;
+      font-size: 1.15rem;
+      text-align: center;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .feedback-toast.show {
+      display: block;
+    }
+
+    .feedback-toast.correct {
+      background: #dcfce7;
+      color: #15803d;
+      border: 1.5px solid #86efac;
+    }
+
+    .feedback-toast.wrong {
+      background: #fee2e2;
+      color: #b91c1c;
+      border: 1.5px solid #fca5a5;
+    }
+
+    /* Solution Toggle Row */
+    .solution-toggle-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      margin: 22px 0 14px 0;
+    }
+
+    .toggle-solution-btn {
+      background: transparent;
+      border: 2px solid var(--primary);
+      color: var(--primary);
+      font-family: var(--font-heading);
+      font-weight: 800;
+      font-size: 1.1rem;
+      padding: 10px 24px;
+      border-radius: 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.25s ease;
+    }
+
+    .toggle-solution-btn:hover {
+      background: var(--primary);
+      color: #fff;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 35, 149, 0.2);
+    }
+
+    .toggle-solution-btn.open {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .reset-slide-btn {
+      background: rgba(0,0,0,0.06);
+      border: none;
+      color: var(--text-muted);
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 0.95rem;
+      padding: 10px 18px;
+      border-radius: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .reset-slide-btn:hover {
+      background: rgba(0,0,0,0.12);
+      color: var(--text-main);
+    }
+
+    /* =============================================================
+       THE DIAGRAM & EXPLANATION PANEL (PURE VISUAL FLOWCHART)
+       ============================================================= */
+    .solution-panel {
+      display: none;
+      margin-top: 20px;
+      padding-top: 22px;
+      border-top: 2px dashed var(--card-border);
+      animation: slideDown 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .solution-panel.revealed {
+      display: block;
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-12px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* DIAGRAM PIPELINE FLOWCHART */
+    .diagram-pipeline {
+      background: linear-gradient(145deg, rgba(255,255,255,0.9), var(--highlight-bg));
+      border: 2px solid var(--card-border);
+      border-radius: 22px;
+      padding: 22px;
+      margin-bottom: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+    }
+
+    body.theme-cyber .diagram-pipeline {
+      background: rgba(15, 23, 42, 0.7);
+    }
+
+    .pipeline-title {
+      font-family: var(--font-heading);
+      font-weight: 800;
+      font-size: 1.25rem;
+      color: var(--primary);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .pipeline-flow {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+      position: relative;
+    }
+
+    .flow-step-card {
+      background: var(--card-bg);
+      border: 2px solid var(--card-border);
+      border-radius: 16px;
+      padding: 16px;
+      position: relative;
+      transition: all 0.25s ease;
+      text-align: left;
+    }
+
+    .flow-step-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+    }
+
+    .flow-step-card.step-clue {
+      border-color: #3b82f6;
+      background: linear-gradient(145deg, var(--card-bg), #eff6ff);
+    }
+
+    .flow-step-card.step-timeline {
+      border-color: #a855f7;
+      background: linear-gradient(145deg, var(--card-bg), #faf5ff);
+    }
+
+    .flow-step-card.step-formula {
+      border-color: #f59e0b;
+      background: linear-gradient(145deg, var(--card-bg), #fffbeb);
+    }
+
+    .flow-step-card.step-result {
+      border-color: #10b981;
+      background: linear-gradient(145deg, var(--card-bg), #ecfdf5);
+    }
+
+    .step-badge {
+      font-family: var(--font-mono);
+      font-weight: 800;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      padding: 3px 10px;
+      border-radius: 20px;
+      display: inline-block;
+      margin-bottom: 8px;
+    }
+
+    .step-clue .step-badge { background: #dbeafe; color: #1e40af; }
+    .step-timeline .step-badge { background: #ede9fe; color: #5b21b6; }
+    .step-formula .step-badge { background: #fef3c7; color: #92400e; }
+    .step-result .step-badge { background: #d1fae5; color: #065f46; }
+
+    .step-heading {
+      font-family: var(--font-heading);
+      font-weight: 800;
+      font-size: 1.1rem;
+      margin-bottom: 6px;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .step-desc {
+      font-size: 0.96rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+      font-weight: 600;
+    }
+
+    .step-desc strong {
+      color: var(--text-main);
+    }
+
+    /* SHORT ENGLISH RULE BANNER */
+    .short-rule-card {
+      background: linear-gradient(135deg, #fef3c7, #fed7aa);
+      border: 2px solid #f59e0b;
+      border-radius: 16px;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 16px;
+      text-align: left;
+    }
+
+    body.theme-cyber .short-rule-card {
+      background: rgba(245, 158, 11, 0.18);
+      border-color: #f59e0b;
+    }
+
+    .rule-icon {
+      font-size: 2rem;
+      flex-shrink: 0;
+    }
+
+    .rule-content h4 {
+      font-family: var(--font-heading);
+      font-weight: 800;
+      font-size: 1.08rem;
+      color: #92400e;
+      margin-bottom: 2px;
+    }
+
+    body.theme-cyber .rule-content h4 {
+      color: #fbbf24;
+    }
+
+    .rule-content p {
+      font-size: 0.98rem;
+      font-weight: 700;
+      color: #78350f;
+    }
+
+    body.theme-cyber .rule-content p {
+      color: #fde68a;
+    }
+
+    /* SIDE-BY-SIDE WHY THIS VS WHY NOT */
+    .contrast-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 16px;
+      text-align: left;
+    }
+
+    @media (max-width: 800px) {
+      .contrast-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .contrast-box {
+      border-radius: 18px;
+      padding: 18px 20px;
+      border: 2px solid transparent;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.03);
+    }
+
+    .contrast-box.why-yes {
+      background: #f0fdf4;
+      border-color: #86efac;
+    }
+
+    body.theme-cyber .contrast-box.why-yes {
+      background: rgba(34, 197, 94, 0.12);
+      border-color: #22c55e;
+    }
+
+    .contrast-box.why-no {
+      background: #fef2f2;
+      border-color: #fca5a5;
+    }
+
+    body.theme-cyber .contrast-box.why-no {
+      background: rgba(239, 68, 68, 0.12);
+      border-color: #ef4444;
+    }
+
+    .contrast-title {
+      font-family: var(--font-heading);
+      font-weight: 800;
+      font-size: 1.1rem;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .why-yes .contrast-title { color: #166534; }
+    .why-no .contrast-title { color: #991b1b; }
+
+    .contrast-text {
+      font-size: 0.95rem;
+      color: var(--text-main);
+      line-height: 1.45;
+      font-weight: 600;
+    }
+
+    /* =============================================================
+       BOTTOM NAVIGATION BAR
+       ============================================================= */
+    .deck-nav-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-top: 30px;
+      padding-top: 20px;
+      border-top: 2px solid var(--card-border);
+      flex-wrap: wrap;
+    }
+
+    .nav-btn {
+      background: var(--card-bg);
+      border: 2px solid var(--card-border);
+      color: var(--text-main);
+      font-family: var(--font-heading);
+      font-weight: 800;
+      font-size: 1.1rem;
+      padding: 12px 26px;
+      border-radius: 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 4px 14px rgba(0,0,0,0.04);
+    }
+
+    .nav-btn:hover:not(:disabled) {
+      border-color: var(--primary);
+      background: var(--primary);
+      color: #fff;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0, 35, 149, 0.25);
+    }
+
+    .nav-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      border-color: var(--card-border);
+    }
+
+    .slide-counter-badge {
+      font-family: var(--font-mono);
+      font-weight: 800;
+      font-size: 1.15rem;
+      color: var(--primary);
+      background: var(--highlight-bg);
+      padding: 8px 18px;
+      border-radius: 20px;
+      border: 1px solid var(--card-border);
+    }
+
+    /* =============================================================
+       SLIDE 16: FINAL SCOREBOARD & MASTERY TABLE
+       ============================================================= */
+    .scoreboard-slide {
+      display: none;
+      text-align: center;
+      padding: 30px;
+      background: var(--card-bg);
+      border: 2.5px solid var(--card-border);
+      border-radius: 28px;
+      box-shadow: var(--card-shadow);
+      animation: fadeIn 0.4s ease;
+    }
+
+    .scoreboard-slide.active {
+      display: block;
+    }
+
+    .trophy-badge {
+      font-size: 4rem;
+      margin-bottom: 12px;
+      animation: bounce 1s infinite alternate;
+    }
+
+    @keyframes bounce {
+      from { transform: translateY(0); }
+      to { transform: translateY(-10px); }
+    }
+
+    .score-headline {
+      font-family: var(--font-heading);
+      font-size: 2.4rem;
+      font-weight: 900;
+      color: var(--primary);
+      margin-bottom: 8px;
+    }
+
+    .score-subline {
+      font-size: 1.25rem;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+    }
+
+    .score-pill-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+    }
+
+    .big-score-box {
+      background: var(--highlight-bg);
+      border: 2px solid var(--card-border);
+      border-radius: 20px;
+      padding: 16px 28px;
+      min-width: 160px;
+    }
+
+    .big-score-num {
+      font-family: var(--font-mono);
+      font-size: 2.5rem;
+      font-weight: 900;
+      color: var(--primary);
+    }
+
+    .big-score-lbl {
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .mastery-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 24px 0;
+      font-size: 0.95rem;
+      text-align: left;
+    }
+
+    .mastery-table th, .mastery-table td {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    .mastery-table th {
+      background: var(--highlight-bg);
+      color: var(--primary);
+      font-family: var(--font-heading);
+      font-weight: 800;
+      text-transform: uppercase;
+      font-size: 0.82rem;
+      letter-spacing: 0.5px;
+    }
+
+    .restart-btn {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      padding: 14px 34px;
+      border-radius: 18px;
+      font-family: var(--font-heading);
+      font-weight: 800;
+      font-size: 1.2rem;
+      cursor: pointer;
+      margin-top: 20px;
+      box-shadow: 0 8px 24px rgba(0, 35, 149, 0.3);
+      transition: all 0.25s ease;
+    }
+
+    .restart-btn:hover {
+      transform: scale(1.05);
+      background: var(--primary-hover);
+    }
+
+    /* =============================================================
+       SETTINGS MODAL
+       ============================================================= */
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.55);
+      backdrop-filter: blur(8px);
+      z-index: 99999;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .settings-modal-card {
+      background: var(--card-bg);
+      border: 2px solid var(--card-border);
+      border-radius: 28px;
+      max-width: 600px;
+      width: 100%;
+      padding: 30px;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.25);
+      animation: modalPop 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes modalPop {
+      from { transform: scale(0.92); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 1.5px solid var(--card-border);
+    }
+
+    .modal-title {
+      font-family: var(--font-heading);
+      font-weight: 900;
+      font-size: 1.4rem;
+      color: var(--primary);
+    }
+
+    .close-modal-btn {
+      background: transparent;
+      border: none;
+      font-size: 1.8rem;
+      cursor: pointer;
+      color: var(--text-muted);
+      line-height: 1;
+    }
+
+    .modal-section {
+      margin-bottom: 20px;
+    }
+
+    .modal-sec-title {
+      font-family: var(--font-heading);
+      font-weight: 800;
+      font-size: 1rem;
+      color: var(--text-main);
+      margin-bottom: 10px;
+    }
+
+    .theme-grid-selector {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 10px;
+    }
+
+    .theme-option-card {
+      border: 2px solid var(--card-border);
+      border-radius: 14px;
+      padding: 10px 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 700;
+      font-size: 0.88rem;
+      transition: all 0.2s;
+    }
+
+    .theme-option-card:hover {
+      border-color: var(--primary);
+      transform: translateY(-2px);
+    }
+
+    .theme-option-card.selected {
+      border-color: var(--primary);
+      background: var(--highlight-bg);
+      color: var(--primary);
+    }
+
+    .font-select-dropdown {
+      width: 100%;
+      padding: 10px 14px;
+      border-radius: 12px;
+      border: 2px solid var(--card-border);
+      background: var(--card-bg);
+      color: var(--text-main);
+      font-size: 0.95rem;
+      font-family: var(--font-body);
+      font-weight: 700;
+      outline: none;
+    }
+
+    .scale-controls-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .scale-btn {
+      background: rgba(0,0,0,0.06);
+      border: 1px solid var(--card-border);
+      padding: 8px 18px;
+      border-radius: 12px;
+      font-weight: 800;
+      font-size: 1rem;
+      cursor: pointer;
+      color: var(--text-main);
+    }
+
+    .scale-val-display {
+      font-family: var(--font-mono);
+      font-weight: 800;
+      font-size: 1.1rem;
+      min-width: 70px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body class="theme-classic">
+
+  <!-- Fireworks 2D Canvas -->
+  <canvas id="fireworksCanvas"></canvas>
+
+  <!-- =============================================================
+       HEADER & NAVIGATION BAR
+       ============================================================= -->
+  <header class="deck-header">
+    <div class="header-inner">
+      <div class="brand-section">
+        <div class="brand-icon-box">⏳</div>
+        <div class="brand-title-wrap">
+          <h1>Les 3 Futurs • CBSE Board Master Deck</h1>
+          <p>Futur Proche • Futur Simple • Futur Antérieur (15 Official Questions)</p>
+        </div>
+      </div>
+
+      <div class="header-controls">
+        <button class="ctrl-btn" onclick="toggleAllSolutions()" id="masterToggleBtn">
+          <span id="masterToggleIcon">👁️</span> <span id="masterToggleText">Show All Answers</span>
+        </button>
+        <button class="ctrl-btn" onclick="toggleFullscreen()" title="Toggle Fullscreen">
+          <span>⛶</span> Fullscreen
+        </button>
+        <button class="ctrl-btn btn-primary" onclick="openSettingsModal()" title="Customize Colors & Fonts">
+          <span>⚙️</span> Themes &amp; Fonts
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Progress Bar -->
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="progressBarFill"></div>
+  </div>
+
+  <!-- Stats HUD Strip -->
+  <div class="hud-stats-strip">
+    <div class="stats-chip-group">
+      <div class="stat-chip score-chip">
+        <span>🏆 Score:</span>
+        <span id="scoreVal">0</span> / 15
+      </div>
+      <div class="stat-chip streak-chip">
+        <span>🔥 Streak:</span>
+        <span id="streakVal">0</span>
+      </div>
+      <div class="stat-chip slide-chip">
+        <span>Question:</span>
+        <span id="hudSlideNum">1</span> / 15
+      </div>
+    </div>
+
+    <!-- 15 Clickable Jump Pills -->
+    <div class="jump-pills-container">
+      <button class="jump-pill active" id="pill-q1" onclick="goToSlide(1)">1</button>
+      <button class="jump-pill" id="pill-q2" onclick="goToSlide(2)">2</button>
+      <button class="jump-pill" id="pill-q3" onclick="goToSlide(3)">3</button>
+      <button class="jump-pill" id="pill-q4" onclick="goToSlide(4)">4</button>
+      <button class="jump-pill" id="pill-q5" onclick="goToSlide(5)">5</button>
+      <button class="jump-pill" id="pill-q6" onclick="goToSlide(6)">6</button>
+      <button class="jump-pill" id="pill-q7" onclick="goToSlide(7)">7</button>
+      <button class="jump-pill" id="pill-q8" onclick="goToSlide(8)">8</button>
+      <button class="jump-pill" id="pill-q9" onclick="goToSlide(9)">9</button>
+      <button class="jump-pill" id="pill-q10" onclick="goToSlide(10)">10</button>
+      <button class="jump-pill" id="pill-q11" onclick="goToSlide(11)">11</button>
+      <button class="jump-pill" id="pill-q12" onclick="goToSlide(12)">12</button>
+      <button class="jump-pill" id="pill-q13" onclick="goToSlide(13)">13</button>
+      <button class="jump-pill" id="pill-q14" onclick="goToSlide(14)">14</button>
+      <button class="jump-pill" id="pill-q15" onclick="goToSlide(15)">15</button>
+      <button class="jump-pill" id="pill-q16" onclick="goToSlide(16)">🏆</button>
+    </div>
+  </div>
+
+  <!-- =============================================================
+       MAIN DECK STAGE (15 SLIDES + SCOREBOARD)
+       ============================================================= -->
+  <main class="main-wrapper">
+
+    <!-- -------------------------------------------------------------
+         SLIDE 1: QUESTION 1 (CBSE 2019)
+         ------------------------------------------------------------- -->
+    <section class="question-slide active" data-q="1" id="slide-1">
+      <div class="slide-card">
+        <div class="slide-meta-bar">
+          <div class="slide-badge-group">
+            <span class="category-badge badge-fa">🟣 Futur Antérieur (Earlier Action)</span>
+            <span class="year-tag">CBSE 2019</span>
+          </div>
+          <button class="listen-btn" onclick="speakSentence('Dès que nous aurons fini nos examens, nous irons en France.')">
+            <span>Écouter la phrase</span> 🔊
+          </button>
+        </div>
+
+        <div class="sentence-hero-container">
+          <div class="french-sentence-text">
+            Dès que nous <span class="interactive-blank" id="blank-q1">___</span> nos examens, nous irons en France.
+          </div>
+          <div class="sentence-english-hint">
+            "As soon as we finish / have finished our exams, we will go to France."
+          </div>
+        </div>
+
+        <div class="options-picker-section">
+          <div class="picker-label">👇 Click the correct conjugated verb:</div>
+          <div class="options-button-grid" id="options-q1">
+            <button class="option-btn" onclick="submitAnswer(1, 'aurons fini')">aurons fini</button>
+            <button class="option-btn" onclick="submitAnswer(1, 'finirons')">finirons</button>
+            <button class="option-btn" onclick="submitAnswer(1, 'allons finir')">allons finir</button>
+          </div>
+        </div>
+
+        <div class="feedback-toast" id="feedback-q1"></div>
+
+        <div class="solution-toggle-row">
+          <button class="toggle-solution-btn" id="toggleBtn-q1" onclick="toggleSlideSolution(1)">
+            💡 Reveal Solution &amp; Diagram
+          </button>
+          <button class="reset-slide-btn" onclick="resetSlide(1)">🔄 Try Again</button>
+        </div>
+
+        <!-- Diagram Panel -->
+        <div class="solution-panel" id="solution-q1">
+          <div class="diagram-pipeline">
+            <div class="pipeline-title">
+              <span>🧠 Mental Trigger Flowchart: Chronological Future Order</span>
+            </div>
+            <div class="pipeline-flow">
+              <div class="flow-step-card step-clue">
+                <span class="step-badge">Step 1: Clue Spotted</span>
+                <div class="step-heading">🔍 "Dès que" + "irons"</div>
+                <div class="step-desc">
+                  Notice conjunction <strong>Dès que</strong> + main verb <strong>irons</strong> (Futur Simple).
+                </div>
+              </div>
+
+              <div class="flow-step-card step-timeline">
+                <span class="step-badge">Step 2: Timeline Flow</span>
+                <div class="step-heading">⏱️ Action 1 ➔ Action 2</div>
+                <div class="step-desc">
+                  Exams finish <strong>FIRST (Action 1)</strong> ➔ Trip to France <strong>SECOND (Action 2)</strong>.
+                </div>
+              </div>
+
+              <div class="flow-step-card step-formula">
+                <span class="step-badge">Step 3: Math Formula</span>
+                <div class="step-heading">📐 Avoir (FS) + P.P.</div>
+                <div class="step-desc">
+                  <code>nous</code> + <strong>aurons</strong> + <strong>fini</strong> = <em>aurons fini</em>.
+                </div>
+              </div>
+
+              <div class="flow-step-card step-result">
+                <span class="step-badge">Step 4: Answer</span>
+                <div class="step-heading">✅ aurons fini</div>
+                <div class="step-desc">
+                  Tense: <strong>Futur Antérieur</strong>.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="short-rule-card">
+            <div class="rule-icon">⚡</div>
+            <div class="rule-content">
+              <h4>Golden Law (Short &amp; Crisp)</h4>
+              <p>After <em>Quand / Dès que / Aussitôt que</em>, the earlier completed future action MUST take <strong>Futur Antérieur</strong>.</p>
+            </div>
+          </div>
+
+          <div class="contrast-grid">
+            <div class="contrast-box why-yes">
+              <div class="contrast-title"><span>✅ Why "aurons fini"?</span></div>
+              <div class="contrast-text">
+                • Action 1 happens <em>before</em> we go to France in the future.<br>
+                • Conjunction <em>Dès que</em> strictly triggers Futur Antérieur here.
+              </div>
+            </div>
+            <div class="contrast-box why-no">
+              <div class="contrast-title"><span>❌ Why NOT "finirons"?</span></div>
+              <div class="contrast-text">
+                • <em>finirons</em> is Futur Simple. We cannot use two independent simultaneous future actions when one is completed first.
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- -------------------------------------------------------------
+         SLIDE 2: QUESTION 2 (CBSE 2018)
+         ------------------------------------------------------------- -->
+    <section class="question-slide" data-q="2" id="slide-2">
+      <div class="slide-card">
+        <div class="slide-meta-bar">
+          <div class="slide-badge-group">
+            <span class="category-badge badge-fs">🔵 Futur Simple (Time Marker)</span>
+            <span class="year-tag">CBSE 2018</span>
+          </div>
+          <button class="listen-btn" onclick="speakSentence('Demain, mes parents partiront pour le Canada.')">
+            <span>Écouter la phrase</span> 🔊
+          </button>
+        </div>
+
+        <div class="sentence-hero-container">
+          <div class="french-sentence-text">
+            Demain, mes parents <span class="interactive-blank" id="blank-q2">___</span> pour le Canada.
+          </div>
+          <div class="sentence-english-hint">
+            "Tomorrow, my parents will leave for Canada."
+          </div>
+        </div>
+
+        <div class="options-picker-section">
+          <div class="picker-label">👇 Click the correct conjugated verb:</div>
+          <div class="options-button-grid" id="options-q2">
+            <button class="option-btn" onclick="submitAnswer(2, 'partiront')">partiront</button>
+            <button class="option-btn" onclick="submitAnswer(2, 'vont partir')">vont partir</button>
+            <button class="option-btn" onclick="submitAnswer(2, 'seront partis')">seront partis</button>
+          </div>
+        </div>
+
+        <div class="feedback-toast" id="feedback-q2"></div>
+
+        <div class="solution-toggle-row">
+          <button class="toggle-solution-btn" id="toggleBtn-q2" onclick="toggleSlideSolution(2)">
+            💡 Reveal Solution &amp; Diagram
+          </button>
+          <button class="reset-slide-btn" onclick="resetSlide(2)">🔄 Try Again</button>
+        </div>
+
+        <!-- Diagram Panel -->
+        <div class="solution-panel" id="solution-q2">
+          <div class="diagram-pipeline">
+            <div class="pipeline-title">
+              <span>🧠 Mental Trigger Flowchart: Single Calendar Marker</span>
+            </div>
+            <div class="pipeline-flow">
+              <div class="flow-step-card step-clue">
+                <span class="step-badge">Step 1: Clue Spotted</span>
+                <div class="step-heading">🔍 "Demain"</div>
+                <div class="step-desc">
+                  Sentence opens with time marker <strong>Demain</strong> (Tomorrow). Single clause.
+                </div>
+              </div>
+
+              <div class="flow-step-card step-timeline">
+                <span class="step-badge">Step 2: Timeline Flow</span>
+                <div class="step-heading">⏱️ Scheduled Future</div>
+                <div class="step-desc">
+                  Standard planned future departure occurring tomorrow. No preceding action.
+                </div>
+              </div>
+
+              <div class="flow-step-card step-formula">
+                <span class="step-badge">Step 3: Math Formula</span>
+                <div class="step-heading">📐 Infinitive + -ont</div>
+                <div class="step-desc">
+                  <code>mes parents (ils)</code> + <strong>partir</strong> + <strong>-ont</strong> = <em>partiront</em>.
+                </div>
+              </div>
+
+              <div class="flow-step-card step-result">
+                <span class="step-badge">Step 4: Answer</span>
+                <div class="step-heading">✅ partiront</div>
+                <div class="step-desc">
+                  Tense: <strong>Futur Simple</strong>.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="short-rule-card">
+            <div class="rule-icon">⚡</div>
+            <div class="rule-content">
+              <h4>Golden Law (Short &amp; Crisp)</h4>
+              <p>Key future time markers like <em>demain, l'année prochaine, plus tard</em> require standard <strong>Futur Simple</strong>.</p>
+            </div>
+          </div>
+
+          <div class="contrast-grid">
+            <div class="contrast-box why-yes">
+              <div class="contrast-title"><span>✅ Why "partiront"?</span></div>
+              <div class="contrast-text">
+                • Standard Future Simple conjugation for 3rd person plural (<em>ils / mes parents</em>).
+              </div>
+            </div>
+            <div class="contrast-box why-no">
+              <div class="contrast-title"><span>❌ Why NOT "seront partis"?</span></div>
+              <div class="contrast-text">
+                • Futur Antérieur requires a second future reference clause (e.g. <em>Quand...</em>). There is none here.
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- -------------------------------------------------------------
+         SLIDE 3: QUESTION 3 (CBSE 2020)
+         ------------------------------------------------------------- -->
+    <section class="question-slide" data-q="3" id="slide-3">
+      <div class="slide-card">
+        <div class="slide-meta-bar">
+          <div class="slide-badge-group">
+            <span class="category-badge badge-fp">🟢 Futur Proche (Imminent Action)</span>
+            <span class="year-tag">CBSE 2020</span>
+          </div>
+          <button class="listen-btn" onclick="speakSentence('Le train va arriver dans cinq minutes, dépêche-toi !')">
+            <span>Écouter la phrase</span> 🔊
+          </button>
+        </div>
+
+        <div class="sentence-hero-container">
+          <div class="french-sentence-text">
+            Le train <span class="interactive-blank" id="blank-q3">___</span> dans cinq minutes, dépêche-toi !
+          </div>
+          <div class="sentence-english-hint">
+            "The train is going to arrive in five minutes, hurry up!"
+          </div>
+        </div>
+
+        <div class="options-picker-section">
+          <div class="picker-label">👇 Click the correct conjugated verb:</div>
+          <div class="options-button-grid" id="options-q3">
+            <button class="option-btn" onclick="submitAnswer(3, 'va arriver')">va arriver</button>
+            <button class="option-btn" onclick="submitAnswer(3, 'arrivera')">arrivera</button>
+            <button class="option-btn" onclick="submitAnswer(3, 'sera arrivé')">sera arrivé</button>
+          </div>
+        </div>
+
+        <div class="feedback-toast" id="feedback-q3"></div>
+
+        <div class="solution-toggle-row">
+          <button class="toggle-solution-btn" id="toggleBtn-q3" onclick="toggleSlideSolution(3)">
+            💡 Reveal Solution &amp; Diagram
+          </button>
+          <button class="reset-slide-btn" onclick="resetSlide(3)">🔄 Try Again</button>
+        </div>
+
+        <!-- Diagram Panel -->
+        <div class="solution-panel" id="solution-q3">
+          <div class="diagram-pipeline">
+            <div class="pipeline-title">
+              <span>🧠 Mental Trigger Flowchart: Urgency &amp; Immediate Arrival</span>
+            </div>
+            <div class="pipeline-flow">
+              <div class="flow-step-card step-clue">
+                <span class="step-badge">Step 1: Clue Spotted</span>
+                <div class="step-heading">🔍 "dans 5 min" + "dépêche-toi!"</div>
+                <div class="step-desc">
+                  Short countdown (<strong>dans cinq minutes</strong>) + imperative exclamation (<strong>dépêche-toi !</strong>).
+                </div>
+              </div>
+
+              <div class="flow-step-card step-timeline">
+                <span class="step-badge">Step 2: Timeline Flow</span>
+                <div class="step-heading">⏱️ Imminent (Minutes Away)</div>
+                <div class="step-desc">
+                  Happening right now, virtually immediate. Signals <strong>Futur Proche</strong>.
+                </div>
+              </div>
+
+              <div class="flow-step-card step-formula">
+                <span class="step-badge">Step 3: Math Formula</span>
+                <div class="step-heading">📐 Aller (Présent) + Inf</div>
+                <div class="step-desc">
+                  <code>le train (il)</code> + <strong>va</strong> + <strong>arriver</strong> = <em>va arriver</em>.
+                </div>
+              </div>
+
+              <div class="flow-step-card step-result">
+                <span class="step-badge">Step 4: Answer</span>
+                <div class="step-heading">✅ va arriver</div>
+                <div class="step-desc">
+                  Tense: <strong>Futur Proche</strong>.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="short-rule-card">
+            <div class="rule-icon">⚡</div>
+            <div class="rule-content">
+              <h4>Golden Law (Short &amp; Crisp)</h4>
+              <p>Short countdowns (<em>dans 5 minutes</em>) paired with imperative urgency (<em>dépêche-toi !</em>) trigger <strong>Futur Proche</strong>.</p>
+            </div>
+          </div>
+
+          <div class="contrast-grid">
+            <div class="contrast-box why-yes">
+              <div class="contrast-title"><span>✅ Why "va arriver"?</span></div>
+              <div class="contrast-text">
+                • Expresses imminent, virtually occurring reality right in front of us.
+              </div>
+            </div>
+            <div class="contrast-box why-no">
+              <div class="contrast-title"><span>❌ Why NOT "arrivera"?</span></div>
+              <div class="contrast-text">
+                • <em>arrivera</em> sounds like distant, detached prediction rather than the immediate urgency demanded by <em>dépêche-toi !</em>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- -------------------------------------------------------------
+         SLIDE 4: QUESTION 4 (CBSE 2017)
+         ------------------------------------------------------------- -->
+    <section class="question-slide" data-q="4" id="slide-4">
+      <div class="slide-card">
+        <div class="slide-meta-bar">
+          <div class="slide-badge-group">
+            <span class="category-badge badge-fs">🔵 Futur Simple (Result Clause)</span>
+            <span class="year-tag">CBSE 2017</span>
+          </div>
+          <button class="listen-btn" onclick="speakSentence('Quand tu auras lu ce roman, tu me le rendras.')">
+            <span>Écouter la phrase</span> 🔊
+          </button>
+        </div>
+
+        <div class="sentence-hero-container">
+          <div class="french-sentence-text">
+            Quand tu auras lu ce roman, tu me le <span class="interactive-blank" id="blank-q4">___</span>.
+          </div>
+          <div class="sentence-english-hint">
+            "When you have read this novel, you will return it to me."
+          </div>
+        </div>
+
+        <div class="options-picker-section">
+          <div class="picker-label">👇 Click the correct conjugated verb:</div>
+          <div class="options-button-grid" id="options-q4">
+            <button class="option-btn" onclick="submitAnswer(4, 'rendras')">rendras</button>
+            <button class="option-btn" onclick="submitAnswer(4, 'auras rendu')">auras rendu</button>
+            <button class="option-btn" onclick="submitAnswer(4, 'vas rendre')">vas rendre</button>
+          </div>
+        </div>
+
+        <div class="feedback-toast" id="feedback-q4"></div>
+
+        <div class="solution-toggle-row">
+          <button class="toggle-solution-btn" id="toggleBtn-q4" onclick="toggleSlideSolution(4)">
+            💡 Reveal Solution &amp; Diagram
+          </button>
+          <button class="reset-slide-btn" onclick="resetSlide(4)">🔄 Try Again</button>
+        </div>
+
+        <!-- Diagram Panel -->
+        <div class="solution-panel" id="solution-q4">
+          <div class="diagram-pipeline">
+            <div class="pipeline-title">
+              <span>🧠 Mental Trigger Flowchart: Complementary Future Clause</span>
+            </div>
+            <div class="pipeline-flow">
+              <div class="flow-step-card step-clue">
+                <span class="step-badge">Step 1: Clue Spotted</span>
+                <div class="step-heading">🔍 "Quand" + "auras lu"</div>
+                <div class="step-desc">
+                  Clause 1 already has <strong>auras lu</strong> (Futur Antérieur)!
+                </div>
+              </div>
+
+              <div class="flow-step-card step-timeline">
+                <span class="step-badge">Step 2: Timeline Flow</span>
+                <div class="step-heading">⏱️ Action 1 already set!</div>
+                <div class="step-desc">
+                  Read novel = Action 1 (FA). Returning it = <strong>Action 2 (Later Future)</strong>.
+                </div>
+              </div>
+
+              <div class="flow-step-card step-formula">
+                <span class="step-badge">Step 3: Math Formula</span>
+                <div class="step-heading">📐 Drop -e + -as</div>
+                <div class="step-desc">
+                  <code>rendre</code> ➔ drop final 'e' (<strong>rendr-</strong>) + <strong>-as</strong> = <em>rendras</em>.
+                </div>
+              </div>
+
+              <div class="flow-step-card step-result">
+                <span class="step-badge">Step 4: Answer</span>
+                <div class="step-heading">✅ rendras</div>
+                <div class="step-desc">
+                  Tense: <strong>Futur Simple</strong>.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="short-rule-card">
+            <div class="rule-icon">⚡</div>
+            <div class="rule-content">
+              <h4>Golden Law (Short &amp; Crisp)</h4>
+              <p>In a <em>Quand</em> sentence: <strong>One clause is Futur Antérieur (Action 1) ➔ The other clause MUST be Futur Simple (Action 2)!</strong></p>
+            </div>
+          </div>
+
+          <div class="contrast-grid">
+            <div class="contrast-box why-yes">
+              <div class="contrast-title"><span>✅ Why "rendras"?</span></div>
+              <div class="contrast-text">
+                • Pairs perfectly with <em>auras lu</em> to complete the Action 1 / Action 2 sequence.
+              </div>
+            </div>
+            <div class="contrast-box why-no">
+              <div class="contrast-title"><span>❌ Why NOT "auras rendu"?</span></div>
+              <div class="contrast-text">
+                • Never put Futur Antérieur in both clauses! One must be Futur Simple.
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- -------------------------------------------------------------
+         SLIDE 5: QUESTION 5 (CBSE 2016)
+         ------------------------------------------------------------- -->
+    <section class="question-slide" data-q="5" id="slide-5">
+      <div class="slide-card">
+        <div class="slide-meta-bar">
+          <div class="slide-badge-group">
+            <span class="category-badge badge-fa">🟣 Futur Antérieur (Conjunction Clause)</span>
+            <span class="year-tag">CBSE 2016</span>
+          </div>
+          <button class="listen-btn" onclick="speakSentence('Aussitôt qu\'il aura reçu son premier salaire, il achètera un ordinateur.')">
+            <span>Écouter la phrase</span> 🔊
+          </button>
+        </div>
+
+        <div class="sentence-hero-container">
+          <div class="french-sentence-text">
+            Aussitôt qu'il <span class="interactive-blank" id="blank-q5">___</span> son premier salaire, il achètera un ordinateur.
+          </div>
+          <div class="sentence-english-hint">
+            "As soon as he receives / has received his first salary, he will buy a computer."
+          </div>
+        </div>
+
+        <div class="options-picker-section">
+          <div class="picker-label">👇 Click the correct conjugated verb:</div>
+          <div class="options-button-grid" id="options-q5">
+            <button class="option-btn" onclick="submitAnswer(5, 'aura reçu')">aura reçu</button>
+            <button class="option-btn" onclick="submitAnswer(5, 'recevra')">recevra</button>
+            <button class="option-btn" onclick="submitAnswer(5, 'va recevoir')">va recevoir</button>
+          </div>
+        </div>
+
+        <div class="feedback-toast" id="feedback-q5"></div>
+
+        <div class="solution-toggle-row">
+          <button class="toggle-solution-btn" id="toggleBtn-q5" onclick="toggleSlideSolution(5)">
+            💡 Reveal Solution &amp; Diagram
+          </button>
+          <button class="reset-slide-btn" onclick="resetSlide(5)">🔄 Try Again</button>
+        </div>
+
+        <!-- Diagram Panel -->
+        <div class="solution-panel" id="solution-q5">
+          <div class="diagram-pipeline">
+            <div class="pipeline-title">
+              <span>🧠 Mental Trigger Flowchart: Aussitôt que Trigger</span>
+            </div>
+            <div class="pipeline-flow">
+              <div class="flow-step-card step-clue">
+                <span class="step-badge">Step 1: Clue Spotted</span>
+                <div class="step-heading">🔍 "Aussitôt qu'" + "achètera"</div>
+                <div class="step-desc">
+                  Conjunction <strong>Aussitôt que</strong> (as soon as) + Clause 2 is <strong>achètera</strong> (Futur Simple).
+                </div>
+              </div>
+
+              <div class="flow-step-card step-timeline">
+                <span class="step-badge">Step 2: Timeline Flow</span>
+                <div class="step-heading">⏱️ Salary First ➔ Buy Second</div>
+                <div class="step-desc">
+                  He must receive the money <strong>FIRST (Action 1)</strong> before buying the PC (Action 2).
+                </div>
+              </div>
+
+              <div class="flow-step-card step-formula">
+                <span class="step-badge">Step 3: Math Formula</span>
+                <div class="step-heading">📐 Avoir (FS) + reçu</div>
+                <div class="step-desc">
+                  <code>il</code> + <strong>aura</strong> + <strong>reçu</strong> (P.P. of recevoir) = <em>aura reçu</em>.
+                </div>
+              </div>
+
+              <div class="flow-step-card step-result">
+                <span class="step-badge">Step 4: Answer</span>
+                <div class="step-heading">✅ aura reçu</div>
+                <div class="step-desc">
+                  Tense: <strong>Futur Antérieur</strong>.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="short-rule-card">
+            <div class="rule-icon">⚡</div>
+            <div class="rule-content">
+              <h4>Golden Law (Short &amp; Crisp)</h4>
+              <p>The clause attached directly to <em>Aussitôt que</em> represents Action 1 and takes <strong>Futur Antérieur</strong>.</p>
+            </div>
+          </div>
+
+          <div class="contrast-grid">
+            <div class="contrast-box why-yes">
+              <div class="contrast-title"><span>✅ Why "aura reçu"?</span></div>
+              <div class="contrast-text">
+                • Accurately establishes that receiving the salary must finish prior to purchasing.
+              </div>
+            </div>
+            <div class="contrast-box why-no">
+              <div class="contrast-title"><span>❌ Why NOT "recevra"?</span></div>
+              <div class="contrast-text">
+                • <em>recevra</em> fails to establish that receiving the salary is completed first.
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- -------------------------------------------------------------
+         SLIDE 6: QUESTION 6 (CBSE 2015)
+         ------------------------------------------------------------- -->
+    <section class="question-slide" data-q="6" id="slide-6">
+      <div class="slide-card">
+        <div class="slide-meta-bar">
+          <div class="slide-badge-group">
+            <span class="category-badge badge-fp">🟢 Futur Proche (Direct Evidence)</span>
+            <span class="year-tag">CBSE 2015</span>
+          </div>
+          <button class="listen-btn" onclick="speakSentence('Regardez ces nuages gris, il va pleuvoir.')">
+            <span>Écouter la phrase</span> 🔊
+          </button>
+        </div>
+
+        <div class="sentence-hero-container">
+          <div class="french-sentence-text">
+            Regardez ces nuages gris, il <span class="interactive-blank" id="blank-q6">___</span>.
+          </div>
+          <div class="sentence-english-hint">
+            "Look at those dark clouds, it is going to rain."
+          </div>
+        </div>
+
+        <div class="options-picker-section">
+          <div class="picker-label">👇 Click the correct conjugated verb:</div>
+          <div class="options-button-grid" id="options-q6">
+            <button class="option-btn" onclick="submitAnswer(6, 'va pleuvoir')">va pleuvoir</button>
+            <button class="option-btn" onclick="submitAnswer(6, 'pleuvra')">pleuvra</button>
+            <button class="option-btn" onclick="submitAnswer(6, 'aura plu')">aura plu</button>
+          </div>
+        </div>
+
+        <div class="feedback-toast" id="feedback-q6"></div>
+
+        <div class="solution-toggle-row">
+          <button class="toggle-solution-btn" id="toggleBtn-q6" onclick="toggleSlideSolution(6)">
+            💡 Reveal Solution &amp; Diagram
+          </button>
+          <button class="reset-slide-btn" onclick="resetSlide(6)">🔄 Try Again</button>
+        </div>
+
+        <!-- Diagram Panel -->
+        <div class="solution-panel" id="solution-q6">
+          <div class="diagram-pipeline">
+            <div class="pipeline-title">
+              <span>🧠 Mental Trigger Flowchart: Direct Visual Evidence</span>
+            </div>
+            <div class="pipeline-flow">
+              <div class="flow-step-card step-clue">
+                <span class="step-badge">Step 1: Clue Spotted</span>
+                <div class="step-heading">🔍 "Regardez ces nuages"</div>
+                <div class="step-desc">
+                  Direct physical observation in the immediate present (<strong>Regardez...</strong>).
+                </div>
+              </div>
+
+              <div class="flow-step-card step-timeline">
+                <span class="step-badge">Step 2: Timeline Flow</span>
+                <div class="step-heading">⏱️ Inevitable &amp; Imminent</div>
+                <div class="step-desc">
+                  Rain is about to pour down in seconds. 100% certainty = <strong>Futur Proche</strong>.
+                </div>
+              </div>
+
+              <div class="flow-step-card step-formula">
+                <span class="step-badge">Step 3: Math Formula</span>
+                <div class="step-heading">📐 Aller (il) + pleuvoir</div>
+                <div class="step-desc">
+                  <code>il</code> + <strong>va</strong> + <strong>pleuvoir</strong> (Infinitive) = <em>va pleuvoir</em>.
+                </div>
+              </div>
+
+              <div class="flow-step-card step-result">
+                <span class="step-badge">Step 4: Answer</span>
+                <div class="step-heading">✅ va pleuvoir</div>
+                <div class="step-desc">
+                  Tense: <strong>Futur Proche</strong>.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="short-rule-card">
+            <div class="rule-icon">⚡</div>
+            <div class="rule-content">
+              <h4>Golden Law (Short &amp; Crisp)</h4>
+              <p>When an action is physically imminent based on visible sensory evidence (<em>Regardez, attention</em>), use <strong>Futur Proche</strong>.</p>
+            </div>
+          </div>
+
+          <div class="contrast-grid">
+            <div class="contrast-box why-yes">
+              <div class="contrast-title"><span>✅ Why "va pleuvoir"?</span></div>
+              <div class="contrast-text">
+                • Fits the imminent weather change observed right now in the sky.
+              </div>
+            </div>
+            <div class="contrast-box why-no">
+              <div class="contrast-title"><span>❌ Why NOT "pleuvra"?</span></div>
+              <div class="contrast-text">
+                • <em>pleuvra</em> is a distant weather forecast, not the imminent event happening right now.
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- -------------------------------------------------------------
+         SLIDE 7: QUESTION 7 (CBSE 2022)
+         ------------------------------------------------------------- -->
+    <section class="question-slide" data-q="7" id="slide-7">
+      <div class="slide-card">
+        <div class="slide-meta-bar">
+          <div class="slide-badge-group">
+            <span class="category-badge badge-fs">🔵 Futur Simple (Distant Marker)</span>
+            <span class="year-tag">CBSE 2022</span>
+          </div>
+          <button class="listen-btn" onclick="speakSentence('L\'année prochaine, vous ferez vos études à l\'étranger.')">
+            <span>Écouter la phrase</span> 🔊
+          </button>
+        </div>
+
+        <div class="sentence-hero-container">
+          <div class="french-sentence-text">
+            L'année prochaine, vous <span class="interactive-blank" id="blank-q7">___</span> vos études à l'étranger.
+          </div>
+          <div class="sentence-english-hint">
+            "Next year, you will do your studies abroad."
+          </div>
+        </div>
+
+        <div class="options-picker-section">
+          <div class="picker-label">👇 Click the correct conjugated verb:</div>
+          <div class="options-button-grid" id="options-q7">
+            <button class="option-btn" onclick="submitAnswer(7, 'ferez')">ferez</button>
+            <button class="option-btn" onclick="submitAnswer(7, 'allez faire')">allez faire</button>
+            <button class="option-btn" onclick="submitAnswer(7, 'aurez fait')">aurez fait</button>
+          </div>
+        </div>
+
+        <div class="feedback-toast" id="feedback-q7"></div>
+
+        <div class="solution-toggle-row">
+          <button class="toggle-solution-btn" id="toggleBtn-q7" onclick="toggleSlideSolution(7)">
+            💡 Reveal Solution &amp; Diagram
+          </button>
+          <button class="reset-slide-btn" onclick="resetSlide(7)">🔄 Try Again</button>
+        </div>
+
+        <!-- Diagram Panel -->
+        <div class="solution-panel" id="solution-q7">
+          <div class="diagram-pipeline">
+            <div class="pipeline-title">
+              <span>🧠 Mental Trigger Flowchart: Distant Future Time Marker</span>
+            </div>
+            <div class="pipeline-flow">
+              <div class="flow-step-card step-clue">
+                <span class="step-badge">Step 1: Clue Spotted</span>
+                <div class="step-heading">🔍 "L'année prochaine"</div>
+                <div class="step-desc">
+                  Time indicator <strong>L'année prochaine</strong> (Next year). Long-term future.
+                </div>
+              </div>
+
+              <div class="flow-step-card step-timeline">
+                <span class="step-badge">Step 2: Timeline Flow</span>
+                <div class="step-heading">⏱️ Months Ahead</div>
+                <div class="step-desc">
+                  Distant calendar event. Not immediate. Standard <strong>Futur Simple</strong>.
+                </div>
+              </div>
+
+              <div class="flow-step-card step-formula">
+                <span class="step-badge">Step 3: Math Formula</span>
+                <div class="step-heading">📐 Stem fer- + -ez</div>
+                <div class="step-desc">
+                  Irregular stem of <code>faire</code> is <strong>fer-</strong> + <strong>-ez</strong> (vous) = <em>ferez</em>.
+                </div>
+              </div>
+
+              <div class="flow-step-card step-result">
+                <span class="step-badge">Step 4: Answer</span>
+                <div class="step-heading">✅ ferez</div>
+                <div class="step-desc">
+                  Tense: <strong>Futur Simple</strong>.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="short-rule-card">
+            <div class="rule-icon">⚡</div>
+            <div class="rule-content">
+              <h4>Golden Law (Short &amp; Crisp)</h4>
+              <p>Distant dates like <em>l'année prochaine / le mois prochain</em> take <strong>Futur Simple</strong> with the irregular stem <strong>fer-</strong>.</p>
+            </div>
+          </div>
+
+          <div class="contrast-grid">
+            <div class="contrast-box why-yes">
+              <div class="contrast-title"><span>✅ Why "ferez"?</span></div>
+              <div class="contrast-text">
+                • Correct future stem (<em>fer-</em>) + <em>-ez</em> ending for <em>vous</em>.
+              </div>
+            </div>
+            <div class="contrast-box why-no">
+              <div class="contrast-title"><span>❌ Why NOT "allez faire"?</span></div>
+              <div class="contrast-text">
+                • <em>L'année prochaine</em> is 12 months away — far too distant for Futur Proche!
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- -------------------------------------------------------------
+         SLIDE 8: QUESTION 8 (CBSE 2023)
+         ------------------------------------------------------------- -->
+    <section class="question-slide" data-q="8" id="slide-8">
+      <div class="slide-card">
+        <div class="slide-meta-bar">
+          <div class="slide-badge-group">
+            <span class="category-badge badge-fa">🟣 Futur Antérieur (Être + Agreement)</span>
+            <span class="year-tag">CBSE 2023</span>
+          </div>
+          <button class="listen-btn" onclick="speakSentence('Dès qu\'elles seront rentrées de l\'école, elles regarderont la télévision.')">
+            <span>Écouter la phrase</span> 🔊
+          </button>
+        </div>
+
+        <div class="sentence-hero-container">
+          <div class="french-sentence-text">
+            Dès qu'elles <span class="interactive-blank" id="blank-q8">___</span> de l'école, elles regarderont la télévision.
+          </div>
+          <div class="sentence-english-hint">
+            "As soon as they return / have returned from school, they will watch television."
+          </div>
+        </div>
+
+        <div class="options-picker-section">
+          <div class="picker-label">👇 Click the correct conjugated verb:</div>
+          <div class="options-button-grid" id="options-q8">
+            <button class="option-btn" onclick="submitAnswer(8, 'seront rentrées')">seront rentrées</button>
+            <button class="option-btn" onclick="submitAnswer(8, 'rentreront')">rentreront</button>
+            <button class="option-btn" onclick="submitAnswer(8, 'seront rentré')">seront rentré</button>
+          </div>
+        </div>
+
+        <div class="feedback-toast" id="feedback-q8"></div>
+
+        <div class="solution-toggle-row">
+          <button class="toggle-solution-btn" id="toggleBtn-q8" onclick="toggleSlideSolution(8)">
+            💡 Reveal Solution &amp; Diagram
+          </button>
+          <button class="reset-slide-btn" onclick="resetSlide(8)">🔄 Try Again</button>
+        </div>
+
+        <!-- Diagram Panel -->
+        <div class="solution-panel" id="solution-q8">
+          <div class="diagram-pipeline">
+            <div class="pipeline-title">
+              <span>🧠 Mental Trigger Flowchart: Être Verb &amp; Feminine Plural Agreement</span>
+            </div>
+            <div class="pipeline-flow">
+              <div class="flow-step-card step-clue">
+                <span class="step-badge">Step 1: Clue Spotted</span>
+                <div class="step-heading">🔍 "Dès qu'" + "rentrer"</div>
+                <div class="step-desc">
+                  <em>Dès que</em> + <strong>regarderont</strong> (FS) + verb <strong>rentrer</strong> is a DR MRS VANDERTRAMP verb!
+                </div>
+              </div>
+
+              <div class="flow-step-card step-timeline">
+                <span class="step-badge">Step 2: Timeline Flow</span>
+                <div class="step-heading">⏱️ Return Home ➔ Watch TV</div>
+                <div class="step-desc">
+                  Returning home is <strong>Action 1</strong> = <strong>Futur Antérieur</strong>.
+                </div>
+              </div>
+
+              <div class="flow-step-card step-formula">
+                <span class="step-badge">Step 3: Math Formula</span>
+                <div class="step-heading">📐 Être (FS) + rentré + es</div>
+                <div class="step-desc">
+                  <code>elles</code> ➔ <strong>seront</strong> + <strong>rentré</strong> + <strong>-es</strong> = <em>seront rentrées</em>.
+                </div>
+              </div>
+
+              <div class="flow-step-card step-result">
+                <span class="step-badge">Step 4: Answer</span>
+                <div class="step-heading">✅ seront rentrées</div>
+                <div class="step-desc">
+                  Tense: <strong>Futur Antérieur</strong> (Feminine Plural Agreement!).
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="short-rule-card">
+            <div class="rule-icon">⚡</div>
+            <div class="rule-content">
+              <h4>Golden Law (Short &amp; Crisp)</h4>
+              <p>Verbs of movement (<em>rentrer, arriver, partir...</em>) take <strong>ÊTRE</strong> in Futur Antérieur and MUST agree with subject (<em>elles = +es</em>)!</p>
+            </div>
+          </div>
+
+          <div class="contrast-grid">
+            <div class="contrast-box why-yes">
+              <div class="contrast-title"><span>✅ Why "seront rentrées"?</span></div>
+              <div class="contrast-text">
+                • Correct auxiliary <em>ÊTRE</em> in FS (<em>seront</em>) + agreement with <em>elles</em> (<em>-es</em>).
+              </div>
+            </div>
+            <div class="contrast-box why-no">
+              <div class="contrast-title"><span>❌ Why NOT "seront rentré"?</span></div>
+              <div class="contrast-text">
+                • Trap! Missing the mandatory feminine plural agreement <em>-es</em> will lose CBSE exam marks!
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- -------------------------------------------------------------
+         SLIDE 9: QUESTION 9 (CBSE 2018)
+         ------------------------------------------------------------- -->
+    <section class="question-slide" data-q="9" id="slide-9">
+      <div class="slide-card">
+        <div class="slide-meta-bar">
+          <div class="slide-badge-group">
+            <span class="category-badge badge-fa">🟣 Futur Antérieur (Reversed Clause Order)</span>
+            <span class="year-tag">CBSE 2018</span>
+          </div>
+          <button class="listen-btn" onclick="speakSentence('Je vous téléphonerai quand j\'aurai trouvé une bonne solution.')">
+            <span>Écouter la phrase</span> 🔊
+          </button>
+        </div>
+
+        <div class="sentence-hero-container">
+          <div class="french-sentence-text">
+            Je vous téléphonerai quand je <span class="interactive-blank" id="blank-q9">___</span> une bonne solution.
+          </div>
+          <div class="sentence-english-hint">
+            "I will phone you when I have found a good solution."
+          </div>
+        </div>
+
+        <div class="options-picker-section">
+          <div class="picker-label">👇 Click the correct conjugated verb:</div>
+          <div class="options-button-grid" id="options-q9">
+            <button class="option-btn" onclick="submitAnswer(9, 'aurai trouvé')">aurai trouvé</button>
+            <button class="option-btn" onclick="submitAnswer(9, 'trouverai')">trouverai</button>
+            <button class="option-btn" onclick="submitAnswer(9, 'vais trouver')">vais trouver</button>
+          </div>
+        </div>
+
+        <div class="feedback-toast" id="feedback-q9"></div>
+
+        <div class="solution-toggle-row">
+          <button class="toggle-solution-btn" id="toggleBtn-q9" onclick="toggleSlideSolution(9)">
+            💡 Reveal Solution &amp; Diagram
+          </button>
+          <button class="reset-slide-btn" onclick="resetSlide(9)">🔄 Try Again</button>
+        </div>
+
+        <!-- Diagram Panel -->
+        <div class="solution-panel" id="solution-q9">
+          <div class="diagram-pipeline">
+            <div class="pipeline-title">
+              <span>🧠 Mental Trigger Flowchart: "quand" in the Second Clause</span>
+            </div>
+            <div class="pipeline-flow">
+              <div class="flow-step-card step-clue">
+                <span class="step-badge">Step 1: Clue Spotted</span>
+                <div class="step-heading">🔍 "téléphonerai" + "quand"</div>
+                <div class="step-desc">
+                  Main clause is <strong>téléphonerai</strong> (Futur Simple). Conjunction <strong>quand</strong> starts clause 2.
+                </div>
+              </div>
+
+              <div class="flow-step-card step-timeline">
+                <span class="step-badge">Step 2: Timeline Flow</span>
+                <div class="step-heading">⏱️ Find First ➔ Call Second</div>
+                <div class="step-desc">
+                  Logic check: I must find the solution <strong>FIRST (Action 1)</strong> before phoning you!
+                </div>
+              </div>
+
+              <div class="flow-step-card step-formula">
+                <span class="step-badge">Step 3: Math Formula</span>
+                <div class="step-heading">📐 Avoir (je) + trouvé</div>
+                <div class="step-desc">
+                  <code>je</code> + <strong>aurai</strong> + <strong>trouvé</strong> (P.P. of trouver) = <em>aurai trouvé</em>.
+                </div>
+              </div>
+
+              <div class="flow-step-card step-result">
+                <span class="step-badge">Step 4: Answer</span>
+                <div class="step-heading">✅ aurai trouvé</div>
+                <div class="step-desc">
+                  Tense: <strong>Futur Antérieur</strong>.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="short-rule-card">
+            <div class="rule-icon">⚡</div>
+            <div class="rule-content">
+              <h4>Golden Law (Short &amp; Crisp)</h4>
+              <p>Even if <em>quand</em> is placed in the 2nd half of the sentence, the clause with <em>quand</em> remains <strong>Action 1 = Futur Antérieur</strong>!</p>
+            </div>
+          </div>
+
+          <div class="contrast-grid">
+            <div class="contrast-box why-yes">
+              <div class="contrast-title"><span>✅ Why "aurai trouvé"?</span></div>
+              <div class="contrast-text">
+                • Finding the solution precedes the phone call chronologically in the future.
+              </div>
+            </div>
+            <div class="contrast-box why-no">
+              <div class="contrast-title"><span>❌ Why NOT "trouverai"?</span></div>
+              <div class="contrast-text">
+                • Would imply both actions happen at the exact same moment without prerequisite completion.
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- -------------------------------------------------------------
+         SLIDE 10: QUESTION 10 (CBSE 2019)
+         ------------------------------------------------------------- -->
+    <section class="question-slide" data-q="10" id="slide-10">
+      <div class="slide-card">
+        <div class="slide-meta-bar">
+          <div class="slide-badge-group">
+            <span class="category-badge badge-fp">🟢 Futur Proche (Instant Marker)</span>
+            <span class="year-tag">CBSE 2019</span>
+          </div>
+          <button class="listen-btn" onclick="speakSentence('Dans un instant, le directeur de l\'école va prononcer son discours.')">
+            <span>Écouter la phrase</span> 🔊
+          </button>
+        </div>
+
+        <div class="sentence-hero-container">
+          <div class="french-sentence-text">
+            Dans un instant, le directeur de l'école <span class="interactive-blank" id="blank-q10">___</span> son discours.
+          </div>
+          <div class="sentence-english-hint">
+            "In a moment, the school principal is going to deliver his speech."
+          </div>
+        </div>
+
+        <div class="options-picker-section">
+          <div class="picker-label">👇 Click the correct conjugated verb:</div>
+          <div class="options-button-grid" id="options-q10">
+            <button class="option-btn" onclick="submitAnswer(10, 'va prononcer')">va prononcer</button>
+            <button class="option-btn" onclick="submitAnswer(10, 'prononcera')">prononcera</button>
+            <button class="option-btn" onclick="submitAnswer(10, 'aura prononcé')">aura prononcé</button>
+          </div>
+        </div>
+
+        <div class="feedback-toast" id="feedback-q10"></div>
+
+        <div class="solution-toggle-row">
+          <button class="toggle-solution-btn" id="toggleBtn-q10" onclick="toggleSlideSolution(10)">
+            💡 Reveal Solution &amp; Diagram
+          </button>
+          <button class="reset-slide-btn" onclick="resetSlide(10)">🔄 Try Again</button>
+        </div>
+
+        <!-- Diagram Panel -->
+        <div class="solution-panel" id="solution-q10">
+          <div class="diagram-pipeline">
+            <div class="pipeline-title">
+              <span>🧠 Mental Trigger Flowchart: Seconds Away</span>
+            </div>
+            <div class="pipeline-flow">
+              <div class="flow-step-card step-clue">
+                <span class="step-badge">Step 1: Clue Spotted</span>
+                <div class="step-heading">🔍 "Dans un instant"</div>
+                <div class="step-desc">
+                  Phrase <strong>Dans un instant</strong> indicates action starting in literally seconds!
+                </div>
+              </div>
+
+              <div class="flow-step-card step-timeline">
+                <span class="step-badge">Step 2: Timeline Flow</span>
+                <div class="step-heading">⏱️ Immediate Imminence</div>
+                <div class="step-desc">
+                  Direct future intention about to unfold right in front of the audience = <strong>Futur Proche</strong>.
+                </div>
+              </div>
+
+              <div class="flow-step-card step-formula">
+                <span class="step-badge">Step 3: Math Formula</span>
+                <div class="step-heading">📐 Aller (il) + prononcer</div>
+                <div class="step-desc">
+                  <code>le directeur (il)</code> + <strong>va</strong> + <strong>prononcer</strong> (Inf) = <em>va prononcer</em>.
+                </div>
+              </div>
+
+              <div class="flow-step-card step-result">
+                <span class="step-badge">Step 4: Answer</span>
+                <div class="step-heading">✅ va prononcer</div>
+                <div class="step-desc">
+                  Tense: <strong>Futur Proche</strong>.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="short-rule-card">
+            <div class="rule-icon">⚡</div>
+            <div class="rule-content">
+              <h4>Golden Law (Short &amp; Crisp)</h4>
+              <p>Phrases like <em>dans un instant, tout de suite, sous peu</em> indicate immediate future = <strong>Futur Proche</strong> (<em>aller + inf</em>).</p>
+            </div>
+          </div>
+
+          <div class="contrast-grid">
+            <div class="contrast-box why-yes">
+              <div class="contrast-title"><span>✅ Why "va prononcer"?</span></div>
+              <div class="contrast-text">
+                • Perfectly matches the immediate imminent trigger <em>Dans un instant</em>.
+              </div>
+            </div>
+            <div class="contrast-box why-no">
+              <div class="contrast-title"><span>❌ Why NOT "prononcera"?</span></div>
+              <div class="contrast-text">
+                • Futur Simple loses the vivid sense of immediacy implied by <em>dans un instant</em>.
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- -------------------------------------------------------------
+         SLIDE 11: QUESTION 11 (CBSE 2020)
+         ------------------------------------------------------------- -->
+    <section class="question-slide" data-q="11" id="slide-11">
+      <div class="slide-card">
+        <div class="slide-meta-bar">
+          <div class="slide-badge-group">
+            <span class="category-badge badge-fs">🔵 Futur Simple (Main Consequence)</span>
+            <span class="year-tag">CBSE 2020</span>
+          </div>
+          <button class="listen-btn" onclick="speakSentence('Une fois que tu auras terminé tes devoirs, tu pourras sortir avec tes amis.')">
+            <span>Écouter la phrase</span> 🔊
+          </button>
+        </div>
+
+        <div class="sentence-hero-container">
+          <div class="french-sentence-text">
+            Une fois que tu auras terminé tes devoirs, tu <span class="interactive-blank" id="blank-q11">___</span> sortir avec tes amis.
+          </div>
+          <div class="sentence-english-hint">
+            "Once you have finished your homework, you will be able to go out with your friends."
+          </div>
+        </div>
+
+        <div class="options-picker-section">
+          <div class="picker-label">👇 Click the correct conjugated verb:</div>
+          <div class="options-button-grid" id="options-q11">
+            <button class="option-btn" onclick="submitAnswer(11, 'pourras')">pourras</button>
+            <button class="option-btn" onclick="submitAnswer(11, 'auras pu')">auras pu</button>
+            <button class="option-btn" onclick="submitAnswer(11, 'peux')">peux</button>
+          </div>
+        </div>
+
+        <div class="feedback-toast" id="feedback-q11"></div>
+
+        <div class="solution-toggle-row">
+          <button class="toggle-solution-btn" id="toggleBtn-q11" onclick="toggleSlideSolution(11)">
+            💡 Reveal Solution &amp; Diagram
+          </button>
+          <button class="reset-slide-btn" onclick="resetSlide(11)">🔄 Try Again</button>
+        </div>
+
+        <!-- Diagram Panel -->
+        <div class="solution-panel" id="solution-q11">
+          <div class="diagram-pipeline">
+            <div class="pipeline-title">
+              <span>🧠 Mental Trigger Flowchart: Une fois que Clause Pair</span>
+            </div>
+            <div class="pipeline-flow">
+              <div class="flow-step-card step-clue">
+                <span class="step-badge">Step 1: Clue Spotted</span>
+                <div class="step-heading">🔍 "Une fois que" + "auras terminé"</div>
+                <div class="step-desc">
+                  Clause 1 is already in <strong>auras terminé</strong> (Futur Antérieur)!
+                </div>
+              </div>
+
+              <div class="flow-step-card step-timeline">
+                <span class="step-badge">Step 2: Timeline Flow</span>
+                <div class="step-heading">⏱️ Action 2 (Later Consequence)</div>
+                <div class="step-desc">
+                  Since Action 1 is already settled, the main result clause MUST be <strong>Futur Simple</strong>.
+                </div>
+              </div>
+
+              <div class="flow-step-card step-formula">
+                <span class="step-badge">Step 3: Math Formula</span>
+                <div class="step-heading">📐 Stem pourr- + -as</div>
+                <div class="step-desc">
+                  Irregular stem of <code>pouvoir</code> is <strong>pourr-</strong> + <strong>-as</strong> (tu) = <em>pourras</em>.
+                </div>
+              </div>
+
+              <div class="flow-step-card step-result">
+                <span class="step-badge">Step 4: Answer</span>
+                <div class="step-heading">✅ pourras</div>
+                <div class="step-desc">
+                  Tense: <strong>Futur Simple</strong>.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="short-rule-card">
+            <div class="rule-icon">⚡</div>
+            <div class="rule-content">
+              <h4>Golden Law (Short &amp; Crisp)</h4>
+              <p>When the condition clause has <em>Une fois que + Futur Antérieur</em>, the main result clause is always <strong>Futur Simple</strong>.</p>
+            </div>
+          </div>
+
+          <div class="contrast-grid">
+            <div class="contrast-box why-yes">
+              <div class="contrast-title"><span>✅ Why "pourras"?</span></div>
+              <div class="contrast-text">
+                • Futur Simple irregular stem <em>pourr-</em> + <em>-as</em> ending for <em>tu</em>.
+              </div>
+            </div>
+            <div class="contrast-box why-no">
+              <div class="contrast-title"><span>❌ Why NOT "auras pu"?</span></div>
+              <div class="contrast-text">
+                • Never duplicate Futur Antérieur in both clauses! One must be Futur Simple.
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- -------------------------------------------------------------
+         SLIDE 12: QUESTION 12 (CBSE 2017)
+         ------------------------------------------------------------- -->
+    <section class="question-slide" data-q="12" id="slide-12">
+      <div class="slide-card">
+        <div class="slide-meta-bar">
+          <div class="slide-badge-group">
+            <span class="category-badge badge-fs">🔵 Futur Simple (Calendar Date)</span>
+            <span class="year-tag">CBSE 2017</span>
+          </div>
+          <button class="listen-btn" onclick="speakSentence('Le mois prochain, les étudiants sauront les résultats de leurs examens.')">
+            <span>Écouter la phrase</span> 🔊
+          </button>
+        </div>
+
+        <div class="sentence-hero-container">
+          <div class="french-sentence-text">
+            Le mois prochain, les étudiants <span class="interactive-blank" id="blank-q12">___</span> les résultats de leurs examens.
+          </div>
+          <div class="sentence-english-hint">
+            "Next month, the students will know the results of their exams."
+          </div>
+        </div>
+
+        <div class="options-picker-section">
+          <div class="picker-label">👇 Click the correct conjugated verb:</div>
+          <div class="options-button-grid" id="options-q12">
+            <button class="option-btn" onclick="submitAnswer(12, 'sauront')">sauront</button>
+            <button class="option-btn" onclick="submitAnswer(12, 'vont savoir')">vont savoir</button>
+            <button class="option-btn" onclick="submitAnswer(12, 'auront su')">auront su</button>
+          </div>
+        </div>
+
+        <div class="feedback-toast" id="feedback-q12"></div>
+
+        <div class="solution-toggle-row">
+          <button class="toggle-solution-btn" id="toggleBtn-q12" onclick="toggleSlideSolution(12)">
+            💡 Reveal Solution &amp; Diagram
+          </button>
+          <button class="reset-slide-btn" onclick="resetSlide(12)">🔄 Try Again</button>
+        </div>
+
+        <!-- Diagram Panel -->
+        <div class="solution-panel" id="solution-q12">
+          <div class="diagram-pipeline">
+            <div class="pipeline-title">
+              <span>🧠 Mental Trigger Flowchart: Irregular Stem "saur-"</span>
+            </div>
+            <div class="pipeline-flow">
+              <div class="flow-step-card step-clue">
+                <span class="step-badge">Step 1: Clue Spotted</span>
+                <div class="step-heading">🔍 "Le mois prochain"</div>
+                <div class="step-desc">
+                  Time indicator <strong>Le mois prochain</strong> (Next month). Single independent clause.
+                </div>
+              </div>
+
+              <div class="flow-step-card step-timeline">
+                <span class="step-badge">Step 2: Timeline Flow</span>
+                <div class="step-heading">⏱️ Scheduled Future</div>
+                <div class="step-desc">
+                  General future notification scheduled next month = <strong>Futur Simple</strong>.
+                </div>
+              </div>
+
+              <div class="flow-step-card step-formula">
+                <span class="step-badge">Step 3: Math Formula</span>
+                <div class="step-heading">📐 Stem saur- + -ont</div>
+                <div class="step-desc">
+                  Irregular stem of <code>savoir</code> is <strong>saur-</strong> + <strong>-ont</strong> (ils) = <em>sauront</em>.
+                </div>
+              </div>
+
+              <div class="flow-step-card step-result">
+                <span class="step-badge">Step 4: Answer</span>
+                <div class="step-heading">✅ sauront</div>
+                <div class="step-desc">
+                  Tense: <strong>Futur Simple</strong>.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="short-rule-card">
+            <div class="rule-icon">⚡</div>
+            <div class="rule-content">
+              <h4>Golden Law (Short &amp; Crisp)</h4>
+              <p>Calendar future markers take <strong>Futur Simple</strong>. Remember the irregular stem of <em>savoir</em> is <strong>saur-</strong>!</p>
+            </div>
+          </div>
+
+          <div class="contrast-grid">
+            <div class="contrast-box why-yes">
+              <div class="contrast-title"><span>✅ Why "sauront"?</span></div>
+              <div class="contrast-text">
+                • Standard Future Simple conjugation for 3rd person plural with irregular stem <em>saur-</em>.
+              </div>
+            </div>
+            <div class="contrast-box why-no">
+              <div class="contrast-title"><span>❌ Why NOT "savent"?</span></div>
+              <div class="contrast-text">
+                • <em>savent</em> is Présent tense. The marker <em>Le mois prochain</em> requires the future!
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- -------------------------------------------------------------
+         SLIDE 13: QUESTION 13 (CBSE 2016)
+         ------------------------------------------------------------- -->
+    <section class="question-slide" data-q="13" id="slide-13">
+      <div class="slide-card">
+        <div class="slide-meta-bar">
+          <div class="slide-badge-group">
+            <span class="category-badge badge-fa">🟣 Futur Antérieur (Être Movement Verb)</span>
+            <span class="year-tag">CBSE 2016</span>
+          </div>
+          <button class="listen-btn" onclick="speakSentence('Dès que le professeur sera entré dans la classe, les élèves se lèveront.')">
+            <span>Écouter la phrase</span> 🔊
+          </button>
+        </div>
+
+        <div class="sentence-hero-container">
+          <div class="french-sentence-text">
+            Dès que le professeur <span class="interactive-blank" id="blank-q13">___</span> dans la classe, les élèves se lèveront.
+          </div>
+          <div class="sentence-english-hint">
+            "As soon as the teacher has entered the classroom, the students will stand up."
+          </div>
+        </div>
+
+        <div class="options-picker-section">
+          <div class="picker-label">👇 Click the correct conjugated verb:</div>
+          <div class="options-button-grid" id="options-q13">
+            <button class="option-btn" onclick="submitAnswer(13, 'sera entré')">sera entré</button>
+            <button class="option-btn" onclick="submitAnswer(13, 'entrera')">entrera</button>
+            <button class="option-btn" onclick="submitAnswer(13, 'aura entré')">aura entré</button>
+          </div>
+        </div>
+
+        <div class="feedback-toast" id="feedback-q13"></div>
+
+        <div class="solution-toggle-row">
+          <button class="toggle-solution-btn" id="toggleBtn-q13" onclick="toggleSlideSolution(13)">
+            💡 Reveal Solution &amp; Diagram
+          </button>
+          <button class="reset-slide-btn" onclick="resetSlide(13)">🔄 Try Again</button>
+        </div>
+
+        <!-- Diagram Panel -->
+        <div class="solution-panel" id="solution-q13">
+          <div class="diagram-pipeline">
+            <div class="pipeline-title">
+              <span>🧠 Mental Trigger Flowchart: Movement Verb with Être</span>
+            </div>
+            <div class="pipeline-flow">
+              <div class="flow-step-card step-clue">
+                <span class="step-badge">Step 1: Clue Spotted</span>
+                <div class="step-heading">🔍 "Dès que" + "se lèveront"</div>
+                <div class="step-desc">
+                  <em>Dès que</em> + <strong>se lèveront</strong> (FS) + verb <strong>entrer</strong> takes <strong>ÊTRE</strong>!
+                </div>
+              </div>
+
+              <div class="flow-step-card step-timeline">
+                <span class="step-badge">Step 2: Timeline Flow</span>
+                <div class="step-heading">⏱️ Teacher Enters ➔ Students Rise</div>
+                <div class="step-desc">
+                  Entering is completed <strong>FIRST (Action 1)</strong> before students stand up (Action 2).
+                </div>
+              </div>
+
+              <div class="flow-step-card step-formula">
+                <span class="step-badge">Step 3: Math Formula</span>
+                <div class="step-heading">📐 Être (il) + entré</div>
+                <div class="step-desc">
+                  <code>le professeur (il)</code> + <strong>sera</strong> + <strong>entré</strong> = <em>sera entré</em>.
+                </div>
+              </div>
+
+              <div class="flow-step-card step-result">
+                <span class="step-badge">Step 4: Answer</span>
+                <div class="step-heading">✅ sera entré</div>
+                <div class="step-desc">
+                  Tense: <strong>Futur Antérieur</strong>.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="short-rule-card">
+            <div class="rule-icon">⚡</div>
+            <div class="rule-content">
+              <h4>Golden Law (Short &amp; Crisp)</h4>
+              <p>Action 1 with <em>Dès que</em> requires Futur Antérieur. <em>Entrer</em> takes auxiliary <strong>ÊTRE</strong> (<em>sera entré</em>), NEVER avoir!</p>
+            </div>
+          </div>
+
+          <div class="contrast-grid">
+            <div class="contrast-box why-yes">
+              <div class="contrast-title"><span>✅ Why "sera entré"?</span></div>
+              <div class="contrast-text">
+                • Uses the correct auxiliary verb <em>Être</em> for the movement verb <em>entrer</em>.
+              </div>
+            </div>
+            <div class="contrast-box why-no">
+              <div class="contrast-title"><span>❌ Why NOT "aura entré"?</span></div>
+              <div class="contrast-text">
+                • Big grammatical error! <em>entrer</em> is conjugated with <em>être</em>, never with <em>avoir</em>.
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- -------------------------------------------------------------
+         SLIDE 14: QUESTION 14 (CBSE 2024)
+         ------------------------------------------------------------- -->
+    <section class="question-slide" data-q="14" id="slide-14">
+      <div class="slide-card">
+        <div class="slide-meta-bar">
+          <div class="slide-badge-group">
+            <span class="category-badge badge-fp">🟢 Futur Proche (Tout de suite)</span>
+            <span class="year-tag">CBSE 2024</span>
+          </div>
+          <button class="listen-btn" onclick="speakSentence('Dépêchez-vous, le spectacle va commencer tout de suite !')">
+            <span>Écouter la phrase</span> 🔊
+          </button>
+        </div>
+
+        <div class="sentence-hero-container">
+          <div class="french-sentence-text">
+            Dépêchez-vous, le spectacle <span class="interactive-blank" id="blank-q14">___</span> tout de suite !
+          </div>
+          <div class="sentence-english-hint">
+            "Hurry up, the show is going to start right now!"
+          </div>
+        </div>
+
+        <div class="options-picker-section">
+          <div class="picker-label">👇 Click the correct conjugated verb:</div>
+          <div class="options-button-grid" id="options-q14">
+            <button class="option-btn" onclick="submitAnswer(14, 'va commencer')">va commencer</button>
+            <button class="option-btn" onclick="submitAnswer(14, 'commencera')">commencera</button>
+            <button class="option-btn" onclick="submitAnswer(14, 'aura commencé')">aura commencé</button>
+          </div>
+        </div>
+
+        <div class="feedback-toast" id="feedback-q14"></div>
+
+        <div class="solution-toggle-row">
+          <button class="toggle-solution-btn" id="toggleBtn-q14" onclick="toggleSlideSolution(14)">
+            💡 Reveal Solution &amp; Diagram
+          </button>
+          <button class="reset-slide-btn" onclick="resetSlide(14)">🔄 Try Again</button>
+        </div>
+
+        <!-- Diagram Panel -->
+        <div class="solution-panel" id="solution-q14">
+          <div class="diagram-pipeline">
+            <div class="pipeline-title">
+              <span>🧠 Mental Trigger Flowchart: Urgent Imperative + Tout de suite</span>
+            </div>
+            <div class="pipeline-flow">
+              <div class="flow-step-card step-clue">
+                <span class="step-badge">Step 1: Clue Spotted</span>
+                <div class="step-heading">🔍 "Dépêchez-vous" + "tout de suite!"</div>
+                <div class="step-desc">
+                  Imperative command (<strong>Dépêchez-vous</strong>) + instant trigger (<strong>tout de suite !</strong>).
+                </div>
+              </div>
+
+              <div class="flow-step-card step-timeline">
+                <span class="step-badge">Step 2: Timeline Flow</span>
+                <div class="step-heading">⏱️ Seconds from starting</div>
+                <div class="step-desc">
+                  Curtains are rising right now! Action about to happen immediately = <strong>Futur Proche</strong>.
+                </div>
+              </div>
+
+              <div class="flow-step-card step-formula">
+                <span class="step-badge">Step 3: Math Formula</span>
+                <div class="step-heading">📐 Aller (il) + commencer</div>
+                <div class="step-desc">
+                  <code>le spectacle (il)</code> + <strong>va</strong> + <strong>commencer</strong> = <em>va commencer</em>.
+                </div>
+              </div>
+
+              <div class="flow-step-card step-result">
+                <span class="step-badge">Step 4: Answer</span>
+                <div class="step-heading">✅ va commencer</div>
+                <div class="step-desc">
+                  Tense: <strong>Futur Proche</strong>.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="short-rule-card">
+            <div class="rule-icon">⚡</div>
+            <div class="rule-content">
+              <h4>Golden Law (Short &amp; Crisp)</h4>
+              <p>The combination of <em>Dépêchez-vous</em> + <em>tout de suite !</em> is the ultimate hallmark trigger for <strong>Futur Proche</strong>.</p>
+            </div>
+          </div>
+
+          <div class="contrast-grid">
+            <div class="contrast-box why-yes">
+              <div class="contrast-title"><span>✅ Why "va commencer"?</span></div>
+              <div class="contrast-text">
+                • Directly communicates the urgent, imminent start of the show.
+              </div>
+            </div>
+            <div class="contrast-box why-no">
+              <div class="contrast-title"><span>❌ Why NOT "commencera"?</span></div>
+              <div class="contrast-text">
+                • <em>commencera</em> is for normal scheduled future, lacking the urgency of <em>tout de suite !</em>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- -------------------------------------------------------------
+         SLIDE 15: QUESTION 15 (CBSE 2023)
+         ------------------------------------------------------------- -->
+    <section class="question-slide" data-q="15" id="slide-15">
+      <div class="slide-card">
+        <div class="slide-meta-bar">
+          <div class="slide-badge-group">
+            <span class="category-badge badge-fa">🟣 Futur Antérieur (Prerequisite Condition)</span>
+            <span class="year-tag">CBSE 2023</span>
+          </div>
+          <button class="listen-btn" onclick="speakSentence('Quand nous aurons fait nos valises, nous appellerons un taxi pour l\'aéroport.')">
+            <span>Écouter la phrase</span> 🔊
+          </button>
+        </div>
+
+        <div class="sentence-hero-container">
+          <div class="french-sentence-text">
+            Quand nous <span class="interactive-blank" id="blank-q15">___</span> nos valises, nous appellerons un taxi pour l'aéroport.
+          </div>
+          <div class="sentence-english-hint">
+            "When we have packed our suitcases, we will call a taxi for the airport."
+          </div>
+        </div>
+
+        <div class="options-picker-section">
+          <div class="picker-label">👇 Click the correct conjugated verb:</div>
+          <div class="options-button-grid" id="options-q15">
+            <button class="option-btn" onclick="submitAnswer(15, 'aurons fait')">aurons fait</button>
+            <button class="option-btn" onclick="submitAnswer(15, 'ferons')">ferons</button>
+            <button class="option-btn" onclick="submitAnswer(15, 'allons faire')">allons faire</button>
+          </div>
+        </div>
+
+        <div class="feedback-toast" id="feedback-q15"></div>
+
+        <div class="solution-toggle-row">
+          <button class="toggle-solution-btn" id="toggleBtn-q15" onclick="toggleSlideSolution(15)">
+            💡 Reveal Solution &amp; Diagram
+          </button>
+          <button class="reset-slide-btn" onclick="resetSlide(15)">🔄 Try Again</button>
+        </div>
+
+        <!-- Diagram Panel -->
+        <div class="solution-panel" id="solution-q15">
+          <div class="diagram-pipeline">
+            <div class="pipeline-title">
+              <span>🧠 Mental Trigger Flowchart: Chronological Prerequisite Sequence</span>
+            </div>
+            <div class="pipeline-flow">
+              <div class="flow-step-card step-clue">
+                <span class="step-badge">Step 1: Clue Spotted</span>
+                <div class="step-heading">🔍 "Quand" + "appellerons"</div>
+                <div class="step-desc">
+                  Conjunction <strong>Quand</strong> + Clause 2 has <strong>appellerons</strong> (Futur Simple).
+                </div>
+              </div>
+
+              <div class="flow-step-card step-timeline">
+                <span class="step-badge">Step 2: Timeline Flow</span>
+                <div class="step-heading">⏱️ Pack First ➔ Call Taxi Second</div>
+                <div class="step-desc">
+                  You pack luggage <strong>FIRST (Action 1)</strong> before calling the taxi to the airport.
+                </div>
+              </div>
+
+              <div class="flow-step-card step-formula">
+                <span class="step-badge">Step 3: Math Formula</span>
+                <div class="step-heading">📐 Avoir (FS) + fait</div>
+                <div class="step-desc">
+                  <code>nous</code> + <strong>aurons</strong> + <strong>fait</strong> (P.P. of faire) = <em>aurons fait</em>.
+                </div>
+              </div>
+
+              <div class="flow-step-card step-result">
+                <span class="step-badge">Step 4: Answer</span>
+                <div class="step-heading">✅ aurons fait</div>
+                <div class="step-desc">
+                  Tense: <strong>Futur Antérieur</strong>.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="short-rule-card">
+            <div class="rule-icon">⚡</div>
+            <div class="rule-content">
+              <h4>Golden Law (Short &amp; Crisp)</h4>
+              <p>With <em>Quand</em> + Futur Simple in the main clause, the prerequisite completed action is always <strong>Futur Antérieur</strong>.</p>
+            </div>
+          </div>
+
+          <div class="contrast-grid">
+            <div class="contrast-box why-yes">
+              <div class="contrast-title"><span>✅ Why "aurons fait"?</span></div>
+              <div class="contrast-text">
+                • Correct auxiliary <em>aurons</em> + past participle <em>fait</em> for the prerequisite action.
+              </div>
+            </div>
+            <div class="contrast-box why-no">
+              <div class="contrast-title"><span>❌ Why NOT "ferons"?</span></div>
+              <div class="contrast-text">
+                • <em>ferons</em> is Futur Simple. We cannot use two independent simultaneous future actions here.
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- -------------------------------------------------------------
+         SLIDE 16: FINAL SCOREBOARD & MASTERY TABLE
+         ------------------------------------------------------------- -->
+    <section class="scoreboard-slide" id="slide-16">
+      <div class="trophy-badge">🏆</div>
+      <h2 class="score-headline" id="scoreboardHeadline">Félicitations ! Master of The 3 Futures !</h2>
+      <p class="score-subline" id="scoreboardSubline">You have completed all 15 CBSE Class 10 Board Exam future tense questions!</p>
+
+      <div class="score-pill-row">
+        <div class="big-score-box">
+          <div class="big-score-num" id="finalScoreDisplay">0 / 15</div>
+          <div class="big-score-lbl">Final Score</div>
+        </div>
+        <div class="big-score-box">
+          <div class="big-score-num" id="finalAccuracyDisplay">0%</div>
+          <div class="big-score-lbl">Accuracy Rate</div>
+        </div>
+        <div class="big-score-box">
+          <div class="big-score-num" id="finalStreakDisplay">0</div>
+          <div class="big-score-lbl">Highest Streak</div>
+        </div>
+      </div>
+
+      <h3 style="font-family: var(--font-heading); color: var(--primary); margin: 24px 0 12px 0;">
+        📋 Quick Revision Checklist (All 15 Board Exam Answers)
+      </h3>
+
+      <div style="overflow-x: auto;">
+        <table class="mastery-table">
+          <thead>
+            <tr>
+              <th>Q#</th>
+              <th>CBSE Year</th>
+              <th>Sentence Key Phrase</th>
+              <th>Correct Conjugation</th>
+              <th>Tense &amp; Golden Trigger Rule</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>1</strong></td>
+              <td>2019</td>
+              <td>Dès que nous (finir) ... irons</td>
+              <td><strong style="color: var(--fa-color);">aurons fini</strong></td>
+              <td>Futur Antérieur (Action 1 with Dès que)</td>
+            </tr>
+            <tr>
+              <td><strong>2</strong></td>
+              <td>2018</td>
+              <td>Demain, mes parents (partir)</td>
+              <td><strong style="color: var(--fs-color);">partiront</strong></td>
+              <td>Futur Simple (Demain = scheduled calendar future)</td>
+            </tr>
+            <tr>
+              <td><strong>3</strong></td>
+              <td>2020</td>
+              <td>Le train (arriver) dans 5 min, dépêche-toi !</td>
+              <td><strong style="color: var(--fp-color);">va arriver</strong></td>
+              <td>Futur Proche (Immediate countdown + urgency)</td>
+            </tr>
+            <tr>
+              <td><strong>4</strong></td>
+              <td>2017</td>
+              <td>Quand tu auras lu ..., tu (rendre)</td>
+              <td><strong style="color: var(--fs-color);">rendras</strong></td>
+              <td>Futur Simple (Main clause pairs with FA in clause 1)</td>
+            </tr>
+            <tr>
+              <td><strong>5</strong></td>
+              <td>2016</td>
+              <td>Aussitôt qu'il (recevoir) ... achètera</td>
+              <td><strong style="color: var(--fa-color);">aura reçu</strong></td>
+              <td>Futur Antérieur (Aussitôt que = prerequisite Action 1)</td>
+            </tr>
+            <tr>
+              <td><strong>6</strong></td>
+              <td>2015</td>
+              <td>Regardez ces nuages, il (pleuvoir)</td>
+              <td><strong style="color: var(--fp-color);">va pleuvoir</strong></td>
+              <td>Futur Proche (Sensory evidence in the sky)</td>
+            </tr>
+            <tr>
+              <td><strong>7</strong></td>
+              <td>2022</td>
+              <td>L'année prochaine, vous (faire)</td>
+              <td><strong style="color: var(--fs-color);">ferez</strong></td>
+              <td>Futur Simple (L'année prochaine + stem fer-)</td>
+            </tr>
+            <tr>
+              <td><strong>8</strong></td>
+              <td>2023</td>
+              <td>Dès qu'elles (rentrer) ... regarderont</td>
+              <td><strong style="color: var(--fa-color);">seront rentrées</strong></td>
+              <td>Futur Antérieur (Être auxiliary + fem. pl. agreement -es)</td>
+            </tr>
+            <tr>
+              <td><strong>9</strong></td>
+              <td>2018</td>
+              <td>téléphonerai quand je (trouver)</td>
+              <td><strong style="color: var(--fa-color);">aurai trouvé</strong></td>
+              <td>Futur Antérieur (Find solution 1st before calling)</td>
+            </tr>
+            <tr>
+              <td><strong>10</strong></td>
+              <td>2019</td>
+              <td>Dans un instant, le directeur (prononcer)</td>
+              <td><strong style="color: var(--fp-color);">va prononcer</strong></td>
+              <td>Futur Proche (Dans un instant = seconds away)</td>
+            </tr>
+            <tr>
+              <td><strong>11</strong></td>
+              <td>2020</td>
+              <td>Une fois que auras terminé, tu (pouvoir)</td>
+              <td><strong style="color: var(--fs-color);">pourras</strong></td>
+              <td>Futur Simple (Result clause with stem pourr-)</td>
+            </tr>
+            <tr>
+              <td><strong>12</strong></td>
+              <td>2017</td>
+              <td>Le mois prochain, les étudiants (savoir)</td>
+              <td><strong style="color: var(--fs-color);">sauront</strong></td>
+              <td>Futur Simple (Future date marker + stem saur-)</td>
+            </tr>
+            <tr>
+              <td><strong>13</strong></td>
+              <td>2016</td>
+              <td>Dès que le professeur (entrer) ... se lèveront</td>
+              <td><strong style="color: var(--fa-color);">sera entré</strong></td>
+              <td>Futur Antérieur (Movement verb with auxiliary Être)</td>
+            </tr>
+            <tr>
+              <td><strong>14</strong></td>
+              <td>2024</td>
+              <td>Dépêchez-vous, le spectacle (commencer) tout de suite !</td>
+              <td><strong style="color: var(--fp-color);">va commencer</strong></td>
+              <td>Futur Proche (Imperative + tout de suite)</td>
+            </tr>
+            <tr>
+              <td><strong>15</strong></td>
+              <td>2023</td>
+              <td>Quand nous (faire) ... appellerons</td>
+              <td><strong style="color: var(--fa-color);">aurons fait</strong></td>
+              <td>Futur Antérieur (Pack bags 1st before taxi arrives)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <button class="restart-btn" onclick="restartDeck()">🔄 Recommencer l'exercice (Restart Deck)</button>
+    </section>
+
+    <!-- =============================================================
+         BOTTOM DECK NAVIGATION CONTROLS
+         ============================================================= -->
+    <div class="deck-nav-bar">
+      <button class="nav-btn" id="prevSlideBtn" onclick="prevSlide()" disabled>
+        ◄ Previous Question
+      </button>
+      <div class="slide-counter-badge">
+        <span id="navCounterText">Slide 1 / 15</span>
+      </div>
+      <button class="nav-btn" id="nextSlideBtn" onclick="nextSlide()">
+        Next Question ►
+      </button>
+    </div>
+
+  </main>
+
+  <!-- =============================================================
+       CUSTOMIZE MODAL (THEMES, FONTS, SCALE)
+       ============================================================= -->
+  <div class="modal-backdrop" id="settingsModal" onclick="closeSettingsModalOnBackdrop(event)">
+    <div class="settings-modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title">🎨 Presentation &amp; Deck Customizer</h3>
+        <button class="close-modal-btn" onclick="closeSettingsModal()">&times;</button>
+      </div>
+
+      <!-- Color Themes -->
+      <div class="modal-section">
+        <div class="modal-sec-title">Color Schemes (6 Presets)</div>
+        <div class="theme-grid-selector">
+          <div class="theme-option-card selected" onclick="setTheme('theme-classic', this)">
+            <span>🇫🇷</span> French Tricolor
+          </div>
+          <div class="theme-option-card" onclick="setTheme('theme-cyber', this)">
+            <span>🌌</span> Cyber Neon
+          </div>
+          <div class="theme-option-card" onclick="setTheme('theme-sunrise', this)">
+            <span>🌅</span> Sunrise Gold
+          </div>
+          <div class="theme-option-card" onclick="setTheme('theme-emerald', this)">
+            <span>🌲</span> Emerald Forest
+          </div>
+          <div class="theme-option-card" onclick="setTheme('theme-purple', this)">
+            <span>👑</span> Royal Purple
+          </div>
+          <div class="theme-option-card" onclick="setTheme('theme-minimal', this)">
+            <span>⚪</span> Minimalist Clean
+          </div>
+        </div>
+      </div>
+
+      <!-- Font Selector -->
+      <div class="modal-section">
+        <div class="modal-sec-title">Typography (5 Famous Google Fonts)</div>
+        <select class="font-select-dropdown" onchange="changeFontFamily(this.value)">
+          <option value="'Plus Jakarta Sans', sans-serif">Plus Jakarta Sans (Ultra-Clean Modern)</option>
+          <option value="'Outfit', sans-serif">Outfit (Bold Geometric Display)</option>
+          <option value="'Space Grotesk', monospace">Space Grotesk (Tech Monospace)</option>
+          <option value="'Poppins', sans-serif">Poppins (Friendly Rounded)</option>
+          <option value="'Playfair Display', serif">Playfair Display (Royal Classic Serif)</option>
+        </select>
+      </div>
+
+      <!-- Font Scale Slider -->
+      <div class="modal-section">
+        <div class="modal-sec-title">Text Scaling</div>
+        <div class="scale-controls-row">
+          <button class="scale-btn" onclick="adjustTextScale(-0.05)">A- (Smaller)</button>
+          <div class="scale-val-display" id="scaleValDisplay">115%</div>
+          <button class="scale-btn" onclick="adjustTextScale(0.05)">A+ (Larger)</button>
+          <button class="scale-btn" onclick="resetTextScale()">Reset</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =============================================================
+       INTERACTIVE JAVASCRIPT ENGINE
+       ============================================================= -->
+  <script>
+    /* -------------------------------------------------------------
+       GLOBAL STATE & CONFIGURATION
+       ------------------------------------------------------------- */
+    let currentSlide = 1;
+    const totalSlides = 16; // 15 questions + 1 final scoreboard
+    let score = 0;
+    let currentStreak = 0;
+    let maxStreak = 0;
+    let currentFontScale = 1.15;
+    let masterSolutionsOpen = false;
+
+    // Answer Key
+    const correctAnswers = {
+      1: 'aurons fini',
+      2: 'partiront',
+      3: 'va arriver',
+      4: 'rendras',
+      5: 'aura reçu',
+      6: 'va pleuvoir',
+      7: 'ferez',
+      8: 'seront rentrées',
+      9: 'aurai trouvé',
+      10: 'va prononcer',
+      11: 'pourras',
+      12: 'sauront',
+      13: 'sera entré',
+      14: 'va commencer',
+      15: 'aurons fait'
+    };
+
+    const answeredState = {};
+
+    /* -------------------------------------------------------------
+       WEB AUDIO SYNTHESIZER (NO EXTERNAL AUDIO FILES NEEDED)
+       ------------------------------------------------------------- */
+    let audioCtx = null;
+
+    function initAudio() {
+      if (!audioCtx) {
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        if (AudioContextClass) audioCtx = new AudioContextClass();
+      }
+      if (audioCtx && audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+    }
+
+    function playPopSound() {
+      initAudio();
+      if (!audioCtx) return;
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(420, audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(840, audioCtx.currentTime + 0.08);
+      gain.gain.setValueAtTime(0.18, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.08);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.08);
+    }
+
+    function playSuccessSound() {
+      initAudio();
+      if (!audioCtx) return;
+      const now = audioCtx.currentTime;
+      [523.25, 659.25, 783.99, 1046.50].forEach((freq, idx) => {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(freq, now + idx * 0.07);
+        gain.gain.setValueAtTime(0.15, now + idx * 0.07);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.07 + 0.35);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start(now + idx * 0.07);
+        osc.stop(now + idx * 0.07 + 0.35);
+      });
+    }
+
+    function playErrorSound() {
+      initAudio();
+      if (!audioCtx) return;
+      const now = audioCtx.currentTime;
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(200, now);
+      osc.frequency.exponentialRampToValueAtTime(110, now + 0.22);
+      gain.gain.setValueAtTime(0.18, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.22);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start(now);
+      osc.stop(now + 0.22);
+    }
+
+    function playVictorySound() {
+      initAudio();
+      if (!audioCtx) return;
+      const notes = [523.25, 659.25, 783.99, 1046.50, 880, 1046.50];
+      notes.forEach((freq, i) => {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime + i * 0.12);
+        gain.gain.setValueAtTime(0.2, audioCtx.currentTime + i * 0.12);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + i * 0.12 + 0.4);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start(audioCtx.currentTime + i * 0.12);
+        osc.stop(audioCtx.currentTime + i * 0.12 + 0.4);
+      });
+    }
+
+    /* -------------------------------------------------------------
+       FRENCH TEXT-TO-SPEECH (SPEECH SYNTHESIS)
+       ------------------------------------------------------------- */
+    function speakSentence(text) {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'fr-FR';
+        utterance.rate = 0.9;
+        
+        const voices = window.speechSynthesis.getVoices();
+        const frenchVoice = voices.find(v => v.lang.startsWith('fr') || v.lang.includes('fr-FR'));
+        if (frenchVoice) utterance.voice = frenchVoice;
+        
+        window.speechSynthesis.speak(utterance);
+      }
+    }
+
+    /* -------------------------------------------------------------
+       2D CANVAS FIREWORKS ENGINE
+       ------------------------------------------------------------- */
+    const canvas = document.getElementById('fireworksCanvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    class Particle {
+      constructor(x, y, color) {
+        this.x = x;
+        this.y = y;
+        this.color = color;
+        const angle = Math.random() * Math.PI * 2;
+        const speed = Math.random() * 6 + 2;
+        this.vx = Math.cos(angle) * speed;
+        this.vy = Math.sin(angle) * speed;
+        this.alpha = 1;
+        this.decay = Math.random() * 0.02 + 0.015;
+        this.size = Math.random() * 4 + 2;
+      }
+
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        this.vy += 0.1; // gravity
+        this.alpha -= this.decay;
+      }
+
+      draw() {
+        ctx.save();
+        ctx.globalAlpha = Math.max(0, this.alpha);
+        ctx.fillStyle = this.color;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+    }
+
+    function triggerFireworks(bursts = 3) {
+      const colors = ['#002395', '#ed2939', '#f4b436', '#22c55e', '#a855f7', '#00f2fe', '#ffffff'];
+      for (let b = 0; b < bursts; b++) {
+        setTimeout(() => {
+          const x = Math.random() * (canvas.width * 0.7) + canvas.width * 0.15;
+          const y = Math.random() * (canvas.height * 0.5) + canvas.height * 0.15;
+          const burstColor = colors[Math.floor(Math.random() * colors.length)];
+          for (let i = 0; i < 45; i++) {
+            particles.push(new Particle(x, y, burstColor));
+          }
+        }, b * 180);
+      }
+    }
+
+    function animateParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (let i = particles.length - 1; i >= 0; i--) {
+        particles[i].update();
+        particles[i].draw();
+        if (particles[i].alpha <= 0) {
+          particles.splice(i, 1);
+        }
+      }
+      requestAnimationFrame(animateParticles);
+    }
+    animateParticles();
+
+    /* -------------------------------------------------------------
+       ANSWER CHECKING & FEEDBACK ENGINE
+       ------------------------------------------------------------- */
+    function submitAnswer(qNum, selectedOption) {
+      initAudio();
+      const targetAns = correctAnswers[qNum];
+      const blankElem = document.getElementById(`blank-q${qNum}`);
+      const feedbackToast = document.getElementById(`feedback-q${qNum}`);
+      const optionsContainer = document.getElementById(`options-q${qNum}`);
+      const jumpPill = document.getElementById(`pill-q${qNum}`);
+
+      // Fill in blank
+      blankElem.textContent = selectedOption;
+
+      // Update button styling
+      const buttons = optionsContainer.querySelectorAll('.option-btn');
+      buttons.forEach(btn => {
+        btn.classList.remove('btn-correct', 'btn-wrong');
+        const btnText = btn.textContent.trim();
+        if (btnText === targetAns) {
+          btn.classList.add('btn-correct');
+        } else if (btnText === selectedOption && selectedOption !== targetAns) {
+          btn.classList.add('btn-wrong');
+        }
+      });
+
+      if (selectedOption === targetAns) {
+        // Correct Answer
+        blankElem.className = 'interactive-blank filled-correct';
+        playSuccessSound();
+        triggerFireworks(3);
+
+        if (!answeredState[qNum]) {
+          score++;
+          currentStreak++;
+          if (currentStreak > maxStreak) maxStreak = currentStreak;
+          answeredState[qNum] = true;
+          updateStatsHUD();
+        }
+
+        feedbackToast.textContent = "🎉 Bravo ! Correct answer ! Visual flowchart revealed below.";
+        feedbackToast.className = "feedback-toast show correct";
+
+        if (jumpPill) {
+          jumpPill.classList.remove('incorrect');
+          jumpPill.classList.add('correct');
+        }
+
+        // Automatically reveal diagram
+        revealSolution(qNum, true);
+
+      } else {
+        // Wrong Answer
+        blankElem.className = 'interactive-blank filled-wrong';
+        playErrorSound();
+        currentStreak = 0;
+        updateStatsHUD();
+
+        feedbackToast.textContent = "❌ Pas tout à fait ! Check the visual diagram below or try again.";
+        feedbackToast.className = "feedback-toast show wrong";
+
+        if (jumpPill && !jumpPill.classList.contains('correct')) {
+          jumpPill.classList.add('incorrect');
+        }
+
+        // Open solution to help them understand
+        revealSolution(qNum, true);
+      }
+    }
+
+    /* Reset individual slide */
+    function resetSlide(qNum) {
+      playPopSound();
+      document.getElementById(`blank-q${qNum}`).textContent = '___';
+      document.getElementById(`blank-q${qNum}`).className = 'interactive-blank';
+
+      const optionsContainer = document.getElementById(`options-q${qNum}`);
+      optionsContainer.querySelectorAll('.option-btn').forEach(btn => {
+        btn.classList.remove('btn-correct', 'btn-wrong');
+      });
+
+      const feedbackToast = document.getElementById(`feedback-q${qNum}`);
+      feedbackToast.className = 'feedback-toast';
+      feedbackToast.textContent = '';
+
+      revealSolution(qNum, false);
+    }
+
+    /* Update HUD elements */
+    function updateStatsHUD() {
+      document.getElementById('scoreVal').textContent = score;
+      document.getElementById('streakVal').textContent = currentStreak;
+    }
+
+    /* Toggle solution panel */
+    function toggleSlideSolution(qNum) {
+      playPopSound();
+      const panel = document.getElementById(`solution-q${qNum}`);
+      const btn = document.getElementById(`toggleBtn-q${qNum}`);
+      const isOpen = panel.classList.contains('revealed');
+      revealSolution(qNum, !isOpen);
+    }
+
+    function revealSolution(qNum, shouldOpen) {
+      const panel = document.getElementById(`solution-q${qNum}`);
+      const btn = document.getElementById(`toggleBtn-q${qNum}`);
+      if (!panel || !btn) return;
+
+      if (shouldOpen) {
+        panel.classList.add('revealed');
+        btn.classList.add('open');
+        btn.innerHTML = '🙈 Hide Diagram';
+      } else {
+        panel.classList.remove('revealed');
+        btn.classList.remove('open');
+        btn.innerHTML = '💡 Reveal Solution &amp; Diagram';
+      }
+    }
+
+    /* Master Toggle (Show / Hide All) */
+    function toggleAllSolutions() {
+      playPopSound();
+      masterSolutionsOpen = !masterSolutionsOpen;
+      const btn = document.getElementById('masterToggleBtn');
+      const text = document.getElementById('masterToggleText');
+      const icon = document.getElementById('masterToggleIcon');
+
+      for (let i = 1; i <= 15; i++) {
+        revealSolution(i, masterSolutionsOpen);
+      }
+
+      if (masterSolutionsOpen) {
+        text.textContent = 'Hide All Answers';
+        icon.textContent = '🙈';
+        btn.style.background = 'linear-gradient(135deg, #e11d48, #be123c)';
+      } else {
+        text.textContent = 'Show All Answers';
+        icon.textContent = '👁️';
+        btn.style.background = '';
+      }
+    }
+
+    /* -------------------------------------------------------------
+       SLIDE DECK NAVIGATION
+       ------------------------------------------------------------- */
+    function updateSlideDisplay() {
+      // Toggle active slide
+      document.querySelectorAll('.question-slide').forEach(slide => {
+        slide.classList.remove('active');
+        if (parseInt(slide.getAttribute('data-q')) === currentSlide) {
+          slide.classList.add('active');
+        }
+      });
+
+      const scoreboardSlide = document.getElementById('slide-16');
+      if (currentSlide === 16) {
+        scoreboardSlide.classList.add('active');
+      } else {
+        scoreboardSlide.classList.remove('active');
+      }
+
+      // Update Jump Pills
+      document.querySelectorAll('.jump-pill').forEach(pill => pill.classList.remove('active'));
+      const activePill = document.getElementById(`pill-q${currentSlide}`);
+      if (activePill) activePill.classList.add('active');
+
+      // Update HUD numbers
+      document.getElementById('hudSlideNum').textContent = currentSlide <= 15 ? currentSlide : '🏆 Final';
+
+      // Update Progress Bar
+      const progressPercent = (currentSlide / totalSlides) * 100;
+      document.getElementById('progressBarFill').style.width = `${progressPercent}%`;
+
+      // Update Prev / Next Buttons
+      const prevBtn = document.getElementById('prevSlideBtn');
+      const nextBtn = document.getElementById('nextSlideBtn');
+
+      prevBtn.disabled = currentSlide === 1;
+
+      if (currentSlide === totalSlides) {
+        nextBtn.textContent = '🏆 Deck Complete';
+        nextBtn.disabled = true;
+        calculateFinalScoreboard();
+      } else if (currentSlide === 15) {
+        nextBtn.textContent = 'View Scoreboard 🏆';
+        nextBtn.disabled = false;
+      } else {
+        nextBtn.textContent = 'Next Question ►';
+        nextBtn.disabled = false;
+      }
+
+      document.getElementById('navCounterText').textContent = currentSlide <= 15 ? `Slide ${currentSlide} / 15` : 'Slide 16 / 16 (Scoreboard)';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function goToSlide(slideNum) {
+      if (slideNum < 1 || slideNum > totalSlides) return;
+      playPopSound();
+      currentSlide = slideNum;
+      updateSlideDisplay();
+    }
+
+    function nextSlide() {
+      if (currentSlide < totalSlides) {
+        goToSlide(currentSlide + 1);
+      }
+    }
+
+    function prevSlide() {
+      if (currentSlide > 1) {
+        goToSlide(currentSlide - 1);
+      }
+    }
+
+    /* Keyboard Navigation (Arrow Keys & Space) */
+    function initKeyboardNavigation() {
+      document.addEventListener('keydown', (e) => {
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
+        if (e.key === 'ArrowRight' || e.key === 'PageDown') {
+          e.preventDefault();
+          nextSlide();
+        } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+          e.preventDefault();
+          prevSlide();
+        } else if (e.key.toLowerCase() === 'f') {
+          e.preventDefault();
+          toggleFullscreen();
+        } else if (e.key.toLowerCase() === 's') {
+          e.preventDefault();
+          openSettingsModal();
+        }
+      });
+    }
+    initKeyboardNavigation();
+
+    /* Final Scoreboard Calculation */
+    function calculateFinalScoreboard() {
+      playVictorySound();
+      triggerFireworks(6);
+
+      const accuracy = Math.round((score / 15) * 100);
+      document.getElementById('finalScoreDisplay').textContent = `${score} / 15`;
+      document.getElementById('finalAccuracyDisplay').textContent = `${accuracy}%`;
+      document.getElementById('finalStreakDisplay').textContent = `${maxStreak}`;
+
+      const headline = document.getElementById('scoreboardHeadline');
+      const subline = document.getElementById('scoreboardSubline');
+
+      if (accuracy === 100) {
+        headline.textContent = "🌟 Score Parfait ! 15 / 15 (100%) !";
+        subline.textContent = "Exceptional mastery of all CBSE Class 10 Future Tenses! You are 100% board exam ready!";
+      } else if (accuracy >= 80) {
+        headline.textContent = "🎉 Excellent Travail ! Très Bien !";
+        subline.textContent = "Superb understanding of Futur Proche, Futur Simple, and Futur Antérieur!";
+      } else if (accuracy >= 50) {
+        headline.textContent = "👍 Bon Travail ! Continue de pratiquer !";
+        subline.textContent = "Review the visual flowchart diagrams above and re-test to hit 100%!";
+      } else {
+        headline.textContent = "📚 Révisez les règles des 3 Futurs !";
+        subline.textContent = "Study the golden rules in the table below and restart the deck for guaranteed success!";
+      }
+    }
+
+    function restartDeck() {
+      playPopSound();
+      score = 0;
+      currentStreak = 0;
+      for (let i = 1; i <= 15; i++) {
+        answeredState[i] = false;
+        resetSlide(i);
+        const pill = document.getElementById(`pill-q${i}`);
+        if (pill) pill.className = 'jump-pill';
+      }
+      updateStatsHUD();
+      goToSlide(1);
+    }
+
+    /* -------------------------------------------------------------
+       SETTINGS MODAL & THEMES
+       ------------------------------------------------------------- */
+    function openSettingsModal() {
+      playPopSound();
+      document.getElementById('settingsModal').classList.add('open');
+    }
+
+    function closeSettingsModal() {
+      playPopSound();
+      document.getElementById('settingsModal').classList.remove('open');
+    }
+
+    function closeSettingsModalOnBackdrop(e) {
+      if (e.target.id === 'settingsModal') {
+        closeSettingsModal();
+      }
+    }
+
+    function setTheme(themeClass, elem) {
+      playPopSound();
+      document.body.className = '';
+      if (themeClass !== 'theme-classic') {
+        document.body.classList.add(themeClass);
+      }
+      document.querySelectorAll('.theme-option-card').forEach(card => card.classList.remove('selected'));
+      if (elem) elem.classList.add('selected');
+    }
+
+    function changeFontFamily(fontFamily) {
+      document.documentElement.style.setProperty('--font-body', fontFamily);
+      document.documentElement.style.setProperty('--font-heading', fontFamily);
+    }
+
+    function adjustTextScale(delta) {
+      currentFontScale = Math.min(1.5, Math.max(0.85, currentFontScale + delta));
+      document.documentElement.style.setProperty('--font-scale', currentFontScale);
+      document.getElementById('scaleValDisplay').textContent = `${Math.round(currentFontScale * 100)}%`;
+    }
+
+    function resetTextScale() {
+      currentFontScale = 1.15;
+      document.documentElement.style.setProperty('--font-scale', 1.15);
+      document.getElementById('scaleValDisplay').textContent = '115%';
+    }
+
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(err => {
+          console.warn(`Fullscreen error: ${err.message}`);
+        });
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        }
+      }
+    }
+  </script>
+</body>
+</html>
