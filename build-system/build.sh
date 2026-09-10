@@ -38,7 +38,10 @@ node "$SP/gen-message-slides.js"
 node "$SP/gen-lecon-slides.js"
 
 cat "$SP/a-head.html" > "$OUT"
-sed -n '17p' "$SRC" >> "$OUT"
+# Reveal.js CSS, copied from the vendored deck and lint-fixed on the way through:
+# patch-reveal-css.js adds five missing standard properties and drops one ignored
+# display:inline-block. The vendored source line itself stays untouched.
+sed -n '17p' "$SRC" | node "$SP/patch-reveal-css.js" >> "$OUT"
 cat "$SP/b-style.html" >> "$OUT"
 for p in "${PARTS[@]}"; do
   [ -f "$SP/$p" ] && cat "$SP/$p" >> "$OUT"
