@@ -401,8 +401,15 @@ async function aiLoadSwitch(){
   if (!db) return;
   try {
     const snap = await getDoc(doc(db, 'config', 'ai'));
-    aiGlobalOn = snap.exists() ? (snap.data() || {}).enabled !== false : true;
-  } catch (e){ aiGlobalOn = true; }        // never lock a lesson out on a read error
+    const cfg = snap.exists() ? (snap.data() || {}) : {};
+    aiGlobalOn = cfg.enabled !== false;
+    aiProxyShared = typeof cfg.proxy === 'string' ? cfg.proxy.trim() : '';
+  } catch (e){
+    aiGlobalOn = true;                        // never lock a lesson out on a read error
+    console.warn('[AI] could not read config/ai (' + ((e && (e.code || e.message)) || e) +
+      ') -- students cannot receive the assistant server address. Are the Firestore rules ' +
+      'with the match /config/{id} block published?');
+  }
   aiRevealButton();
 }
 
@@ -959,9 +966,13 @@ const AI_SKIP = '.flip-card, .option-btn, .fib-input, .accent-key, .drill, .voc-
 
 let aiMode = false;
 let aiKeyHandler = null;
+let aiProxyShared = '';    // the Worker address, shared with the class through config/ai
 let aiGlobalOn = true;      // the teacher global switch, from Firestore config/ai
 
-const aiProxy = () => aiLS.get('ai_proxy', '').trim();
+/* A local value is a teacher-only override for testing another Worker; everyone
+   else gets the address the teacher shared through Firestore. Reading only this
+   browser storage here is what hid the button on every student device. */
+const aiProxy = () => aiLS.get('ai_proxy', '').trim() || aiProxyShared;
 /* The teacher may still use their own key directly; everyone else goes through
    the Worker, which is the only place the billable key exists. */
 const aiDirect = () => !!(aiKey() && ME && ME.role === 'teacher');
@@ -1278,7 +1289,7 @@ function onAiClick(ev){
   aiOpen(ev.clientX, ev.clientY, word);
 }
 
-function aiSet(on){
+function aiSet(on, byUser){
   /* Students hold no key: their access is the proxy plus the class switch. The
      teacher may also use their own key directly. Requiring aiKey() here meant a
      student could never switch it on at all. */
@@ -1287,7 +1298,10 @@ function aiSet(on){
   aiMode = want;
   document.body.classList.toggle('ai-mode', aiMode);
   const b = $('#aiBtn'); if (b) b.setAttribute('aria-pressed', aiMode ? 'true' : 'false');
-  aiLS.set('ai_on', aiMode ? '1' : '0');
+  /* Remember only a choice made with the robot button. System switch-offs (sign-out,
+     a hidden button, the class switch) must not overwrite a student preference, or
+     default-ON silently becomes OFF after the first sign-out. */
+  if (byUser) aiLS.set('ai_on', aiMode ? '1' : '0');
   if (aiMode){
     document.addEventListener('click', onAiClick);
     document.addEventListener('mouseup', onAiSelect);
@@ -1345,7 +1359,7 @@ function afEnrich(student, count, tier){
     aiOpen(r.left + (r.width / 2), r.bottom, null, hit.text);
   });
   const b = $('#aiBtn');
-  if (b) b.addEventListener('click', () => aiSet(!aiMode));
+  if (b) b.addEventListener('click', () => aiSet(!aiMode, true));
   const x = $('#aiTipClose');
   if (x) x.addEventListener('click', aiClose);
 })();
@@ -1563,11 +1577,32 @@ function adAI(){
   const pSave = adEl('button', 'ad-approve', 'Save'); pSave.type = 'button';
   pRow.appendChild(pSave);
   body.appendChild(pRow);
-  pSave.onclick = () => {
+  const pStat = adEl('p', 'ai-hint', '');
+  body.appendChild(pStat);
+  const aiShareStatus = () => {
+    const local = aiLS.get('ai_proxy', '').trim();
+    if (!local && !aiProxyShared) pStat.textContent = 'No server set: students will not see the assistant.';
+    else if (!local || local === aiProxyShared) pStat.textContent = 'Shared with students.';
+    else pStat.textContent = 'Only on this device -- press Save to share it with students.';
+  };
+  aiShareStatus();
+  pSave.onclick = async () => {
     const v = String(pIn.value || "").trim();
     aiLS.set('ai_proxy', v);
-    aiRevealButton();
-    msg.textContent = v ? 'Server saved. Students will use it.' : 'Server cleared.';
+    pSave.disabled = true;
+    try {
+      /* Written to config/ai so every student browser receives it. Saving it only
+         to this device was why students never saw the assistant. */
+      await setDoc(doc(db, 'config', 'ai'), { proxy: v, updatedAt: serverTimestamp() }, { merge: true });
+      aiProxyShared = v;
+      msg.textContent = v ? 'Saved and shared with students.' : 'Server cleared for the whole class.';
+    } catch (e){
+      msg.textContent = 'Saved on this device only -- students cannot use it yet: ' + ((e && e.message) || e);
+    } finally {
+      pSave.disabled = false;
+      aiRevealButton();
+      aiShareStatus();
+    }
   };
   body.appendChild(adEl('p', 'ai-hint',
     'Students never hold a key: their browser sends only their sign-in, and the server adds the key. The key below is yours alone and is used only when you are signed in as teacher.'));

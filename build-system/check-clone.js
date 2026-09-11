@@ -131,12 +131,27 @@ if (fs.existsSync(LECONS)){
 
 // the click listener must be added only inside the ON path, never at top level
 (() => {
-  const a = app.indexOf('function aiSet(on)');
+  /* Match the declaration, not one exact parameter list: the signature gained a
+     byUser parameter and a literal 'function aiSet(on)' anchor went stale. */
+  const a = app.indexOf('function aiSet(');
   const decl = app.indexOf("document.addEventListener('click', onAiClick)");
   if (decl === -1) { problems.push('[ai] onAiClick is never registered'); return; }
   if (a === -1 || decl < a)
     problems.push('[ai] the AI click listener is registered outside aiSet() -- OFF would not be clean');
 })();
+
+// The assistant server address must reach students through Firestore. Keeping it
+// only in the teacher's browser is exactly the bug that hid the AI button from
+// every student device.
+if (app.indexOf("setDoc(doc(db, 'config', 'ai'), { proxy: v") === -1)
+  problems.push('[ai] Admin Save does not share the server address through config/ai');
+if (app.indexOf("aiProxyShared = typeof cfg.proxy === 'string'") === -1)
+  problems.push('[ai] aiLoadSwitch does not read the shared server address');
+if (app.indexOf("aiLS.get('ai_proxy', '').trim() || aiProxyShared") === -1)
+  problems.push('[ai] aiProxy() does not fall back to the shared address');
+// a system switch-off must never overwrite a student's own on/off choice
+if (app.indexOf("if (byUser) aiLS.set('ai_on'") === -1)
+  problems.push("[ai] ai_on is saved on system switch-offs, not only on the user's own choice");
 
 // placement: must not collide with the admin trigger, and must sit on its own rung
 if (app.indexOf('z-index:10040') === -1) problems.push('[ai] the tooltip is not at z-index 10040');
