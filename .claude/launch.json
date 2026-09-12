@@ -4,14 +4,26 @@
     {
       "name": "deck-preview",
       "runtimeExecutable": "node",
-      "runtimeArgs": ["build-system/serve.js"],
+      "runtimeArgs": [
+        "build-system/serve.js"
+      ],
       "port": 8099
     },
     {
       "name": "letter-app",
       "runtimeExecutable": "node",
-      "runtimeArgs": ["build-system/serve-letterapp.js"],
+      "runtimeArgs": [
+        "build-system/serve-letterapp.js"
+      ],
       "port": 8123
+    },
+    {
+      "name": "papers-lab",
+      "runtimeExecutable": "node",
+      "runtimeArgs": [
+        "build-system/serve-papers.js"
+      ],
+      "port": 8177
     }
   ]
 }
