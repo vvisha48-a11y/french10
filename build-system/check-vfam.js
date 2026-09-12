@@ -92,7 +92,9 @@ Object.keys(MUST).forEach(k => {
   if (got !== MUST[k]) problems.push(`[placement] ${key} is in "${got}", expected "${MUST[k]}"`);
 });
 
-// 4. every verb carries all 10 tenses with usable forms.
+// 4. every verb carries all 10 STORED tenses with usable forms. (The futur proche
+//    is the 11th shown in the Lab, built from aller + the infinitive at render
+//    time rather than stored, so it is not listed here — check-render.js covers it.)
 // Exactly three verbs legitimately have NO imperative in French: you cannot
 // command someone to "be necessary", "rain", or "be able". Anything else with a
 // missing tense is a real data gap, and a new name appearing here is a regression.

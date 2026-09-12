@@ -121,7 +121,12 @@ if (fs.existsSync(LECONS)){
 (() => {
   const a = app.indexOf('/* ===== TEACHER AI ASSISTANT ===== */');
   if (a === -1) { problems.push('[ai] the AI CSS block is missing from the clone'); return; }
-  const end = app.indexOf('</style>', a);
+  /* End at the next banner comment, not at </style>: the layer appends its CSS in
+     labelled blocks, and reading to the end of the stylesheet made every later
+     block look like an unscoped AI rule. */
+  const nextBlock = app.indexOf('/* =====', a + 10);
+  const style = app.indexOf('</style>', a);
+  let end = (nextBlock !== -1 && (style === -1 || nextBlock < style)) ? nextBlock : style;
   const bad = app.slice(a, end === -1 ? a + 4000 : end).split(String.fromCharCode(10))
     .map(l => l.trim())
     .filter(l => l.indexOf('{') > -1 && /^[.#a-z]/i.test(l))
@@ -152,6 +157,21 @@ if (app.indexOf("aiLS.get('ai_proxy', '').trim() || aiProxyShared") === -1)
 // a system switch-off must never overwrite a student's own on/off choice
 if (app.indexOf("if (byUser) aiLS.set('ai_on'") === -1)
   problems.push("[ai] ai_on is saved on system switch-offs, not only on the user's own choice");
+
+// 4d. Pick Student belongs to the teacher only.
+//
+// The deck ships the button to everyone -- it has to, because docs/index.html is
+// the offline deck with no accounts at all and must stay byte-identical. So the
+// LAYER does the hiding, and these four checks keep it that way: both halves
+// present in the clone, and neither of them leaking into the offline deck.
+if (app.indexOf('body:not(.fb-teacher) #pickStudentBtn') === -1)
+  problems.push('[pick] the clone does not hide #pickStudentBtn from non-teachers');
+if (app.indexOf("classList.toggle('fb-teacher'") === -1)
+  problems.push('[pick] applyGate does not set the fb-teacher body class');
+if (index.indexOf('fb-teacher') !== -1)
+  problems.push('[pick] docs/index.html mentions fb-teacher -- the role gate must stay in the layer');
+if (index.indexOf('#pickStudentBtn{ display:none') !== -1)
+  problems.push('[pick] docs/index.html hides its own Pick Student button -- the offline deck must keep it');
 
 // placement: must not collide with the admin trigger, and must sit on its own rung
 if (app.indexOf('z-index:10040') === -1) problems.push('[ai] the tooltip is not at z-index 10040');

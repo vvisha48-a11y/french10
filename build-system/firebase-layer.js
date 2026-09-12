@@ -264,6 +264,11 @@ if (auth) onAuthStateChanged(auth, async (user) => {
     msg('');
     const ab = $('#adBtn'); if (ab) ab.hidden = true;   // signed out: no trigger
     const aib = $('#aiBtn'); if (aib) aib.hidden = true;
+    /* this branch returns before applyGate(), so the teacher's tools are put away
+       here by hand -- otherwise Pick Student would stay on screen for whoever
+       signs in next on the same browser */
+    document.body.classList.remove('fb-teacher');
+    const pb = $('#pickStudentBtn'); if (pb) pb.hidden = true;
     aiSet(false);
     gateShow('form');
     return;
@@ -428,8 +433,18 @@ function aiRevealButton(){
 
 function applyGate(){
   /* the admin trigger follows the account, never the other way round */
+  const teacher = !!(ME && ME.role === 'teacher');
   const ab = $('#adBtn');
-  if (ab) ab.hidden = !(ME && ME.role === 'teacher');
+  if (ab) ab.hidden = !teacher;
+  /* Pick Student is a teacher tool: it spins the class roster and writes the weekly
+     ledger, which Firestore already refuses to a student. The body class does the
+     hiding (see the CSS) so there is no flash before Firebase answers; the hidden
+     property takes it out of the tab order and the accessibility tree as well.
+     Keyed to the ACCOUNT role, so the deck own Teacher/Student view toggle is
+     untouched -- the teacher keeps the button in either view. */
+  document.body.classList.toggle('fb-teacher', teacher);
+  const pb = $('#pickStudentBtn');
+  if (pb) pb.hidden = !teacher;
   aiRevealButton();
   aiLoadSwitch();
   if (!ME){ gateShow('form'); return; }
@@ -726,6 +741,18 @@ async function psVerdict(v){
   lbSetClass(cls, false);
   lbRender(true);
 }
+
+/* The button itself is hidden for a student by applyGate. This is the second lock:
+   the engine binds openPick ON the button, so a capture listener on the document
+   still runs first and a student who un-hides it in the browser tools gets nothing. */
+document.addEventListener('click', ev => {
+  const t = ev.target;
+  if (!t || !t.closest) return;
+  if (!t.closest('#pickStudentBtn')) return;
+  if (ME && ME.role === 'teacher') return;
+  ev.preventDefault();
+  ev.stopImmediatePropagation();
+}, true);
 
 /* Intercept the deck own class buttons. Capture phase, so this runs BEFORE the
    per-button listener the engine attached, and stopImmediatePropagation keeps
@@ -2362,6 +2389,20 @@ module.exports.AI_HTML = `
   <div class="ai-tip-body" id="aiTipBody"></div>
   <div class="ai-tip-menu" id="aiTipMenu"></div>
 </div>
+`;
+
+module.exports.CSS += `
+/* ===== PICK STUDENT: the teacher's button ===== */
+/* Hidden by DEFAULT and revealed for the teacher, rather than hidden once the
+   account is known -- otherwise every student would see it flash for the second
+   Firebase takes to answer. Nothing else in the top bar moves: the button is
+   display:none, so the row closes up exactly as it does when it is not there.
+   Removing this layer removes this rule, and the offline deck keeps its button.
+
+   This block sits BEFORE the AI block on purpose: check-clone.js reads the AI
+   scoping window as "the AI marker to the end of the stylesheet", so anything
+   appended after it is judged as though it were an AI rule. */
+body:not(.fb-teacher) #pickStudentBtn{ display:none !important; }
 `;
 
 module.exports.CSS += `

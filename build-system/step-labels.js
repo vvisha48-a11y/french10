@@ -60,6 +60,8 @@ module.exports = {
   'Usages · Le résultat présent': 'Usage: Present Result',
   'Usages · Le passé du passé': 'Usage: The Past Before the Past',
   'Usages · Le regret & l’explication': 'Usage: Regret & Explanation',
+  'Usages · Intentions & décisions': 'Usage: Intentions & Decisions',
+  'Usages · Preuve sous les yeux': 'Usage: Evidence in Front of You',
   'Usages · Projets & prédictions': 'Usage: Plans & Predictions',
   'Usages · Promesses & conseils': 'Usage: Promises & Advice',
   'Usages · Après quand & dès que': 'Usage: After quand & dès que',

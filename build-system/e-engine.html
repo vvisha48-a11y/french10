@@ -202,7 +202,7 @@ const sbOpen = { group: null, item: null };
 /* Sidebar step labels: English for every topic EXCEPT La Lettre, whose steps
    are already English. Lookup normalises apostrophes (’ vs ') because the two
    forms are mixed across the content files. */
-const SB_STEP_EN = {"Description":"Description","Formation":"How to Form","Exceptions":"Exceptions","Pièges":"Common Mistakes","Exemples":"Examples","En contexte":"In Context","Pratique QCM":"MCQ Practice","Pratique — à compléter":"Fill-in-the-blanks Practice","Usages":"Usage","Mémo visuel":"Visual Memory Aid","En application":"In Practice","Galerie visuelle":"Visual Gallery","Tableau de référence":"Reference Table","Examen CBSE":"CBSE Exam","Check-list":"Checklist","Cartes mémoire":"Flashcards","Bienvenue":"Welcome","Les 8 étapes":"The 8 Steps","Les 3 groupes":"The 3 Groups","La ligne du temps":"Timeline","Laboratoire de conjugaison":"Conjugation Lab","Examen CBSE — tous les temps":"CBSE Exam — All Tenses","Check-list de l’examen":"Exam Checklist","Arbre de décision":"Decision Tree","Pourquoi mélanger":"Why Mix Them","Identifier le sujet":"Identify the Topic","Mélange 1 — QCM":"Mixed 1 — MCQ","Mélange 2 — à compléter":"Mixed 2 — Fill in the Blanks","Les pièges les plus coûteux":"The Costliest Traps","Stratégie de l’examen":"Exam Strategy","Bonne chance":"Good Luck","Usages · La routine":"Usage: Daily Routine","Usages · Maintenant":"Usage: Happening Now","Usages · Vérités générales":"Usage: General Truths","Usages · Les instructions":"Usage: Instructions","Usages · Conseils & invitations":"Usage: Advice & Invitations","Usages · La description":"Usage: Description & Background","Usages · L’habitude passée":"Usage: Past Habits","Usages · L’action interrompue":"Usage: Interrupted Action","Usages · L’événement terminé":"Usage: A Completed Event","Usages · La suite d’actions":"Usage: A Sequence of Actions","Usages · Le résultat présent":"Usage: Present Result","Usages · Le passé du passé":"Usage: The Past Before the Past","Usages · Le regret & l’explication":"Usage: Regret & Explanation","Usages · Projets & prédictions":"Usage: Plans & Predictions","Usages · Promesses & conseils":"Usage: Promises & Advice","Usages · Après quand & dès que":"Usage: After quand & dès que","Usages · Fini avant un moment futur":"Usage: Finished Before a Future Moment","Usages · La supposition":"Usage: Supposition","Usages · La politesse":"Usage: Politeness","Usages · L’hypothèse":"Usage: Hypotheses","Usages · Conseils & nouvelles":"Usage: Advice & News","Usages · La routine quotidienne":"Usage: Daily Routine","Usages · Le sens réciproque":"Usage: Reciprocal Meaning","Usages · Volonté & Désir":"Usage: Will & Desire","Usages · L’Émotion":"Usage: Emotion","Usages · La Nécessité":"Usage: Necessity","Usages · Doute & Négation":"Usage: Doubt & Negation","Usages · Les conjonctions déclencheurs":"Usage: Trigger Conjunctions","Usages · Refuser & démentir":"Usage: Refusing & Denying","Usages · La fréquence zéro":"Usage: Never — Zero Frequency","Usages · Ce qui a changé":"Usage: What Has Changed","Usages · Zéro chose":"Usage: Nothing — Zero Things","Usages · Zéro personne":"Usage: Nobody — Zero People","Usages · La restriction":"Usage: Only — Restriction","Usages · Refuser deux choses":"Usage: Refusing Two Things","Usages · Éviter la répétition":"Usage: Avoiding Repetition","Usages · À qui on parle":"Usage: Who You Speak To","Usages · Le lieu où l’on va":"Usage: Where You Go","Usages · Les quantités":"Usage: Quantities","Usages · Insister & après une préposition":"Usage: Emphasis & After a Preposition","Usages · Deux pronoms ensemble":"Usage: Two Pronouns Together","Usages · Décrire qui fait l’action":"Usage: Describing Who Acts","Usages · Décrire ce qu’on subit":"Usage: Describing What Receives","Usages · Le lieu et le moment":"Usage: Place & Time","Usages · Quand le verbe demande DE":"Usage: When the Verb Needs DE","Usages · Après une préposition":"Usage: After a Preposition","Usages · Rapporter une affirmation":"Usage: Reporting a Statement","Usages · Rapporter une question":"Usage: Reporting a Question","Usages · Rapporter un ordre":"Usage: Reporting an Order","Usages · Quand le verbe introducteur est au passé":"Usage: When the Reporting Verb Is Past","Usages · Les repères de temps changent":"Usage: Time Markers Change","Usages · La question passe-partout":"Usage: The All-Purpose Question","Usages · Le registre formel":"Usage: The Formal Register","Usages · Une personne ou une chose":"Usage: A Person or a Thing","Usages · Demander les circonstances":"Usage: Asking About Circumstances","Usages · Choisir dans un ensemble":"Usage: Choosing From a Set","Usages · Demander une quantité":"Usage: Asking How Many","Usages · Présenter ce qui est à soi":"Usage: Saying What Is Yours","Usages · Comparer sans répéter":"Usage: Comparing Without Repeating","Usages · Montrer du doigt":"Usage: Pointing at Things","Usages · Celui de, celui qui":"Usage: celui de, celui qui","Usages · Celui-ci ou celui-là":"Usage: celui-ci or celui-là"};
+const SB_STEP_EN = {"Description":"Description","Formation":"How to Form","Exceptions":"Exceptions","Pièges":"Common Mistakes","Exemples":"Examples","En contexte":"In Context","Pratique QCM":"MCQ Practice","Pratique — à compléter":"Fill-in-the-blanks Practice","Usages":"Usage","Mémo visuel":"Visual Memory Aid","En application":"In Practice","Galerie visuelle":"Visual Gallery","Tableau de référence":"Reference Table","Examen CBSE":"CBSE Exam","Check-list":"Checklist","Cartes mémoire":"Flashcards","Bienvenue":"Welcome","Les 8 étapes":"The 8 Steps","Les 3 groupes":"The 3 Groups","La ligne du temps":"Timeline","Laboratoire de conjugaison":"Conjugation Lab","Examen CBSE — tous les temps":"CBSE Exam — All Tenses","Check-list de l’examen":"Exam Checklist","Arbre de décision":"Decision Tree","Pourquoi mélanger":"Why Mix Them","Identifier le sujet":"Identify the Topic","Mélange 1 — QCM":"Mixed 1 — MCQ","Mélange 2 — à compléter":"Mixed 2 — Fill in the Blanks","Les pièges les plus coûteux":"The Costliest Traps","Stratégie de l’examen":"Exam Strategy","Bonne chance":"Good Luck","Usages · La routine":"Usage: Daily Routine","Usages · Maintenant":"Usage: Happening Now","Usages · Vérités générales":"Usage: General Truths","Usages · Les instructions":"Usage: Instructions","Usages · Conseils & invitations":"Usage: Advice & Invitations","Usages · La description":"Usage: Description & Background","Usages · L’habitude passée":"Usage: Past Habits","Usages · L’action interrompue":"Usage: Interrupted Action","Usages · L’événement terminé":"Usage: A Completed Event","Usages · La suite d’actions":"Usage: A Sequence of Actions","Usages · Le résultat présent":"Usage: Present Result","Usages · Le passé du passé":"Usage: The Past Before the Past","Usages · Le regret & l’explication":"Usage: Regret & Explanation","Usages · Intentions & décisions":"Usage: Intentions & Decisions","Usages · Preuve sous les yeux":"Usage: Evidence in Front of You","Usages · Projets & prédictions":"Usage: Plans & Predictions","Usages · Promesses & conseils":"Usage: Promises & Advice","Usages · Après quand & dès que":"Usage: After quand & dès que","Usages · Fini avant un moment futur":"Usage: Finished Before a Future Moment","Usages · La supposition":"Usage: Supposition","Usages · La politesse":"Usage: Politeness","Usages · L’hypothèse":"Usage: Hypotheses","Usages · Conseils & nouvelles":"Usage: Advice & News","Usages · La routine quotidienne":"Usage: Daily Routine","Usages · Le sens réciproque":"Usage: Reciprocal Meaning","Usages · Volonté & Désir":"Usage: Will & Desire","Usages · L’Émotion":"Usage: Emotion","Usages · La Nécessité":"Usage: Necessity","Usages · Doute & Négation":"Usage: Doubt & Negation","Usages · Les conjonctions déclencheurs":"Usage: Trigger Conjunctions","Usages · Refuser & démentir":"Usage: Refusing & Denying","Usages · La fréquence zéro":"Usage: Never — Zero Frequency","Usages · Ce qui a changé":"Usage: What Has Changed","Usages · Zéro chose":"Usage: Nothing — Zero Things","Usages · Zéro personne":"Usage: Nobody — Zero People","Usages · La restriction":"Usage: Only — Restriction","Usages · Refuser deux choses":"Usage: Refusing Two Things","Usages · Éviter la répétition":"Usage: Avoiding Repetition","Usages · À qui on parle":"Usage: Who You Speak To","Usages · Le lieu où l’on va":"Usage: Where You Go","Usages · Les quantités":"Usage: Quantities","Usages · Insister & après une préposition":"Usage: Emphasis & After a Preposition","Usages · Deux pronoms ensemble":"Usage: Two Pronouns Together","Usages · Décrire qui fait l’action":"Usage: Describing Who Acts","Usages · Décrire ce qu’on subit":"Usage: Describing What Receives","Usages · Le lieu et le moment":"Usage: Place & Time","Usages · Quand le verbe demande DE":"Usage: When the Verb Needs DE","Usages · Après une préposition":"Usage: After a Preposition","Usages · Rapporter une affirmation":"Usage: Reporting a Statement","Usages · Rapporter une question":"Usage: Reporting a Question","Usages · Rapporter un ordre":"Usage: Reporting an Order","Usages · Quand le verbe introducteur est au passé":"Usage: When the Reporting Verb Is Past","Usages · Les repères de temps changent":"Usage: Time Markers Change","Usages · La question passe-partout":"Usage: The All-Purpose Question","Usages · Le registre formel":"Usage: The Formal Register","Usages · Une personne ou une chose":"Usage: A Person or a Thing","Usages · Demander les circonstances":"Usage: Asking About Circumstances","Usages · Choisir dans un ensemble":"Usage: Choosing From a Set","Usages · Demander une quantité":"Usage: Asking How Many","Usages · Présenter ce qui est à soi":"Usage: Saying What Is Yours","Usages · Comparer sans répéter":"Usage: Comparing Without Repeating","Usages · Montrer du doigt":"Usage: Pointing at Things","Usages · Celui de, celui qui":"Usage: celui de, celui qui","Usages · Celui-ci ou celui-là":"Usage: celui-ci or celui-là"};
 const sbNorm = s => String(s || '').replace(/[’ʼ`]/g, "'");
 const SB_STEP_LOOKUP = {};
 Object.keys(SB_STEP_EN).forEach(k => { SB_STEP_LOOKUP[sbNorm(k)] = SB_STEP_EN[k]; });
@@ -897,10 +897,13 @@ function initTimeline(){
    ================================================================ */
 const CJ_PRON = ['je','tu','il/elle','nous','vous','ils/elles'];
 const CJ_IMP_PRON = ['(tu)','(nous)','(vous)'];
-// Full 10-tense order used by the all-tenses card
+// Full 11-tense order used by the all-tenses card. The order IS the reading order,
+// in the Lab and in the Family Navigator alike, so the futur proche sits with the
+// other futures — exactly where the timeline slide puts it.
 const CJ_ALL_TENSES = [
   ['present','Présent','I do'],['pc','Passé Composé','I did / have done'],
   ['imparfait','Imparfait','I was doing / used to'],['pqp','Plus-que-parfait','I had done'],
+  ['futurProche','Futur Proche','I am going to do'],
   ['futur','Futur Simple','I will do'],['futurAnt','Futur Antérieur','I will have done'],
   ['cond','Conditionnel Présent','I would do'],['condPasse','Conditionnel Passé','I would have done'],
   ['subj','Subjonctif Présent','(that) I do'],['imperatif','Impératif','Do!']
@@ -940,9 +943,10 @@ const CONJ = {
   pouvoir:{inf:'pouvoir',en:'to be able to',group:3,fam:'boot',present:['peux','peux','peut','pouvons','pouvez','peuvent'],imparfait:['pouvais','pouvais','pouvait','pouvions','pouviez','pouvaient'],pc:['ai pu','as pu','a pu','avons pu','avez pu','ont pu'],futur:['pourrai','pourras','pourra','pourrons','pourrez','pourront'],cond:['pourrais','pourrais','pourrait','pourrions','pourriez','pourraient'],subj:['puisse','puisses','puisse','puissions','puissiez','puissent']},
   vouloir:{inf:'vouloir',en:'to want',group:3,fam:'boot',present:['veux','veux','veut','voulons','voulez','veulent'],imparfait:['voulais','voulais','voulait','voulions','vouliez','voulaient'],pc:['ai voulu','as voulu','a voulu','avons voulu','avez voulu','ont voulu'],futur:['voudrai','voudras','voudra','voudrons','voudrez','voudront'],cond:['voudrais','voudrais','voudrait','voudrions','voudriez','voudraient'],subj:['veuille','veuilles','veuille','voulions','vouliez','veuillent']}
 };
-const CJ_COMPOUND = ['pc', 'pqp', 'futurAnt', 'condPasse'];
+const CJ_COMPOUND = ['pc', 'pqp', 'futurAnt', 'condPasse', 'futurProche'];
 function cjSplit(form, tense){
-  // compound tenses show auxiliary + participle whole — the ending sits on the auxiliary
+  // compound tenses show auxiliary + participle whole — the ending sits on the auxiliary.
+  // The futur proche joins them: the ending is on aller, the verb stays an infinitive.
   if (CJ_COMPOUND.indexOf(tense) >= 0) return [form, ''];
   const ends = CJ_ENDINGS[tense] || [];
   for (const e of ends){ if (form.length > e.length && form.endsWith(e)) return [form.slice(0, -e.length), e]; }
@@ -952,6 +956,33 @@ function cjSplit(form, tense){
 function cjPron(pron, form){
   if (pron === 'je' && /^[aeiouâàéèêhîïôœù]/i.test(form)) return "j'";
   return pron + ' ';
+}
+
+/* ---- le futur proche: aller au présent + l'infinitif ----
+   Built here rather than stored in verbdata.js. The rule has no exceptions — every
+   one of the 500 verbs keeps its infinitive whole — so a stored column would be 500
+   copies of one rule, and ~60 KB in every build. The two things that are NOT
+   automatic: the dataset writes infinitives in Title Case (Abaisser), and six
+   reflexive entries carry their marker inside `inf` ((s')Asseoir, Fier (se)), which
+   needs its own pronoun in front of the infinitive — je vais me lever, not je vais lever. */
+const FP_REFL = ['me', 'te', 'se', 'nous', 'vous', 'se'];
+function cjFuturProche(v){
+  if (!v || !v.inf) return null;
+  const src = (typeof VERBS500 !== 'undefined' && VERBS500) ? VERBS500 : CONJ;
+  const a = src['aller'];
+  const go = a ? (a.t ? a.t.present : a.present) : null;   // full dataset vs curated table
+  if (!go || go.length !== 6) return null;
+  let inf = String(v.inf).trim();
+  const refl = /\(s['’]\)|\(se\)/i.test(inf);
+  inf = inf.replace(/\(s['’]\)|\(se\)/gi, '').replace(/\s+/g, ' ').trim().toLowerCase();
+  if (!inf) return null;
+  return go.map((g, i) => {
+    if (!refl) return g + ' ' + inf;
+    const p = FP_REFL[i];
+    // me/te/se elide before a vowel or mute h; nous/vous never do
+    const elide = p.length === 2 && /^[aeiouâàéèêëîïôûùüh]/i.test(inf);
+    return g + ' ' + (elide ? p.charAt(0) + "'" : p + ' ') + inf;
+  });
 }
 function famLabel(id){ const f = CJ_FAMS.find(x => x[0] === id); return f ? f[1] : id; }
 
@@ -968,7 +999,7 @@ function cjRenderAllTenses(v, head, grid, hidden){
 
   grid.innerHTML = '';
   CJ_ALL_TENSES.forEach(([id, label, gloss]) => {
-    const forms = v.t[id];
+    const forms = (id === 'futurProche') ? cjFuturProche(v) : v.t[id];
     if (!forms || !forms.length) return;
     const blk = document.createElement('div');
     blk.className = 'cj-block'; blk.dataset.t = id;
@@ -1101,7 +1132,9 @@ const DRILL = [
   {q:'<span class="clue">Autrefois</span>, les gens _____ (écrire) des lettres.', a:'écrivaient'},
   {q:'<span class="clue">Dès qu’</span>il _____ (arriver), nous mangerons.', a:'arrivera'},
   {q:'<span class="clue">Maintenant</span>, vous _____ (comprendre) la règle.', a:'comprenez'},
-  {q:'<span class="clue">Bien qu’</span>il _____ (avoir) tort, il continue.', a:'ait'}
+  {q:'<span class="clue">Bien qu’</span>il _____ (avoir) tort, il continue.', a:'ait'},
+  {q:'<span class="clue">Regarde ces nuages !</span> Il _____ (pleuvoir) dans cinq minutes.', a:'va pleuvoir'},
+  {q:'<span class="clue">Mon sac est prêt</span>, je _____ (partir) tout de suite.', a:'vais partir'}
 ];
 /* The deck's own bank, captured before initSpeedDrill shadows the name. */
 const DRILL_DEFAULT = DRILL;
@@ -1894,7 +1927,7 @@ function initDropOverlay(){
 
 /* ============================================================
    VERB FAMILY NAVIGATOR  (cj-nav-1)
-   4 ending-based tabs -> 19 sub-families -> every verb, all 10 tenses.
+   4 ending-based tabs -> 19 sub-families -> every verb, all 11 tenses.
    The rule() predicates are the SINGLE SOURCE OF TRUTH: they drive both
    the navigator's bucketing and the Lab's fine filter, so the two can
    never disagree. check-vfam.js extracts this block and tests it.
@@ -2206,7 +2239,7 @@ function initVerbFamilies(container){
     showConj(curVerb);
   }
 
-  /* all 10 tenses, rendered by the SAME function the Lab uses */
+  /* all 11 tenses, rendered by the SAME function the Lab uses */
   function showConj(k){
     const box = $('.vfam-conj', panel);
     if (!box) return;

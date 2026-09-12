@@ -99,7 +99,7 @@ const region = html.slice(a1, a2) + '\n' + html.slice(b1, b2);
 let api;
 try {
   api = new Function('$', '$$', 'norm', 'document', 'VERBS500', 'playSound', 'Deck', 'window',
-    region + '\nreturn { initVerbFamilies: initVerbFamilies, VFAM: VFAM, cjRenderAllTenses: cjRenderAllTenses };'
+    region + '\nreturn { initVerbFamilies: initVerbFamilies, VFAM: VFAM, cjRenderAllTenses: cjRenderAllTenses, cjFuturProche: cjFuturProche };'
   )($, $$, norm, document, VERBS500, function(){}, { getIndices(){ return { h:0, v:0 }; }, slide(){} }, {});
 } catch (e){
   console.error('ENGINE REGION FAILED TO LOAD: ' + e.message);
@@ -140,15 +140,49 @@ try {
   problems.push('[panel] rendering a family threw: ' + e.message);
 }
 
-// 4. the shared renderer produces all 10 tenses for a real verb
+// 4. the shared renderer produces all 11 tenses for a real verb
 try {
   const head = mkEl('cj-head'), grid = mkEl('cj-allgrid');
   api.cjRenderAllTenses(VERBS500['parler'], head, grid, {});
   const blocks = grid.children.filter(c => c.classes.has('cj-block'));
-  if (blocks.length !== 10) problems.push(`[conj] parler rendered ${blocks.length} tense blocks, expected 10`);
+  if (blocks.length !== 11) problems.push(`[conj] parler rendered ${blocks.length} tense blocks, expected 11`);
   if (!String(head.innerHTML).toLowerCase().includes('parler')) problems.push('[conj] header does not name the verb');
 } catch (e){
   problems.push('[conj] cjRenderAllTenses threw: ' + e.message);
+}
+
+/* 4b. the futur proche is BUILT, not stored, so the rule itself is the thing to
+   test: aller + a clean lower-case infinitive, and the six reflexive records that
+   keep their marker inside `inf` must get their own pronoun. */
+try {
+  const fp = v => (api.cjFuturProche(v) || []).join(' | ');
+  const want = [
+    ['parler',      'vais parler',     'vont parler'],
+    ['(se)reposer', 'vais me reposer', 'vont se reposer'],
+    ["(s')asseoir", "vais m'asseoir",  "vont s'asseoir"],
+    ['finir',       'vais finir',      'vont finir']
+  ];
+  want.forEach(([key, first, last]) => {
+    const v = VERBS500[key];
+    if (!v){ problems.push('[fp] ' + key + ' is not in the dataset'); return; }
+    const forms = api.cjFuturProche(v);
+    if (!forms || forms.length !== 6){
+      problems.push('[fp] ' + key + ' produced ' + (forms ? forms.length : 'no') + ' forms, expected 6');
+      return;
+    }
+    if (forms[0] !== first) problems.push('[fp] ' + key + ' je-form is "' + forms[0] + '", expected "' + first + '"');
+    if (forms[5] !== last)  problems.push('[fp] ' + key + ' ils-form is "' + forms[5] + '", expected "' + last + '"');
+  });
+  // nothing may leak the dataset's Title Case or its reflexive markers
+  const leaky = Object.keys(VERBS500).filter(k => {
+    const f = api.cjFuturProche(VERBS500[k]);
+    return !f || f.length !== 6 || f.some(x => /[A-Z]/.test(x) || x.indexOf('(') >= 0);
+  });
+  if (leaky.length)
+    problems.push('[fp] ' + leaky.length + ' verb(s) build a malformed futur proche, e.g. ' +
+      leaky.slice(0, 3).map(k => k + ' -> ' + fp(VERBS500[k])).join(' ; '));
+} catch (e){
+  problems.push('[fp] cjFuturProche threw: ' + e.message);
 }
 
 /* ---------------- 5. static lint for the exact bug that shipped ----------------
