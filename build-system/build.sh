@@ -25,6 +25,9 @@ PARTS=(
   t12-messages.html
   t13-lecons.html
   t10-revision.html
+  # Question Papers stays LAST: deep links (#/h/v) and saved progress are keyed by
+  # stack index, so anything inserted before an existing stack would shift them.
+  t14-papers.html
 )
 
 # La Lettre slides are generated from letterdata.js
@@ -36,6 +39,11 @@ node "$SP/gen-message-slides.js"
 
 # Les Lecons slides are generated from the 10th-lessons content files
 node "$SP/gen-lecon-slides.js"
+
+# Question Papers: the data from the committed PDF text, then the slide itself,
+# built from papers-ui.js -- the same CSS, markup and engine strings as the lab.
+node "$SP/gen-papers.js" > /dev/null
+node "$SP/gen-papers-slide.js"
 
 cat "$SP/a-head.html" > "$OUT"
 # Reveal.js CSS, copied from the vendored deck and lint-fixed on the way through:

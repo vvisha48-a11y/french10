@@ -386,7 +386,7 @@ function applyCorrections(paperId, sections, stats){
          and D), so an entry may pin itself to one */
       if (!rep || (rep.section && rep.section !== s.id)){ out.push(q); return; }
       rep.questions.forEach(r => out.push({
-        id: paperId + '-' + r.num.replace(/[^w.]/g, ''),
+        id: paperId + '-' + r.num.replace(/[^\w.]/g, ''),
         num: r.num,
         instruction: r.instruction,
         marks: r.marks != null ? r.marks : null,

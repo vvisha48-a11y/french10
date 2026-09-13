@@ -400,7 +400,7 @@ body.pl-focus .pl-section:not(.is-current){ opacity:.34; filter:saturate(.5); }
   .pl-q{ opacity:1; transform:none; }
 }
 @media print{
-  .pl-rail, .pl-active, .sidebar, .topbar{ display:none !important; }
+  .pl-rail, .pl-active{ display:none !important; }
   .pl-q{ opacity:1 !important; transform:none !important; break-inside:avoid; }
 }
 `;
@@ -541,7 +541,7 @@ function figHTML(paperId){
 module.exports.HTML = function (papers){
   const out = [];
   papers.forEach(p => {
-    out.push('<section class="pl-paper" data-paper="' + esc(p.id) + '" data-year="' + p.year + '">');
+    out.push('<div class="pl-paper" role="region" aria-label="' + esc(p.badge) + '" data-paper="' + esc(p.id) + '" data-year="' + p.year + '">');
     out.push('<div class="pl-paper-head">');
     out.push('<h2>' + esc(p.badge) + '</h2>');
     out.push('<span class="pl-paper-meta">' + p.marks + ' marks · ' + esc(p.duration) +
@@ -557,55 +557,69 @@ module.exports.HTML = function (papers){
       sec.questions.forEach(q => out.push(qHTML(p, sec, q)));
       out.push('</div>');
     });
-    out.push('</section>');
+    out.push('</div>');
   });
   return out.join('\n');
 };
 
 module.exports.qHTML = qHTML;
 
+/* The whole page, shared by both hosts. The lab wraps it in its own chrome; the
+   deck puts it inside a .slide-card. Neither keeps a copy of its own, so the two
+   cannot drift -- check-papers.js compares the bytes. */
+module.exports.PAGE = function (papers){
+  return [
+    '<div class="pl-page" id="plPage">',
+    '<div class="pl-hero"><h1>CBSE Board Exam Question Papers</h1></div>',
+    '<nav class="pl-nav" id="plNav" aria-label="Filtrer par section"></nav>',
+    '<div class="pl-rail" id="plRail"></div>',
+    '<div class="pl-active" id="plActive" hidden></div>',
+    '<div id="plByPaper">',
+    module.exports.HTML(papers),
+    '</div>',
+    '<div class="pl-empty" id="plEmpty" hidden>No question in these papers matches that topic.</div>',
+    '</div>'
+  ].join('\n');
+};
+
+/* The data, as plain assignments to window. The lab used to inline paperdata.js,
+   whose top-level consts become global lexical bindings -- harmless on their own,
+   a redeclaration error waiting to happen among a deck's many scripts. "</" is
+   escaped so no question text can ever close the <script> it sits in. */
+module.exports.DATA = function (papers, taxonomy, tenses){
+  const j = v => JSON.stringify(v).replace(/<\//g, '<\\/');
+  return 'window.PAPERS = ' + j(papers) + ';\n' +
+         'window.TAXONOMY = ' + j(taxonomy) + ';\n' +
+         'window.TENSES = ' + j(tenses) + ';';
+};
+
 /* ------------------------------------------------------------------ *
  *  ENGINE
  * ------------------------------------------------------------------ */
 module.exports.JS = `
 (function papersModule(){
-  const PAPERS = window.PAPERS || [];
-  const TREE   = window.TAXONOMY || [];
-  const TENSES = window.TENSES || [];
-  if (!PAPERS.length) return;
+  /* Nothing runs at load. A host calls activate(): the deck when the Papers slide
+     is first current -- under Reveal's viewDistance the slide is display:none at
+     page load, so nothing on it can be measured earlier -- and the lab once, with
+     the window as its scroller. Everything that touches the page is wired in
+     mount(), at the bottom. */
   const $  = (s, r) => (r || document).querySelector(s);
   const $$ = (s, r) => [...(r || document).querySelectorAll(s)];
-  const page = $('#plPage');
-  if (!page) return;
+  let PAPERS = [], TREE = [], TENSES = [];
+  let page = null, qEls = [];
+  let mounted = false, active = false;
+  /* how "Learn this" reaches a lesson; the deck's engine hands it over in connect() */
+  const host = { goTopic: null };
 
   const leafOf = k => { for (const g of TREE){ const l = g.leaves.find(x => x.key === k); if (l) return { g, l }; } return null; };
   const tenseOf = k => TENSES.find(t => t.key === k) || null;
 
-  /* every question element, with its keys resolved once */
-  const qEls = $$('.pl-q').map(el => ({
-    el,
-    paper: el.dataset.paper,
-    marks: Number(el.dataset.marks) || 0,
-    keys: new Set((el.dataset.topics || '').split(' ').filter(Boolean)),
-    isHead: el.classList.contains('is-head')
-  }));
-  PAPERS.forEach(p => p.sections.forEach(s => s.questions.forEach(q => {
-    if (!q.isContainer) return;
-    const head = qEls.find(x => x.el.id === q.id);
-    if (!head) return;
-    head.kids = qEls.filter(x => x.el.dataset.paper === p.id &&
-      x.el.dataset.item && x.el.dataset.item.indexOf(q.num + '(') === 0);
-  })));
-
-  /* One filter, two ways of choosing it. state.key is a leaf or a tense; nothing
-     else is ever filtered on, so the panel and the rail cannot disagree.
-     (No backticks in this file's JS string -- it is itself a template literal.) */
   /* One filter, one menu. state.group is which section is expanded and is never
      cleared by choosing a topic -- that persistence is the requirement. state.key
-     is what is filtered on: a group key, a leaf key or a tense key. */
+     is what is filtered on: a group key, a leaf key or a tense key.
+     (No backticks in this file's JS string -- it is itself a template literal.) */
   const CARET = '▶';
-  const state = { key: null, group: 'grammaire', verbsOpen: false,
-                  papers: new Set(PAPERS.map(p => p.id)) };
+  const state = { key: null, group: 'grammaire', verbsOpen: false, papers: new Set() };
 
   /* ---------------- filtering ---------------- */
   function apply(){
@@ -676,7 +690,7 @@ module.exports.JS = `
     /* Deliberately does NOT close the menu. The nav is part of the page now, so
        comparing two topics is one click each instead of reopening a popover. */
     apply();
-    page.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    scrollToEl(page);
   }
 
   /* ---------------- the persistent section nav ----------------
@@ -787,14 +801,21 @@ module.exports.JS = `
      and it does not run at all in a tab the browser has stopped painting. */
   const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
   let pending = [];
-  function scroller(el){
-    for (let n = el.parentElement; n; n = n.parentElement){
-      const ov = getComputedStyle(n).overflowY;
-      if ((ov === 'auto' || ov === 'scroll') && n.scrollHeight > n.clientHeight + 4) return n;
-    }
-    return null;
+  /* The element that scrolls: the deck's .slide-card, handed in by activate(), or
+     null in the lab, where the window scrolls. */
+  let ROOT = null;
+  /* Scroll ROOT itself instead of calling scrollIntoView. Inside Reveal that would
+     also scroll the slides container -- overflow:hidden, but still scrollable from
+     script -- and knock the whole deck out of alignment. The sticky rail is allowed
+     for, so a target does not come to rest underneath it. */
+  function scrollToEl(el){
+    if (!el) return;
+    if (!ROOT){ el.scrollIntoView({ behavior: 'smooth', block: 'start' }); return; }
+    const rail = $('#plRail');
+    const under = rail ? rail.offsetHeight + 10 : 0;
+    const top = el.getBoundingClientRect().top - ROOT.getBoundingClientRect().top + ROOT.scrollTop - under;
+    ROOT.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
   }
-  const ROOT = scroller(page);
   function viewport(){
     if (!ROOT) return { top: 0, bottom: innerHeight };
     const r = ROOT.getBoundingClientRect();
@@ -846,6 +867,9 @@ module.exports.JS = `
 
   /* ---------------- the sidebar: unchanged, the deck's own rows ---------------- */
   function renderSidebar(){
+    /* In the deck #sidebar belongs to the engine except while Papers is the
+       current slide; the lab activates once and keeps it. */
+    if (!active) return;
     const sb = $('#sidebar');
     if (!sb) return;
     const h = ['<div class="sb-title">Question Papers</div>'];
@@ -869,7 +893,7 @@ module.exports.JS = `
       const el = parts.length > 1
         ? $('.pl-section[data-paper="' + parts[0] + '"][data-section="' + parts[1] + '"]')
         : $('.pl-paper[data-paper="' + parts[0] + '"]');
-      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      scrollToEl(el);
     }));
   }
 
@@ -954,7 +978,7 @@ module.exports.JS = `
       $$('.pl-chip', $('#plYears')).forEach(x => x.classList.toggle('is-on', x === b));
       apply();
       const el = $('.pl-paper[data-paper="' + b.dataset.paper + '"]');
-      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      scrollToEl(el);
     }));
     const all = $('[data-year="all"]', rail);
     if (all) all.addEventListener('click', () => {
@@ -974,14 +998,12 @@ module.exports.JS = `
   }
 
   /* ---------------- learn-this, answers, done ---------------- */
-  document.addEventListener('click', ev => {
+  function onClick(ev){
     const l = ev.target.closest && ev.target.closest('.pl-learn');
     if (l){
       const key = l.dataset.deck;
-      if (window.Deck && window.topicByKey && window.topicByKey[key]){
-        const t = window.topicByKey[key];
-        if (t.indices && t.indices.length) window.Deck.slide(t.indices[0], 0);
-      } else {
+      if (host.goTopic) host.goTopic(key);
+      else {
         l.textContent = 'opens ' + key + ' in the app';
         setTimeout(() => { l.textContent = 'Learn this →'; }, 1800);
       }
@@ -1002,11 +1024,99 @@ module.exports.JS = `
       if (done.has(q.id)) done.delete(q.id); else done.add(q.id);
       saveDone(); paintDone(); apply();
     }
-  });
+  }
 
-  buildRail();
-  paintDone();
-  observe();
-  apply();
+  /* ---------------- keyboard ----------------
+     While the Papers slide is current, the scroll keys scroll its card. The deck's
+     Reveal config asks wantsKey() before it handles a key and stands aside when the
+     answer is yes; left and right still change slide. The lab has no ROOT, so it
+     never claims a key and the browser scrolls the window as it always did. */
+  /* keyCode first -- it is what Reveal reads, so on every real keyboard both sides
+     agree -- and the key name as a fallback for input that reports no keyCode
+     (some virtual keyboards and remote tools send none). Reveal ignores those
+     events anyway, so claiming them takes nothing away from the deck. */
+  const SCROLL_KEYS = { 32: 'page', 33: 'pageUp', 34: 'page', 35: 'end', 36: 'home', 38: 'up', 40: 'down' };
+  const SCROLL_NAMES = { ' ': 'page', Spacebar: 'page', PageUp: 'pageUp', PageDown: 'page', End: 'end', Home: 'home', ArrowUp: 'up', ArrowDown: 'down' };
+  const scrollKind = e => SCROLL_KEYS[e.keyCode] || SCROLL_NAMES[e.key] || null;
+  function wantsKey(e){
+    if (!active || !ROOT || !e) return false;
+    if (e.altKey || e.ctrlKey || e.metaKey) return false;
+    if (!scrollKind(e)) return false;
+    const a = document.activeElement;
+    if (a && (a.isContentEditable || a.tagName === 'INPUT' || a.tagName === 'SELECT' || a.tagName === 'TEXTAREA')) return false;
+    /* Space on a focused button presses that button */
+    const isSpace = e.keyCode === 32 || e.key === ' ' || e.key === 'Spacebar';
+    if (isSpace && a && a.closest && a.closest('button, a, summary')) return false;
+    return true;
+  }
+  function onKey(e){
+    if (!wantsKey(e)) return;
+    e.preventDefault();
+    const k = scrollKind(e);
+    const pageBy = ROOT.clientHeight * 0.85;
+    if (k === 'home'){ ROOT.scrollTo({ top: 0, behavior: 'smooth' }); return; }
+    if (k === 'end'){ ROOT.scrollTo({ top: ROOT.scrollHeight, behavior: 'smooth' }); return; }
+    const by = k === 'up' ? -60 : k === 'down' ? 60 : k === 'pageUp' ? -pageBy : (e.shiftKey ? -pageBy : pageBy);
+    ROOT.scrollBy({ top: by, behavior: 'smooth' });
+  }
+
+  /* ---------------- mount: once, on the first activate() ---------------- */
+  function mount(root){
+    PAPERS = window.PAPERS || [];
+    TREE   = window.TAXONOMY || [];
+    TENSES = window.TENSES || [];
+    page = $('#plPage');
+    if (!PAPERS.length || !page) return false;
+    ROOT = root || null;
+
+    /* every question element, with its keys resolved once */
+    qEls = $$('.pl-q').map(el => ({
+      el,
+      paper: el.dataset.paper,
+      marks: Number(el.dataset.marks) || 0,
+      keys: new Set((el.dataset.topics || '').split(' ').filter(Boolean)),
+      isHead: el.classList.contains('is-head')
+    }));
+    PAPERS.forEach(p => p.sections.forEach(s => s.questions.forEach(q => {
+      if (!q.isContainer) return;
+      const head = qEls.find(x => x.el.id === q.id);
+      if (!head) return;
+      head.kids = qEls.filter(x => x.el.dataset.paper === p.id &&
+        x.el.dataset.item && x.el.dataset.item.indexOf(q.num + '(') === 0);
+    })));
+    state.papers = new Set(PAPERS.map(p => p.id));
+
+    /* Done ticks stored under an id that no longer exists are dropped. Before
+       gen-papers.js was fixed, every split-out question in a paper shared one id,
+       so a single tick credited all of them; this keeps such a tick from lingering.
+       Ticks on real ids are untouched. */
+    const live = new Set(qEls.map(q => q.el.id));
+    const kept = [...done].filter(id => live.has(id));
+    if (kept.length !== done.size){ done = new Set(kept); saveDone(); }
+
+    document.addEventListener('click', onClick);
+    document.addEventListener('keydown', onKey);
+    buildRail();
+    paintDone();
+    observe();
+    mounted = true;
+    return true;
+  }
+
+  window.PapersModule = {
+    /* The deck calls this from updateHud() whenever Papers is the current slide;
+       after the first call it only redraws the sidebar and re-sweeps. */
+    activate(root){
+      const first = !mounted;
+      if (first && !mount(root)) return;
+      active = true;
+      if (first) apply();
+      else { renderSidebar(); onScroll(); }
+    },
+    deactivate(){ active = false; },
+    wantsKey: wantsKey,
+    renderSidebar(){ renderSidebar(); },
+    connect(o){ if (o && typeof o.goTopic === 'function') host.goTopic = o.goTopic; }
+  };
 })();
 `;

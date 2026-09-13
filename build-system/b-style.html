@@ -143,6 +143,20 @@ p{ font-size:calc(1.08rem * var(--custom-font-scale)); line-height:1.55; margin:
 .tb-btn:hover{ border-color:var(--highlight-border); transform:translateY(-1px); }
 .tb-btn.is-on{ background:var(--highlight-border); color:#fff; }
 .tb-spacer{ flex:1; }
+/* Room for 📝 Papers on narrower screens. Measured: without this, 1024px pushed
+   ⚙ Settings fully off-screen and cut ☰. Only spacing tightens -- font, size,
+   weight, radius, colours and labels are untouched, and every row button changes
+   alike, so Papers stays identical to Messages. The row now needs 998px at the
+   default font, less than it needed before Papers existed. 1199px, not 1110px,
+   because Cinzel (the widest Settings font) needs 1182px with Papers added; at
+   this breakpoint the bar fits in every font wherever it fit before. The `>`
+   selectors keep the ☰ and Grammar ▾ dropdown items at their own padding. */
+@media (max-width:1199px){
+  .topbar{ gap:6px; padding:0 10px; }
+  .topbar > .tb-btn,
+  .topbar > .topic-menu-wrap > .tb-btn,
+  .topbar > .util-wrap > .tb-btn{ padding-left:9px; padding-right:9px; }
+}
 
 /* Topic dropdown */
 .topic-menu-wrap{ position:relative; }
@@ -1937,6 +1951,7 @@ body.projector-mode .lecon-slide .quiz-progress-bar{ margin-bottom:4px; }
 
   <button class="tb-btn" id="lettersBtn" title="Go to La Lettre (Section B)">✉️ Letters</button>
   <button class="tb-btn" id="messagesBtn" title="Go to Les Messages (Section B)">💬 Messages</button>
+  <button class="tb-btn" id="papersBtn" title="Go to the CBSE board exam question papers">📝 Papers</button>
   <div class="topic-menu-wrap">
     <button class="tb-btn" id="leconsBtn" title="Choose a vocabulary lesson">📖 Leçons ▾</button>
     <div class="topic-menu" id="leconsMenu"></div>

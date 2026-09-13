@@ -68,8 +68,11 @@ if (app.indexOf('id="adBtn" type="button" hidden') === -1)
 if (app.indexOf('pointer-events:none;   /* never steals a click from the lesson */') === -1)
   problems.push('[affirm] the affirmation overlay is not click-through');
 // the French must keep its accents -- this is a French class
-['Tres bien', 'reponse ', 'comme ca'].forEach(w => {
-  if (app.indexOf(w) !== -1) problems.push('[french] unaccented French in the clone: "' + w + '"');
+/* Whole words, not substrings. A bare indexOf read "comme cadeau" -- correct French,
+   transcribed verbatim from the 2023 paper -- as a missing cedilla. "comme ca" is
+   only the error when no letter follows it. */
+[['Tres bien', /Tres bien/], ['reponse ', /reponse /], ['comme ca', /comme ca(?![A-Za-zÀ-ÿ])/]].forEach(([w, re]) => {
+  if (re.test(app)) problems.push('[french] unaccented French in the clone: "' + w + '"');
 });
 // the picker must never draw uniformly at random -- that is the bug it exists to fix
 if (app.indexOf('spinPick') !== -1 && app.indexOf('stopImmediatePropagation') === -1)

@@ -5,8 +5,8 @@
 // The point of assembling it rather than hand-writing it: the stylesheet is
 // lifted VERBATIM out of b-style.html, so the lab cannot drift from the real
 // app's design language. If a token changes in the deck, it changes here on the
-// next run. The module's own CSS/markup/JS come from papers-ui.js, which Phase 2
-// will reuse unchanged.
+// next run. The module's own CSS, page markup, data script and engine come from
+// papers-ui.js -- the same strings gen-papers-slide.js puts into the deck.
 const fs = require('fs');
 const path = require('path');
 
@@ -29,11 +29,8 @@ if (APP_CSS.indexOf('--heading-color') === -1){
 const dataFile = path.join(SP, 'paperdata.js');
 if (!fs.existsSync(dataFile)){ console.error('paperdata.js missing -- run gen-papers.js first'); process.exit(1); }
 const { PAPERS, TAXONOMY, TENSES } = require(dataFile);
-/* Drop the CommonJS tail by WHOLE LINE. Cutting from the first "module.exports"
-   sliced through the middle of `if (typeof module !== "undefined" && module.exports)`
-   and left the page with a syntax error. */
-const DATA = fs.readFileSync(dataFile, 'utf8')
-  .split('\n').filter(l => l.indexOf('module.exports') === -1).join('\n');
+/* The data goes in through UI.DATA(): plain window assignments, byte-for-byte the
+   script the deck ships. */
 
 const THEMES = ['classic','cyber','slate','sunrise','emerald','purple','minimal'];
 
@@ -96,30 +93,11 @@ body.sidebar-hidden .pl-shell{ margin-right:0; }
   <code>b-style.html</code>, so this is the app's real design language, not a copy of it.
   Switch themes above to check all seven.</p>
 
-  <div class="pl-page" id="plPage">
-
-    <div class="pl-hero">
-      <h1>CBSE Board Exam Question Papers</h1>
-    </div>
-
-    <nav class="pl-nav" id="plNav" aria-label="Filtrer par section"></nav>
-    <div class="pl-rail" id="plRail"></div>
-    <div class="pl-active" id="plActive" hidden></div>
-
-    <div id="plByPaper">
-${UI.HTML(PAPERS)}
-    </div>
-    <div id="plBank2" hidden></div>
-
-    <div class="pl-empty" id="plEmpty" hidden>No question in these papers matches that topic.</div>
-  </div>
+${UI.PAGE(PAPERS)}
 </div>
 
 <script>
-${DATA}
-window.PAPERS = PAPERS;
-window.TAXONOMY = TAXONOMY;
-window.TENSES = TENSES;
+${UI.DATA(PAPERS, TAXONOMY, TENSES)}
 </script>
 <script>
 /* lab-only chrome: theme switching and the sidebar toggle, so the module can be
@@ -151,6 +129,11 @@ window.TENSES = TENSES;
 </script>
 <script>
 ${UI.JS}
+</script>
+<script>
+/* In the deck the engine calls this when the Papers slide is current. The lab has
+   no deck, so it activates once; null means the window is the scroller. */
+window.PapersModule.activate(null);
 </script>
 </body>
 </html>

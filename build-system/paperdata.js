@@ -648,7 +648,7 @@ const PAPERS = [
       "group": "grammaire"
      },
      {
-      "id": "qp2017-",
+      "id": "qp2017-9",
       "num": "9",
       "instruction": "Mettez au négatif :",
       "marks": 3,
@@ -1275,7 +1275,7 @@ const PAPERS = [
     "intro": [],
     "questions": [
      {
-      "id": "qp2018a-",
+      "id": "qp2018a-Ia",
       "num": "I(a)",
       "instruction": "Répondez aux questions : (taux* : degree)",
       "marks": 2,
@@ -1327,7 +1327,7 @@ const PAPERS = [
       "group": "comprehension"
      },
      {
-      "id": "qp2018a-",
+      "id": "qp2018a-Ib",
       "num": "I(b)",
       "instruction": "Trouvez les contraires du texte :",
       "marks": 2,
@@ -3739,7 +3739,7 @@ const PAPERS = [
       "group": "culture"
      },
      {
-      "id": "qp2018r-",
+      "id": "qp2018r-16",
       "num": "16",
       "instruction": "Reliez et récrivez :",
       "marks": 3,
@@ -3834,7 +3834,7 @@ const PAPERS = [
       "group": "culture"
      },
      {
-      "id": "qp2018r-",
+      "id": "qp2018r-17",
       "num": "17",
       "instruction": "Dites vrai ou faux :",
       "marks": 4,
@@ -3929,7 +3929,7 @@ const PAPERS = [
     "intro": [],
     "questions": [
      {
-      "id": "qp2018c-",
+      "id": "qp2018c-I1",
       "num": "I(1)",
       "instruction": "Répondez aux questions suivantes :",
       "marks": 2,
@@ -3981,7 +3981,7 @@ const PAPERS = [
       "group": "comprehension"
      },
      {
-      "id": "qp2018c-",
+      "id": "qp2018c-I2",
       "num": "I(2)",
       "instruction": "Complétez avec les mots du texte :",
       "marks": 4,
@@ -4054,7 +4054,7 @@ const PAPERS = [
       "group": "comprehension"
      },
      {
-      "id": "qp2018c-",
+      "id": "qp2018c-I3",
       "num": "I(3)",
       "instruction": "Trouvez dans le texte :",
       "marks": 2,
@@ -4116,7 +4116,7 @@ const PAPERS = [
       "group": "comprehension"
      },
      {
-      "id": "qp2018c-",
+      "id": "qp2018c-I4",
       "num": "I(4)",
       "instruction": "Trouvez du texte :",
       "marks": 2,
@@ -4179,7 +4179,7 @@ const PAPERS = [
     ],
     "questions": [
      {
-      "id": "qp2018c-",
+      "id": "qp2018c-IIa",
       "num": "II(a)",
       "instruction": "Écrivez une lettre d’environ 80 mots à votre ami/amie lui décrivant les moyens de transport de votre ville.",
       "marks": 10,
@@ -4209,7 +4209,7 @@ const PAPERS = [
       "group": "expression"
      },
      {
-      "id": "qp2018c-",
+      "id": "qp2018c-IIb",
       "num": "II(b)",
       "instruction": "Écrivez une lettre d’environ 80 mots à votre cousin/e lui décrivant comment vous vous détendez.",
       "marks": 10,
@@ -4252,7 +4252,7 @@ const PAPERS = [
       "isContainer": true
      },
      {
-      "id": "qp2018c-",
+      "id": "qp2018c-IIIa",
       "num": "III(a)",
       "instruction": "Mettez en ordre le dialogue suivant et récrivez : Paolo : Enchanté de faire votre connaissance ! / Christine : Non, je suis belge mais je fais mes études en France. Et vous, vous êtes français ? / Paolo : Pourriez-vous me dire comment arriver à la piscine ? / Christine : Enchantée ! J’adore l’Italie ! Et moi c’est Christine ! / Paolo : Merci beaucoup ! Vous êtes française ? / Christine : Bonjour ! / Paolo : Bonjour Mademoiselle ! / Christine : Au revoir / Paolo : Non, je suis italien, je m’appelle Paolo. / Christine : Oui, bien sûr. Derrière le bâtiment rouge là-bas il y a la piscine. Elle est à côté du restaurant Chez Marc.",
       "marks": 5,
@@ -4308,7 +4308,7 @@ const PAPERS = [
       "group": "expression"
      },
      {
-      "id": "qp2018c-",
+      "id": "qp2018c-IIIc",
       "num": "III(c)",
       "instruction": "Complétez le texte suivant avec les mots donnés ci-dessous : (entier / connus / magnifiques / célèbres / certainement / par exemple / économique / grand / capitale / musée) — Paris est la capitale __________, la capitale politique et la _________ culturelle de la France. La ville compte beaucoup de lieux _________ dans le monde _________ comme « la tour Eiffel », « l’Arc de Triomphe » et « Notre-Dame de Paris ». Les musées parisiens aussi sont très _________ Il y a, _________, le musée du Louvre. C’est le plus _________ musée de France. On peut voir dans le _________ du Louvre des tableaux _________. Le plus célèbre est _________ « La Joconde » de Léonard de Vinci.",
       "marks": 5,
@@ -4525,7 +4525,7 @@ const PAPERS = [
       "group": "grammaire"
      },
      {
-      "id": "qp2018c-",
+      "id": "qp2018c-VI",
       "num": "VI",
       "instruction": "Mettez au négatif :",
       "marks": 3,
@@ -4587,7 +4587,7 @@ const PAPERS = [
       "group": "grammaire"
      },
      {
-      "id": "qp2018c-",
+      "id": "qp2018c-VII",
       "num": "VII",
       "instruction": "Trouvez la question :",
       "marks": 3,
@@ -4649,7 +4649,7 @@ const PAPERS = [
       "group": "grammaire"
      },
      {
-      "id": "qp2018c-",
+      "id": "qp2018c-VIII",
       "num": "VIII",
       "instruction": "Reliez avec les pronoms relatifs composés :",
       "marks": 3,
@@ -4711,7 +4711,7 @@ const PAPERS = [
       "group": "grammaire"
      },
      {
-      "id": "qp2018c-",
+      "id": "qp2018c-IX",
       "num": "IX",
       "instruction": "Conjuguez le verbe au subjonctif :",
       "marks": 3,
@@ -4773,7 +4773,7 @@ const PAPERS = [
       "group": "grammaire"
      },
      {
-      "id": "qp2018c-",
+      "id": "qp2018c-X",
       "num": "X",
       "instruction": "Complétez avec les adjectifs ou les pronoms démonstratifs :",
       "marks": 3,
@@ -4941,7 +4941,7 @@ const PAPERS = [
       "group": "grammaire"
      },
      {
-      "id": "qp2018c-",
+      "id": "qp2018c-XIII",
       "num": "XIII",
       "instruction": "Complétez avec les prépositions : (de / chez / à / par / en / près de)",
       "marks": 3,
@@ -5033,7 +5033,7 @@ const PAPERS = [
     "intro": [],
     "questions": [
      {
-      "id": "qp2018c-",
+      "id": "qp2018c-XIV",
       "num": "XIV",
       "instruction": "Répondez aux questions (5 au choix) :",
       "marks": 10,
@@ -5129,7 +5129,7 @@ const PAPERS = [
       "group": "culture"
      },
      {
-      "id": "qp2018c-",
+      "id": "qp2018c-XV",
       "num": "XV",
       "instruction": "Choisissez la bonne réponse : (Wi-Fi / formulaires / RFI / pôle-emploi.fr / L’accent grave / Bengaluru)",
       "marks": 3,
@@ -5224,7 +5224,7 @@ const PAPERS = [
       "group": "culture"
      },
      {
-      "id": "qp2018c-",
+      "id": "qp2018c-XVI",
       "num": "XVI",
       "instruction": "Reliez et récrivez :",
       "marks": 3,
@@ -5319,7 +5319,7 @@ const PAPERS = [
       "group": "culture"
      },
      {
-      "id": "qp2018c-",
+      "id": "qp2018c-XVII",
       "num": "XVII",
       "instruction": "Dites vrai ou faux :",
       "marks": 4,
@@ -6602,7 +6602,7 @@ const PAPERS = [
       "group": "culture"
      },
      {
-      "id": "qp2019-",
+      "id": "qp2019-16",
       "num": "16",
       "instruction": "Choisissez la bonne réponse : (Palais Bourbon / crudités / fait divers / connexion / Antoine de Saint-Exupéry / zapper)",
       "marks": 3,
@@ -6698,7 +6698,7 @@ const PAPERS = [
       "group": "culture"
      },
      {
-      "id": "qp2019-",
+      "id": "qp2019-17",
       "num": "17",
       "instruction": "Dites « Vrai » ou « Faux » :",
       "marks": 2,
@@ -6771,7 +6771,7 @@ const PAPERS = [
       "group": "culture"
      },
      {
-      "id": "qp2019-",
+      "id": "qp2019-18",
       "num": "18",
       "instruction": "Chassez l’intrus :",
       "marks": 2,
@@ -6881,7 +6881,7 @@ const PAPERS = [
       "isContainer": true
      },
      {
-      "id": "qp2020-",
+      "id": "qp2020-Ia",
       "num": "I(a)",
       "instruction": "Le Québec est situé :",
       "marks": 2,
@@ -7139,7 +7139,7 @@ const PAPERS = [
       "group": "comprehension"
      },
      {
-      "id": "qp2020-",
+      "id": "qp2020-VII",
       "num": "VII",
       "instruction": "Dites vrai ou faux. Justifiez votre réponse :",
       "marks": 2,
@@ -7200,7 +7200,7 @@ const PAPERS = [
     ],
     "questions": [
      {
-      "id": "qp2020-",
+      "id": "qp2020-2a",
       "num": "2(a)",
       "instruction": "Écrivez une lettre à votre ami(e) décrivant votre nouveau boulot (80 mots).",
       "marks": 10,
@@ -7230,7 +7230,7 @@ const PAPERS = [
       "group": "expression"
      },
      {
-      "id": "qp2020-",
+      "id": "qp2020-2b",
       "num": "2(b)",
       "instruction": "Écrivez une lettre à votre frère sur le système d’éducation en France.",
       "marks": 10,
@@ -8240,7 +8240,7 @@ const PAPERS = [
       "group": "culture"
      },
      {
-      "id": "qp2020-",
+      "id": "qp2020-16",
       "num": "16",
       "instruction": "Reliez et récrivez :",
       "marks": 3,
@@ -8335,7 +8335,7 @@ const PAPERS = [
       "group": "culture"
      },
      {
-      "id": "qp2020-",
+      "id": "qp2020-17",
       "num": "17",
       "instruction": "Chassez l’intrus : (4 au choix)",
       "marks": 2,
@@ -8419,7 +8419,7 @@ const PAPERS = [
       "group": "culture"
      },
      {
-      "id": "qp2020-",
+      "id": "qp2020-18",
       "num": "18",
       "instruction": "Écrivez « Vrai » ou « Faux » : (4 au choix)",
       "marks": 2,
@@ -8528,7 +8528,7 @@ const PAPERS = [
     ],
     "questions": [
      {
-      "id": "qp2022-",
+      "id": "qp2022-1",
       "num": "1",
       "instruction": "Regardez l’image, lisez le texte et répondez aux questions suivantes. (5 au choix)",
       "marks": 5,
@@ -9283,7 +9283,7 @@ const PAPERS = [
     "intro": [],
     "questions": [
      {
-      "id": "qp2023-",
+      "id": "qp2023-1i",
       "num": "1(i)",
       "instruction": "Répondez aux questions suivantes (2 au choix) :",
       "marks": 4,
@@ -9346,7 +9346,7 @@ const PAPERS = [
       "group": "comprehension"
      },
      {
-      "id": "qp2023-",
+      "id": "qp2023-1ii",
       "num": "1(ii)",
       "instruction": "Ecrivez vrai ou faux :",
       "marks": 3,
@@ -9441,7 +9441,7 @@ const PAPERS = [
       "group": "comprehension"
      },
      {
-      "id": "qp2023-",
+      "id": "qp2023-1iii",
       "num": "1(iii)",
       "instruction": "Trouvez dans le texte :",
       "marks": 3,
@@ -9546,7 +9546,7 @@ const PAPERS = [
     ],
     "questions": [
      {
-      "id": "qp2023-",
+      "id": "qp2023-2",
       "num": "2",
       "instruction": "Écrivez UNE lettre de 80 mots :",
       "marks": 10,
@@ -9609,7 +9609,7 @@ const PAPERS = [
       "group": "expression"
      },
      {
-      "id": "qp2023-",
+      "id": "qp2023-3i",
       "num": "3(i)",
       "instruction": "Vous voulez fêter le 25e anniversaire de votre frère/sœur. Rédigez une invitation de 30 à 40 mots à ses amis.",
       "marks": 5,
@@ -9639,7 +9639,7 @@ const PAPERS = [
       "group": "expression"
      },
      {
-      "id": "qp2023-",
+      "id": "qp2023-3ii",
       "num": "3(ii)",
       "instruction": "Mettez le dialogue en ordre et récrivez : Mme. Saby : Très bien ! Tu veux apporter quelque chose ? / Naomi : Oui, je vais voir le Pont du Gard avec l’école. / Mme. Saby : Tu pars à quelle heure ? / Naomi : Bonne nuit Madame ! / Mme. Saby : Tu vas sortir ce week-end ? / Naomi : Merci, c’est très gentil. / Mme. Saby : Allez, je te laisse. Bonne nuit Naomi. / Naomi : Comme d’habitude, mais je vais certainement rentrer plus tard. / Mme. Saby : D’accord. Je vais préparer un bon poulet avec une soupe aux oignons. J’en laisserai dans le frigo. / Naomi : Non, c’est gentil, on va acheter un sandwich sur la route.",
       "marks": 5,
@@ -9669,7 +9669,7 @@ const PAPERS = [
       "group": "expression"
      },
      {
-      "id": "qp2023-",
+      "id": "qp2023-3iii",
       "num": "3(iii)",
       "instruction": "Complétez le texte en utilisant les mots/les expressions donnés : (voyage / coûte / confortable / prendre / moyens / dépend / seulement / même / moins / rapide) — Pour aller de Paris à Lyon, on peut ________ le train, l’avion, le bus et ________ le taxi. Le plus _________, c’est l’avion. On met une heure pour aller de Paris à Lyon. C’est le plus rapide, mais c’est aussi le plus cher. Le ________ en avion coûte 150 euros pour un aller. Bien sûr, ça ________ des jours et des compagnies aériennes. Il y a un autre moyen de transport assez rapide, c’est le train. En plus c’est beaucoup _______ cher que l’avion, ça ______ 42 euros l’aller simple. Le train est moins rapide que l’avion, c’est vrai, mais il met ______ deux heures. C’est donc plus rapide que le bus et c’est aussi plus _______. Si le train et le taxi sont les _______ de transport les plus confortables, le moins cher c’est quand même le bus.",
       "marks": 5,
@@ -10597,7 +10597,7 @@ const PAPERS = [
     ],
     "questions": [
      {
-      "id": "qp2023-",
+      "id": "qp2023-10",
       "num": "10",
       "instruction": "Répondez aux questions (5 au choix) (20 à 30 mots) :",
       "marks": 10,
@@ -10705,7 +10705,7 @@ const PAPERS = [
       "group": "culture"
      },
      {
-      "id": "qp2023-",
+      "id": "qp2023-11",
       "num": "11",
       "instruction": "Complétez à l’aide des mots donnés ci-dessous (5 au choix) : (répondeur / version / terre / musée / chaîne / nuit / Sénat)",
       "marks": 5,
@@ -10812,7 +10812,7 @@ const PAPERS = [
       "group": "culture"
      },
      {
-      "id": "qp2023-",
+      "id": "qp2023-12a",
       "num": "12(a)",
       "instruction": "Faites correspondre les éléments de le colonne A avec ceux de la colonne B :",
       "marks": 5,
@@ -11002,7 +11002,7 @@ const PAPERS = [
       "isContainer": true
      },
      {
-      "id": "qp2024-",
+      "id": "qp2024-1a",
       "num": "1(a)",
       "instruction": "Répondez aux questions suivantes : (2 au choix)",
       "marks": 4,
@@ -11065,7 +11065,7 @@ const PAPERS = [
       "group": "comprehension"
      },
      {
-      "id": "qp2024-",
+      "id": "qp2024-1b",
       "num": "1(b)",
       "instruction": "Écrivez vrai ou faux :",
       "marks": 3,
@@ -11160,7 +11160,7 @@ const PAPERS = [
       "group": "comprehension"
      },
      {
-      "id": "qp2024-",
+      "id": "qp2024-1c",
       "num": "1(c)",
       "instruction": "Trouvez dans le texte : (3 au choix)",
       "marks": 3,
@@ -11294,7 +11294,7 @@ const PAPERS = [
       "group": "expression"
      },
      {
-      "id": "qp2024-",
+      "id": "qp2024-2b",
       "num": "2(b)",
       "instruction": "Écrivez une lettre à votre mère en Inde, lui décrivant le système scolaire en France.",
       "marks": 10,
@@ -11324,7 +11324,7 @@ const PAPERS = [
       "group": "expression"
      },
      {
-      "id": "qp2024-",
+      "id": "qp2024-2c",
       "num": "2(c)",
       "instruction": "Écrivez à votre ami/amie, lui disant pourquoi vous aimez aller à la bibliothèque.",
       "marks": 10,
@@ -11367,7 +11367,7 @@ const PAPERS = [
       "isContainer": true
      },
      {
-      "id": "qp2024-",
+      "id": "qp2024-3a",
       "num": "3(a)",
       "instruction": "C’est l’anniversaire de votre cousine. Vous ne pouvez pas assister à la soirée. Rédigez un refus et excusez-vous ! (30 mots)",
       "marks": 5,
@@ -11397,7 +11397,7 @@ const PAPERS = [
       "group": "expression"
      },
      {
-      "id": "qp2024-",
+      "id": "qp2024-3b",
       "num": "3(b)",
       "instruction": "Mettez le dialogue en ordre et récrivez : Pierre : Pourquoi as-tu quitté la Provence ? / Lucas : C’est vrai. Ici à Paris, tout est immense, il y a du monde partout. / Pierre : Moi, c’est Pierre. Bienvenue au collège Claude Debussy. / Lucas : Mon père a trouvé un emploi à Paris. / Pierre : Bonjour, ça va ? Comment t’appelles-tu ? / Lucas : Je viens de la Provence. / Pierre : Tu viens d’où ? / Lucas : Bonjour. Oui ça va. Je m’appelle Lucas. Et toi ? / Pierre : La Provence ? C’est loin de Paris ça ! / Lucas : Merci, c’est gentil.",
       "marks": 5,
@@ -11427,7 +11427,7 @@ const PAPERS = [
       "group": "expression"
      },
      {
-      "id": "qp2024-",
+      "id": "qp2024-3c",
       "num": "3(c)",
       "instruction": "Complétez le texte en choisissant parmi les mots donnés ci-dessous et récrivez : (beaucoup / fantastiques / acheter / prennent / surtout / pour / hiver) — Tout le monde aime les centres commerciaux. En été comme en ________, les gens visitent ces endroits ________ remplis de boutiques variées et d’animations diverses. En effet, même si vous ne voulez pas _________ quelque chose, il est toujours intéressant de passer du temps dans les centres commerciaux. Le centre commercial est l’endroit idéal ________ passer un bon moment avec la famille ou des amis. Les gens y vont ________ pour déguster un bon sandwich assis près de la fontaine ou tout en regardant un spectacle de danse.",
       "marks": 5,
@@ -12437,7 +12437,7 @@ const PAPERS = [
     ],
     "questions": [
      {
-      "id": "qp2024-",
+      "id": "qp2024-5",
       "num": "5",
       "instruction": "Répondez aux questions : (5 au choix) (20 à 30 mots)",
       "marks": 10,
@@ -12544,7 +12544,7 @@ const PAPERS = [
       "group": "culture"
      },
      {
-      "id": "qp2024-",
+      "id": "qp2024-6",
       "num": "6",
       "instruction": "Complétez à l’aide des mots donnes ci-dessous : (5 au choix) (lessive / dents / répondeur / Malgudi Days / Monde / jardinage / retraite)",
       "marks": 5,
@@ -12651,7 +12651,7 @@ const PAPERS = [
       "group": "culture"
      },
      {
-      "id": "qp2024-",
+      "id": "qp2024-7a",
       "num": "7(a)",
       "instruction": "Faites correspondre les éléments de la Colonne A avec ceux de la Colonne B :",
       "marks": 5,
@@ -12735,7 +12735,7 @@ const PAPERS = [
       "group": "culture"
      },
      {
-      "id": "qp2024-",
+      "id": "qp2024-7b",
       "num": "7(b)",
       "instruction": "Écrivez vrai ou faux :",
       "marks": 5,
@@ -12980,7 +12980,7 @@ const PAPERS = [
       "group": "comprehension"
      },
      {
-      "id": "qp2025-",
+      "id": "qp2025-1c",
       "num": "1(c)",
       "instruction": "Trouvez dans le texte : (3 au choix)",
       "marks": 3,
@@ -13204,7 +13204,7 @@ const PAPERS = [
       "group": "expression"
      },
      {
-      "id": "qp2025-",
+      "id": "qp2025-3b",
       "num": "3(b)",
       "instruction": "Complétez le texte en choisissant le mot convenable donnés ci-dessous et récrivez : (professionnelle / passées / longtemps / plaisir / construire / continuation / endroit) — Bonjour à toutes et à tous. C’est mon dernier jour parmi vous après 8 belles années _________ dans notre entreprise. Je voulais tout simplement vous dire que c’était un très grand _________ de travailler avec vous. C’était une expérience très riche que je garderai _________ en mémoire. Une page se tourne mais cette étape de ma vie _________ restera toujours comme une très belle période de ma vie. Un grand merci à vous ! Bonne _________ à tous et meilleurs voeux de bonheur à chacun !",
       "marks": 5,
@@ -13488,7 +13488,7 @@ const PAPERS = [
       "group": "grammaire"
      },
      {
-      "id": "qp2025-",
+      "id": "qp2025-6a",
       "num": "6(a)",
       "instruction": "Trouvez la question :",
       "marks": 5,
@@ -13572,7 +13572,7 @@ const PAPERS = [
       "group": "grammaire"
      },
      {
-      "id": "qp2025-",
+      "id": "qp2025-6b",
       "num": "6(b)",
       "instruction": "Mettez les phrases suivantes au négatif :",
       "marks": 5,
@@ -13786,7 +13786,7 @@ const PAPERS = [
       "group": "grammaire"
      },
      {
-      "id": "qp2025-",
+      "id": "qp2025-8a",
       "num": "8(a)",
       "instruction": "Reliez les phrases avec les pronoms relatifs simples ou composés :",
       "marks": 5,
@@ -13870,7 +13870,7 @@ const PAPERS = [
       "group": "grammaire"
      },
      {
-      "id": "qp2025-",
+      "id": "qp2025-8b",
       "num": "8(b)",
       "instruction": "Remplacez les mots soulignés avec les pronoms personnels, y, en, etc. :",
       "marks": 5,

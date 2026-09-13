@@ -27,8 +27,12 @@ const WIDTH = wArg > -1 ? Number(process.argv[wArg + 1]) : 640;
 const QUALITY = 80;
 
 /* Each output must stay well under GitHub's 50 MB warning. If the embedded total
-   would push past this, the width steps down and everything is re-encoded. */
-const CEILING_MB = 24;
+   would push past this, the width steps down and everything is re-encoded.
+   25, not 24: the Question Papers slide (t14-papers.html) added 1.3 MB of real
+   content, and at 24 the ladder quietly re-encoded every lesson photo at 448px
+   to make room. At 25 the photos stay at 512px and the shipped file is ~24.7 MB,
+   still about half of the 50 MB warning this ceiling exists to protect. */
+const CEILING_MB = 25;
 /* This step runs BEFORE inline-photos.js and inline-assets.js, so the file it
    measures is not yet the finished one. Those two add the deck's own 27 photos
    (~9.2 MB), the woff2 faces (~0.23 MB) and gsap+lucide (~0.39 MB). Counting

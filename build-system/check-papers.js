@@ -247,6 +247,80 @@ Object.keys(PHOTOS).forEach(k => {
 if (UI_SRC.indexOf('function renderNav()') === -1)
   problems.push('[ui] papers-ui.js has no renderNav() — the persistent nav is missing');
 
+
+/* ---- 13. Phase 2: the module inside the deck ----
+   The promise is zero drift between the lab and the live app, so it is proven by
+   bytes: the deck and the lab must each carry papers-ui.js's CSS, page markup and
+   engine verbatim. The rest guards what the deck itself imposes. */
+{
+  const UI2 = require('./papers-ui.js');
+  const PAGE2 = UI2.PAGE(PAPERS);
+  const HOSTS = [['docs/index.html', INDEX], ['docs/app.html', 'C:/claude/10 th/docs/app.html']];
+  HOSTS.forEach(([name, file]) => {
+    if (!fs.existsSync(file)){ problems.push('[deck] ' + name + ' is missing -- run build.sh'); return; }
+    const h = fs.readFileSync(file, 'utf8');
+    if (h.indexOf(UI2.CSS) === -1) problems.push('[drift] ' + name + ' does not carry the papers-ui.js CSS byte-for-byte');
+    if (h.indexOf(UI2.JS) === -1)  problems.push('[drift] ' + name + ' does not carry the papers-ui.js engine byte-for-byte');
+    if (h.indexOf(PAGE2) === -1)   problems.push('[drift] ' + name + ' does not carry the papers page markup byte-for-byte -- rebuild after gen-papers.js');
+
+    /* the button: Messages' class exactly, and no dropdown caret */
+    const b = h.match(/<button class="([^"]*)" id="papersBtn"[^>]*>([^<]*)<\/button>/);
+    if (!b) problems.push('[button] #papersBtn is missing from ' + name);
+    else {
+      if (b[1] !== 'tb-btn') problems.push('[button] #papersBtn has class "' + b[1] + '"; Messages has exactly "tb-btn"');
+      if (b[2].indexOf('\u25BE') !== -1) problems.push('[button] #papersBtn still carries a dropdown caret');
+    }
+    if (h.indexOf('id="papersMenu"') !== -1) problems.push('[button] a Papers dropdown menu is still in ' + name);
+    if (h.indexOf('<section class="pl-paper"') !== -1)
+      problems.push('[deck] .pl-paper is a <section> in ' + name + ' -- the deck styles every nested section');
+
+    /* exactly one papers stack, and it is the last one */
+    const a = h.indexOf('id="slidesRoot"'), z = h.indexOf('<!-- /.slides -->', a);
+    const body = h.slice(a, z);
+    const stacks = [];
+    let depth = 0, m;
+    const re = /<section\b[^>]*>|<\/section>/g;
+    while ((m = re.exec(body))){
+      if (m[0][1] === '/'){ depth--; continue; }
+      if (depth === 0) stacks.push((m[0].match(/data-topic="([^"]*)"/) || [])[1]);
+      depth++;
+    }
+    const nPapers = stacks.filter(t => t === 'papers').length;
+    if (nPapers !== 1) problems.push('[deck] ' + name + ' has ' + nPapers + ' papers stacks, expected 1');
+    else if (stacks[stacks.length - 1] !== 'papers')
+      problems.push('[deck] the papers stack is not last in ' + name + ' -- every stack after it would shift its #/h/v link and progress');
+    else if (name === 'docs/index.html')
+      notes.push('papers is the last of ' + stacks.length + ' stacks: #/' + (stacks.length - 1) + '/0');
+  });
+
+  /* the lab is built from the same strings */
+  const LAB = 'C:/claude/10 th/papers-lab.html';
+  if (fs.existsSync(LAB)){
+    const lab = fs.readFileSync(LAB, 'utf8');
+    if (lab.indexOf(PAGE2) === -1)   problems.push('[drift] papers-lab.html does not carry the same page markup as the deck');
+    if (lab.indexOf(UI2.JS) === -1)  problems.push('[drift] papers-lab.html does not carry the same engine as the deck');
+    if (lab.indexOf(UI2.CSS) === -1) problems.push('[drift] papers-lab.html does not carry the same CSS as the deck');
+  }
+
+  /* no duplicate ids in the module markup -- the Done ticks are keyed on them */
+  const idCount = {};
+  [...PAGE2.matchAll(/\sid="([^"]+)"/g)].forEach(x => { idCount[x[1]] = (idCount[x[1]] || 0) + 1; });
+  const dupIds = Object.keys(idCount).filter(k => idCount[k] > 1);
+  if (dupIds.length) problems.push('[ids] ' + dupIds.length + ' duplicated id(s) in the papers markup: ' + dupIds.slice(0, 6).join(', '));
+
+  /* every selector the module ships is scoped to it, so it cannot restyle the deck */
+  const flat = UI2.CSS.replace(/\/\*[\s\S]*?\*\//g, '').replace(/@(media|supports)[^{]*\{/g, '');
+  const sels = new Set();
+  flat.split('}').forEach(block => {
+    const i = block.indexOf('{');
+    if (i < 0) return;
+    block.slice(0, i).split(',').forEach(s => { s = s.trim(); if (s && s[0] !== '@') sels.add(s); });
+  });
+  const unscoped = [...sels].filter(s => !/\.pl-|#pl|body\.pl-/.test(s));
+  if (unscoped.length) problems.push('[css] ' + unscoped.length + ' papers selector(s) are not .pl- scoped: ' + unscoped.slice(0, 5).join(' | '));
+  else notes.push('all ' + sels.size + ' papers selectors are .pl- scoped');
+}
+
 /* ---- report ---- */
 const real = PAPERS.reduce((n, p) => n + p.sections.reduce((m, s) => m + s.questions.filter(q => !q.isContainer).length, 0), 0);
 const its = PAPERS.reduce((n, p) => n + p.sections.reduce((m, s) => m + s.questions.reduce((c, q) => c + q.items.length, 0), 0), 0);

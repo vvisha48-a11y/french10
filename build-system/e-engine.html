@@ -48,6 +48,10 @@ const Deck = new Reveal({
   minScale: 1,
   maxScale: 1,
   keyboard: true,
+  // On the Question Papers slide the scroll keys scroll its card instead of
+  // stepping the deck. Returning false makes Reveal ignore the key before it
+  // binds or preventDefaults anything; everywhere else this is always true.
+  keyboardCondition: e => !(window.PapersModule && window.PapersModule.wantsKey(e)),
   viewDistance: 2,        // 440 slides — never render them all at once
   mobileViewDistance: 1,
   fragmentInURL: false
@@ -181,7 +185,7 @@ function renderTopicMenu(){
      is redundant here. MENU_HIDE only filters this dropdown — the topic, its
      slides and every other entry point are untouched. Numbering below uses the
      filtered index, so the remaining items renumber automatically. */
-  const MENU_HIDE = { lettre: 1, messages: 1, accueil: 1 };
+  const MENU_HIDE = { lettre: 1, messages: 1, accueil: 1, papers: 1 };
   LECON_KEYS.forEach(k => { MENU_HIDE[k] = 1; });
   topics.filter(t => !MENU_HIDE[t.key]).forEach((t, i) => {
     const b = document.createElement('button');
@@ -294,6 +298,23 @@ function renderSidebar(){
   }));
 }
 
+/* ---------------- Question Papers ----------------
+   The module mounts on its first visit: under viewDistance the slide is
+   display:none at page load, so it cannot measure its scroll container earlier.
+   While its slide is current it owns #sidebar. updateHud() runs on every slide
+   change and once after restoreFromHash() at boot, so every way onto the slide
+   passes through here -- and the shared accordion renderSidebar stays untouched. */
+function syncPapers(){
+  const P = window.PapersModule;
+  if (!P) return false;
+  const t = topicOf(Deck.getIndices().h);
+  const card = (t && t.key === 'papers' && Deck.getCurrentSlide())
+    ? Deck.getCurrentSlide().querySelector('.slide-card') : null;
+  if (card){ P.activate(card); return true; }
+  P.deactivate();
+  return false;
+}
+
 /* ---------------- HUD ---------------- */
 function updateHud(){
   const idx = Deck.getIndices();
@@ -312,7 +333,7 @@ function updateHud(){
   $('#topicProgress').style.width = (Deck.getProgress()*100).toFixed(1) + '%';
 
   markVisited(idx.h, idx.v);
-  renderSidebar();
+  if (!syncPapers()) renderSidebar();
 }
 
 /* ---------------- Themes ---------------- */
@@ -1259,6 +1280,10 @@ if ($('#lettersBtn')) $('#lettersBtn').onclick = () => {
 };
 if ($('#messagesBtn')) $('#messagesBtn').onclick = () => {
   const t = topicByKey['messages'];
+  if (t && t.indices && t.indices.length) Deck.slide(t.indices[0], 0);
+};
+if ($('#papersBtn')) $('#papersBtn').onclick = () => {
+  const t = topicByKey['papers'];
   if (t && t.indices && t.indices.length) Deck.slide(t.indices[0], 0);
 };
 if ($('#utilBtn')) $('#utilBtn').onclick = e => {
@@ -2497,6 +2522,11 @@ function boot(){
   buildSearchIndex();
   renderTopicMenu();
   renderLeconMenu();
+  /* topicByKey lives inside this IIFE, so the papers module is handed a way to
+     navigate instead of reaching for a window global that never exists */
+  if (window.PapersModule) window.PapersModule.connect({
+    goTopic: key => { const t = topicByKey[key]; if (t && t.indices && t.indices.length) Deck.slide(t.indices[0], 0); }
+  });
   applyMode(ls.get('mode','mode-teacher'));   // re-apply: enables/disables the widgets just wired
   restoreFromHash();
   updateHud();
