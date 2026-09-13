@@ -321,6 +321,39 @@ if (UI_SRC.indexOf('function renderNav()') === -1)
   else notes.push('all ' + sels.size + ' papers selectors are .pl- scoped');
 }
 
+/* ---- 14. "Learn this" links, and the measured label colours ---- */
+{
+  const UI3 = require('./papers-ui.js');
+  const page3 = UI3.PAGE(PAPERS);
+  const links = [...page3.matchAll(/class="pl-learn" data-deck="([^"]+)"/g)].map(m => m[1]);
+  let expected = 0;
+  PAPERS.forEach(p => p.sections.forEach(s => s.questions.forEach(q => {
+    if (!q.isContainer && q.topics.some(t => t.deck)) expected++;
+  })));
+  if (!links.length) problems.push('[learn] no "Learn this" link renders anywhere');
+  else if (links.length !== expected) problems.push('[learn] ' + links.length + ' links render but ' + expected + ' questions have a lesson');
+  /* every leaf the deck teaches must name its lesson, so no such question goes without a link */
+  const taught = TAX.allLeaves().filter(l => (/^gr-/.test(l.key) && !l.legacy) || l.key === 'ex-letter' || l.key === 'ex-message');
+  const unlinked = taught.filter(l => !l.deck).map(l => l.key);
+  if (unlinked.length) problems.push('[learn] leaves the deck teaches have no lesson: ' + unlinked.join(', '));
+  if (fs.existsSync(INDEX)){
+    const inDeck = new Set([...fs.readFileSync(INDEX, 'utf8').matchAll(/data-topic="([^"]+)"/g)].map(m => m[1]));
+    const lost = [...new Set(links)].filter(k => !inDeck.has(k));
+    if (lost.length) problems.push('[learn] link target(s) missing from the deck: ' + lost.join(', '));
+    else if (links.length) notes.push(links.length + ' "Learn this" links render, to ' + new Set(links).size + ' lessons, all in the deck');
+  }
+  /* colours measured to pass 4.5:1 in all 7 themes on all four section grounds (numbers in papers-ui.js) */
+  [
+    ['.pl-answer-tag.is-official{ background:var(--green); color:var(--card-bg); }', 'officielle tag'],
+    ['.pl-answer-tag.is-modele{ background:var(--card-bg); color:var(--text-main); border:1px dashed var(--card-border); }', 'modele tag'],
+    ['color:var(--text-muted); white-space:nowrap;', 'citation'],
+    ['.pl-learn:hover{ background:var(--heading-color); color:var(--card-bg); }', 'Learn this hover']
+  ].forEach(([rule, label]) => {
+    if (UI3.CSS.indexOf(rule) === -1)
+      problems.push('[contrast] the ' + label + ' colours differ from the ones measured in all 7 themes -- re-measure before shipping');
+  });
+}
+
 /* ---- report ---- */
 const real = PAPERS.reduce((n, p) => n + p.sections.reduce((m, s) => m + s.questions.filter(q => !q.isContainer).length, 0), 0);
 const its = PAPERS.reduce((n, p) => n + p.sections.reduce((m, s) => m + s.questions.reduce((c, q) => c + q.items.length, 0), 0), 0);

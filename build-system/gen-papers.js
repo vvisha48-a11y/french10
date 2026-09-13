@@ -491,7 +491,7 @@ function classifyAll(sections, stats){
     q.leaf = leaf.key;
     q.group = leaf.group;
     q.topics.push({ key: leaf.key, label: leaf.label, group: leaf.group,
-                    deck: null, confidence: 'certain', legacy: !!leaf.legacy });
+                    deck: leaf.deck || null, confidence: 'certain', legacy: !!leaf.legacy });
   }));
 }
 

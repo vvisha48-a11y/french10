@@ -52,6 +52,12 @@ const TENSES_NEVER_ASKED = [];
  *  `marks` is the syllabus allotment where CBSE states one; where it does not,
  *  gen-papers.js fills in what the most recent paper actually awarded.
  * ------------------------------------------------------------------ */
+/* `deck` is the data-topic of the lesson that teaches a leaf, and it is what the
+   "Learn this →" link under each question opens. Only leaves the deck actually
+   teaches carry one. Comprehension, dialogue and story tasks, the culture
+   questions and the retired prepositions have no lesson to send a student to,
+   so they get no link rather than a misleading one. check-papers.js confirms
+   every target exists in the built deck. */
 const TAXONOMY = [
   {
     key: 'comprehension', label: 'Compréhension', section: 'A',
@@ -78,11 +84,11 @@ const TAXONOMY = [
   {
     key: 'expression', label: 'Expression', section: 'B',
     leaves: [
-      { key: 'ex-letter', label: 'Informal letter',
+      { key: 'ex-letter', label: 'Informal letter', deck: 'lettre',
         match: /lettre/i },
       { key: 'ex-dialogue', label: 'Rearranging of dialogue',
         match: /dialogue/i },
-      { key: 'ex-message', label: 'Writing a message',
+      { key: 'ex-message', label: 'Writing a message', deck: 'messages',
         match: /message|invitation|refus|accept|annonce|r.digez|excusez/i },
       { key: 'ex-story', label: 'Completing a story',
         match: /compl.tez|choisissant parmi les mots|. l.aide des mots|parmi les mots donn/i }
@@ -95,23 +101,23 @@ const TAXONOMY = [
          verb question, but your taxonomy lists Le subjonctif as its own Grammaire
          topic, so it must win the match -- otherwise Les Verbes swallows all nine
          subjonctif questions and the topic shows three. */
-      { key: 'gr-subjonctif', label: 'Le subjonctif',
+      { key: 'gr-subjonctif', label: 'Le subjonctif', deck: 'subjonctif',
         match: /subjonctif/i },
-      { key: 'gr-verbes', label: 'Les Verbes', tenses: true,
+      { key: 'gr-verbes', label: 'Les Verbes', tenses: true, deck: 'verbes',
         match: /conjuguez|temps convenable|aux temps|mettez les verbes/i },
-      { key: 'gr-discours', label: 'Le discours direct et indirect',
+      { key: 'gr-discours', label: 'Le discours direct et indirect', deck: 'discours',
         match: /style (direct|indirect)|discours (direct|rapport|indirect)|directe ou indirecte/i },
-      { key: 'gr-question', label: 'Trouver la question',
+      { key: 'gr-question', label: 'Trouver la question', deck: 'question',
         match: /trouvez (la|les|des) questions?|trouvez la phrase|trouvez des questions/i },
-      { key: 'gr-negation', label: 'La négation',
+      { key: 'gr-negation', label: 'La négation', deck: 'negation',
         match: /n.gati(f|ve)|au n.gatif|. la forme n.g/i },
-      { key: 'gr-relatifs', label: 'Les pronoms relatifs simples et composés',
+      { key: 'gr-relatifs', label: 'Les pronoms relatifs simples et composés', deck: 'relatifs',
         match: /pronoms? relatifs?|reliez (les phrases|en utilisant)/i },
-      { key: 'gr-possessifs', label: 'Les adjectifs et pronoms possessifs',
+      { key: 'gr-possessifs', label: 'Les adjectifs et pronoms possessifs', deck: 'possessifs',
         match: /poss?ess?ifs?/i },
-      { key: 'gr-demonstratifs', label: 'Les adjectifs et pronoms démonstratifs',
+      { key: 'gr-demonstratifs', label: 'Les adjectifs et pronoms démonstratifs', deck: 'demonstratifs',
         match: /d.monstratifs?/i },
-      { key: 'gr-pronoms', label: 'Les pronoms (COD, COI, toniques, y, en)',
+      { key: 'gr-pronoms', label: 'Les pronoms (COD, COI, toniques, y, en)', deck: 'pronoms',
         match: /remplacez les (noms|mots)|pronoms personnels|par des pronoms|remplacez les noms|y, en/i },
       /* Kept deliberately: six real questions (2017-2020) ask prepositions, and
          dropping the row would make them unreachable. Labelled so a student can

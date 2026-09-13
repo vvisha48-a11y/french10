@@ -293,7 +293,10 @@ module.exports.CSS = `/* ===== QUESTION PAPERS ===== */
   background:var(--card-bg); color:var(--heading-color);
   border:1px solid var(--heading-color); transition:all .16s ease;
 }
-.pl-learn:hover{ background:var(--heading-color); color:#fff; }
+/* Resting state lowest 4.96:1 (sunrise). On hover the heading colour fills the pill;
+   white on it measured 1.39:1 on cyber and 1.67:1 on slate, so the text takes the
+   card colour instead -- lowest 4.69:1 (sunrise). */
+.pl-learn:hover{ background:var(--heading-color); color:var(--card-bg); }
 .pl-answer{
   margin:8px 0 0; padding:9px 11px; border-radius:9px;
   background:var(--box-gold-bg); border:1px solid var(--box-gold-border);
@@ -344,17 +347,25 @@ body.pl-focus .pl-section:not(.is-current){ opacity:.34; filter:saturate(.5); }
   font-family:var(--custom-heading-font); font-size:.6rem; font-weight:900;
   text-transform:uppercase; letter-spacing:.06em; padding:3px 8px; border-radius:999px;
 }
-/* the two tiers must never read alike: solid for the official scheme, outlined
-   for an answer modelled on its rules */
-.pl-answer-tag.is-official{ background:var(--green); color:#fff; }
-.pl-answer-tag.is-modele{ background:transparent; color:var(--text-muted); border:1px dashed var(--card-border); }
+/* The two tiers must never read alike: solid green for the official scheme, a
+   dashed card-coloured chip for an answer modelled on its rules.
+   Measured in all 7 themes on all four section grounds. These are small bold
+   labels, so WCAG asks 4.5:1:
+     officielle -- var(--card-bg) text on var(--green): lowest 4.69:1 (sunrise).
+       White measured 1.74:1 on slate and 1.81:1 on cyber, where the green is
+       light; the card colour turns dark or light with the theme.
+     modele     -- var(--text-main) on a var(--card-bg) chip: lowest 9.65:1 (emerald). */
+.pl-answer-tag.is-official{ background:var(--green); color:var(--card-bg); }
+.pl-answer-tag.is-modele{ background:var(--card-bg); color:var(--text-main); border:1px dashed var(--card-border); }
 .pl-answer-list{ list-style:none; margin:0; padding:0; display:grid; gap:5px; }
 .pl-answer-list li{ display:flex; gap:8px; align-items:baseline; font-size:.86rem; line-height:1.5; }
 .pl-ans-label{ font-weight:800; color:var(--sec); min-width:2.1em; }
 .pl-ans-text{ flex:1; }
+/* text-muted, not green: green measured 4.32:1 on sunrise. text-muted is lowest at
+   4.72:1 (emerald) and keeps the citation quieter than the answer it cites. */
 .pl-ans-src{
   display:inline-block; margin-left:7px; font-size:.62rem; font-weight:800;
-  color:var(--green); white-space:nowrap;
+  color:var(--text-muted); white-space:nowrap;
 }
 .pl-answer-text{ margin:0; font-size:.86rem; line-height:1.55; }
 .pl-rubric{
@@ -509,6 +520,11 @@ function qHTML(p, sec, q){
 
   out.push('<div class="pl-q-foot">');
   q.topics.forEach(t => out.push('<span class="pl-topic">' + esc(t.label) + '</span>'));
+  /* The lesson that teaches this, where the deck has one (papers-taxonomy.js `deck`).
+     The engine hands over navigation; in the lab the button only says where it goes. */
+  const lesson = q.isContainer ? null : q.topics.find(t => t.deck);
+  if (lesson) out.push('<button type="button" class="pl-learn" data-deck="' + esc(lesson.deck) + '"' +
+    ' title="Open the lesson: ' + esc(lesson.label) + '">Learn this →</button>');
   if (!q.isContainer && q.marks) out.push('<button type="button" class="pl-done" aria-pressed="false">✓ Done</button>');
   if (hasAnswer(q)) out.push('<button type="button" class="pl-chip pl-show-answer">Voir la réponse</button>');
   if ((q.flags || []).indexOf('read-from-pdf') !== -1)
@@ -1004,7 +1020,7 @@ module.exports.JS = `
       const key = l.dataset.deck;
       if (host.goTopic) host.goTopic(key);
       else {
-        l.textContent = 'opens ' + key + ' in the app';
+        l.textContent = 'Opens in the deck app';
         setTimeout(() => { l.textContent = 'Learn this →'; }, 1800);
       }
       return;

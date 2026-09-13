@@ -318,7 +318,7 @@ const PAPERS = [
         "key": "ex-letter",
         "label": "Informal letter",
         "group": "expression",
-        "deck": null,
+        "deck": "lettre",
         "confidence": "certain",
         "legacy": false
        }
@@ -344,7 +344,7 @@ const PAPERS = [
         "key": "ex-letter",
         "label": "Informal letter",
         "group": "expression",
-        "deck": null,
+        "deck": "lettre",
         "confidence": "certain",
         "legacy": false
        }
@@ -405,7 +405,7 @@ const PAPERS = [
         "key": "ex-message",
         "label": "Writing a message",
         "group": "expression",
-        "deck": null,
+        "deck": "messages",
         "confidence": "certain",
         "legacy": false
        }
@@ -571,7 +571,7 @@ const PAPERS = [
         "key": "gr-question",
         "label": "Trouver la question",
         "group": "grammaire",
-        "deck": null,
+        "deck": "question",
         "confidence": "certain",
         "legacy": false
        }
@@ -636,7 +636,7 @@ const PAPERS = [
         "key": "gr-possessifs",
         "label": "Les adjectifs et pronoms possessifs",
         "group": "grammaire",
-        "deck": null,
+        "deck": "possessifs",
         "confidence": "certain",
         "legacy": false
        }
@@ -718,7 +718,7 @@ const PAPERS = [
         "key": "gr-negation",
         "label": "La négation",
         "group": "grammaire",
-        "deck": null,
+        "deck": "negation",
         "confidence": "certain",
         "legacy": false
        }
@@ -825,7 +825,7 @@ const PAPERS = [
         "key": "gr-verbes",
         "label": "Les Verbes",
         "group": "grammaire",
-        "deck": null,
+        "deck": "verbes",
         "confidence": "certain",
         "legacy": false
        }
@@ -890,7 +890,7 @@ const PAPERS = [
         "key": "gr-discours",
         "label": "Le discours direct et indirect",
         "group": "grammaire",
-        "deck": null,
+        "deck": "discours",
         "confidence": "certain",
         "legacy": false
        }
@@ -955,7 +955,7 @@ const PAPERS = [
         "key": "gr-subjonctif",
         "label": "Le subjonctif",
         "group": "grammaire",
-        "deck": null,
+        "deck": "subjonctif",
         "confidence": "certain",
         "legacy": false
        }
@@ -1564,7 +1564,7 @@ const PAPERS = [
         "key": "ex-letter",
         "label": "Informal letter",
         "group": "expression",
-        "deck": null,
+        "deck": "lettre",
         "confidence": "certain",
         "legacy": false
        }
@@ -1590,7 +1590,7 @@ const PAPERS = [
         "key": "ex-letter",
         "label": "Informal letter",
         "group": "expression",
-        "deck": null,
+        "deck": "lettre",
         "confidence": "certain",
         "legacy": false
        }
@@ -1655,7 +1655,7 @@ const PAPERS = [
         "key": "ex-message",
         "label": "Writing a message",
         "group": "expression",
-        "deck": null,
+        "deck": "messages",
         "confidence": "certain",
         "legacy": false
        }
@@ -1812,7 +1812,7 @@ const PAPERS = [
         "key": "gr-verbes",
         "label": "Les Verbes",
         "group": "grammaire",
-        "deck": null,
+        "deck": "verbes",
         "confidence": "certain",
         "legacy": false
        }
@@ -1861,7 +1861,7 @@ const PAPERS = [
         "key": "gr-discours",
         "label": "Le discours direct et indirect",
         "group": "grammaire",
-        "deck": null,
+        "deck": "discours",
         "confidence": "certain",
         "legacy": false
        }
@@ -1910,7 +1910,7 @@ const PAPERS = [
         "key": "gr-negation",
         "label": "La négation",
         "group": "grammaire",
-        "deck": null,
+        "deck": "negation",
         "confidence": "certain",
         "legacy": false
        }
@@ -1959,7 +1959,7 @@ const PAPERS = [
         "key": "gr-question",
         "label": "Trouver la question",
         "group": "grammaire",
-        "deck": null,
+        "deck": "question",
         "confidence": "certain",
         "legacy": false
        }
@@ -2008,7 +2008,7 @@ const PAPERS = [
         "key": "gr-relatifs",
         "label": "Les pronoms relatifs simples et composés",
         "group": "grammaire",
-        "deck": null,
+        "deck": "relatifs",
         "confidence": "certain",
         "legacy": false
        }
@@ -2057,7 +2057,7 @@ const PAPERS = [
         "key": "gr-subjonctif",
         "label": "Le subjonctif",
         "group": "grammaire",
-        "deck": null,
+        "deck": "subjonctif",
         "confidence": "certain",
         "legacy": false
        }
@@ -2114,7 +2114,7 @@ const PAPERS = [
         "key": "gr-demonstratifs",
         "label": "Les adjectifs et pronoms démonstratifs",
         "group": "grammaire",
-        "deck": null,
+        "deck": "demonstratifs",
         "confidence": "certain",
         "legacy": false
        }
@@ -2163,7 +2163,7 @@ const PAPERS = [
         "key": "gr-possessifs",
         "label": "Les adjectifs et pronoms possessifs",
         "group": "grammaire",
-        "deck": null,
+        "deck": "possessifs",
         "confidence": "certain",
         "legacy": false
        }
@@ -2212,7 +2212,7 @@ const PAPERS = [
         "key": "gr-pronoms",
         "label": "Les pronoms (COD, COI, toniques, y, en)",
         "group": "grammaire",
-        "deck": null,
+        "deck": "pronoms",
         "confidence": "certain",
         "legacy": false
        }
@@ -2856,7 +2856,7 @@ const PAPERS = [
         "key": "ex-letter",
         "label": "Informal letter",
         "group": "expression",
-        "deck": null,
+        "deck": "lettre",
         "confidence": "certain",
         "legacy": false
        }
@@ -2882,7 +2882,7 @@ const PAPERS = [
         "key": "ex-letter",
         "label": "Informal letter",
         "group": "expression",
-        "deck": null,
+        "deck": "lettre",
         "confidence": "certain",
         "legacy": false
        }
@@ -2947,7 +2947,7 @@ const PAPERS = [
         "key": "ex-message",
         "label": "Writing a message",
         "group": "expression",
-        "deck": null,
+        "deck": "messages",
         "confidence": "certain",
         "legacy": false
        }
@@ -3104,7 +3104,7 @@ const PAPERS = [
         "key": "gr-verbes",
         "label": "Les Verbes",
         "group": "grammaire",
-        "deck": null,
+        "deck": "verbes",
         "confidence": "certain",
         "legacy": false
        }
@@ -3153,7 +3153,7 @@ const PAPERS = [
         "key": "gr-discours",
         "label": "Le discours direct et indirect",
         "group": "grammaire",
-        "deck": null,
+        "deck": "discours",
         "confidence": "certain",
         "legacy": false
        }
@@ -3202,7 +3202,7 @@ const PAPERS = [
         "key": "gr-negation",
         "label": "La négation",
         "group": "grammaire",
-        "deck": null,
+        "deck": "negation",
         "confidence": "certain",
         "legacy": false
        }
@@ -3251,7 +3251,7 @@ const PAPERS = [
         "key": "gr-question",
         "label": "Trouver la question",
         "group": "grammaire",
-        "deck": null,
+        "deck": "question",
         "confidence": "certain",
         "legacy": false
        }
@@ -3300,7 +3300,7 @@ const PAPERS = [
         "key": "gr-relatifs",
         "label": "Les pronoms relatifs simples et composés",
         "group": "grammaire",
-        "deck": null,
+        "deck": "relatifs",
         "confidence": "certain",
         "legacy": false
        }
@@ -3349,7 +3349,7 @@ const PAPERS = [
         "key": "gr-subjonctif",
         "label": "Le subjonctif",
         "group": "grammaire",
-        "deck": null,
+        "deck": "subjonctif",
         "confidence": "certain",
         "legacy": false
        }
@@ -3398,7 +3398,7 @@ const PAPERS = [
         "key": "gr-demonstratifs",
         "label": "Les adjectifs et pronoms démonstratifs",
         "group": "grammaire",
-        "deck": null,
+        "deck": "demonstratifs",
         "confidence": "certain",
         "legacy": false
        }
@@ -3447,7 +3447,7 @@ const PAPERS = [
         "key": "gr-possessifs",
         "label": "Les adjectifs et pronoms possessifs",
         "group": "grammaire",
-        "deck": null,
+        "deck": "possessifs",
         "confidence": "certain",
         "legacy": false
        }
@@ -3512,7 +3512,7 @@ const PAPERS = [
         "key": "gr-pronoms",
         "label": "Les pronoms (COD, COI, toniques, y, en)",
         "group": "grammaire",
-        "deck": null,
+        "deck": "pronoms",
         "confidence": "certain",
         "legacy": false
        }
@@ -4193,7 +4193,7 @@ const PAPERS = [
         "key": "ex-letter",
         "label": "Informal letter",
         "group": "expression",
-        "deck": null,
+        "deck": "lettre",
         "confidence": "certain",
         "legacy": false
        }
@@ -4223,7 +4223,7 @@ const PAPERS = [
         "key": "ex-letter",
         "label": "Informal letter",
         "group": "expression",
-        "deck": null,
+        "deck": "lettre",
         "confidence": "certain",
         "legacy": false
        }
@@ -4294,7 +4294,7 @@ const PAPERS = [
         "key": "ex-message",
         "label": "Writing a message",
         "group": "expression",
-        "deck": null,
+        "deck": "messages",
         "confidence": "certain",
         "legacy": false
        }
@@ -4464,7 +4464,7 @@ const PAPERS = [
         "key": "gr-verbes",
         "label": "Les Verbes",
         "group": "grammaire",
-        "deck": null,
+        "deck": "verbes",
         "confidence": "certain",
         "legacy": false
        }
@@ -4513,7 +4513,7 @@ const PAPERS = [
         "key": "gr-discours",
         "label": "Le discours direct et indirect",
         "group": "grammaire",
-        "deck": null,
+        "deck": "discours",
         "confidence": "certain",
         "legacy": false
        }
@@ -4573,7 +4573,7 @@ const PAPERS = [
         "key": "gr-negation",
         "label": "La négation",
         "group": "grammaire",
-        "deck": null,
+        "deck": "negation",
         "confidence": "certain",
         "legacy": false
        }
@@ -4635,7 +4635,7 @@ const PAPERS = [
         "key": "gr-question",
         "label": "Trouver la question",
         "group": "grammaire",
-        "deck": null,
+        "deck": "question",
         "confidence": "certain",
         "legacy": false
        }
@@ -4697,7 +4697,7 @@ const PAPERS = [
         "key": "gr-relatifs",
         "label": "Les pronoms relatifs simples et composés",
         "group": "grammaire",
-        "deck": null,
+        "deck": "relatifs",
         "confidence": "certain",
         "legacy": false
        }
@@ -4759,7 +4759,7 @@ const PAPERS = [
         "key": "gr-subjonctif",
         "label": "Le subjonctif",
         "group": "grammaire",
-        "deck": null,
+        "deck": "subjonctif",
         "confidence": "certain",
         "legacy": false
        }
@@ -4821,7 +4821,7 @@ const PAPERS = [
         "key": "gr-demonstratifs",
         "label": "Les adjectifs et pronoms démonstratifs",
         "group": "grammaire",
-        "deck": null,
+        "deck": "demonstratifs",
         "confidence": "certain",
         "legacy": false
        }
@@ -4872,7 +4872,7 @@ const PAPERS = [
         "key": "gr-possessifs",
         "label": "Les adjectifs et pronoms possessifs",
         "group": "grammaire",
-        "deck": null,
+        "deck": "possessifs",
         "confidence": "certain",
         "legacy": false
        }
@@ -4929,7 +4929,7 @@ const PAPERS = [
         "key": "gr-pronoms",
         "label": "Les pronoms (COD, COI, toniques, y, en)",
         "group": "grammaire",
-        "deck": null,
+        "deck": "pronoms",
         "confidence": "certain",
         "legacy": false
        }
@@ -5718,7 +5718,7 @@ const PAPERS = [
         "key": "ex-letter",
         "label": "Informal letter",
         "group": "expression",
-        "deck": null,
+        "deck": "lettre",
         "confidence": "certain",
         "legacy": false
        }
@@ -5744,7 +5744,7 @@ const PAPERS = [
         "key": "ex-letter",
         "label": "Informal letter",
         "group": "expression",
-        "deck": null,
+        "deck": "lettre",
         "confidence": "certain",
         "legacy": false
        }
@@ -5835,7 +5835,7 @@ const PAPERS = [
         "key": "ex-message",
         "label": "Writing a message",
         "group": "expression",
-        "deck": null,
+        "deck": "messages",
         "confidence": "certain",
         "legacy": false
        }
@@ -6033,7 +6033,7 @@ const PAPERS = [
         "key": "gr-verbes",
         "label": "Les Verbes",
         "group": "grammaire",
-        "deck": null,
+        "deck": "verbes",
         "confidence": "certain",
         "legacy": false
        }
@@ -6090,7 +6090,7 @@ const PAPERS = [
         "key": "gr-pronoms",
         "label": "Les pronoms (COD, COI, toniques, y, en)",
         "group": "grammaire",
-        "deck": null,
+        "deck": "pronoms",
         "confidence": "certain",
         "legacy": false
        }
@@ -6139,7 +6139,7 @@ const PAPERS = [
         "key": "gr-demonstratifs",
         "label": "Les adjectifs et pronoms démonstratifs",
         "group": "grammaire",
-        "deck": null,
+        "deck": "demonstratifs",
         "confidence": "certain",
         "legacy": false
        }
@@ -6188,7 +6188,7 @@ const PAPERS = [
         "key": "gr-discours",
         "label": "Le discours direct et indirect",
         "group": "grammaire",
-        "deck": null,
+        "deck": "discours",
         "confidence": "certain",
         "legacy": false
        }
@@ -6237,7 +6237,7 @@ const PAPERS = [
         "key": "gr-negation",
         "label": "La négation",
         "group": "grammaire",
-        "deck": null,
+        "deck": "negation",
         "confidence": "certain",
         "legacy": false
        }
@@ -6286,7 +6286,7 @@ const PAPERS = [
         "key": "gr-subjonctif",
         "label": "Le subjonctif",
         "group": "grammaire",
-        "deck": null,
+        "deck": "subjonctif",
         "confidence": "certain",
         "legacy": false
        }
@@ -6335,7 +6335,7 @@ const PAPERS = [
         "key": "gr-relatifs",
         "label": "Les pronoms relatifs simples et composés",
         "group": "grammaire",
-        "deck": null,
+        "deck": "relatifs",
         "confidence": "certain",
         "legacy": false
        }
@@ -6384,7 +6384,7 @@ const PAPERS = [
         "key": "gr-question",
         "label": "Trouver la question",
         "group": "grammaire",
-        "deck": null,
+        "deck": "question",
         "confidence": "certain",
         "legacy": false
        }
@@ -6433,7 +6433,7 @@ const PAPERS = [
         "key": "gr-possessifs",
         "label": "Les adjectifs et pronoms possessifs",
         "group": "grammaire",
-        "deck": null,
+        "deck": "possessifs",
         "confidence": "certain",
         "legacy": false
        }
@@ -7214,7 +7214,7 @@ const PAPERS = [
         "key": "ex-letter",
         "label": "Informal letter",
         "group": "expression",
-        "deck": null,
+        "deck": "lettre",
         "confidence": "certain",
         "legacy": false
        }
@@ -7244,7 +7244,7 @@ const PAPERS = [
         "key": "ex-letter",
         "label": "Informal letter",
         "group": "expression",
-        "deck": null,
+        "deck": "lettre",
         "confidence": "certain",
         "legacy": false
        }
@@ -7285,7 +7285,7 @@ const PAPERS = [
         "key": "ex-message",
         "label": "Writing a message",
         "group": "expression",
-        "deck": null,
+        "deck": "messages",
         "confidence": "certain",
         "legacy": false
        }
@@ -7502,7 +7502,7 @@ const PAPERS = [
         "key": "gr-verbes",
         "label": "Les Verbes",
         "group": "grammaire",
-        "deck": null,
+        "deck": "verbes",
         "confidence": "certain",
         "legacy": false
        }
@@ -7559,7 +7559,7 @@ const PAPERS = [
         "key": "gr-relatifs",
         "label": "Les pronoms relatifs simples et composés",
         "group": "grammaire",
-        "deck": null,
+        "deck": "relatifs",
         "confidence": "certain",
         "legacy": false
        }
@@ -7616,7 +7616,7 @@ const PAPERS = [
         "key": "gr-pronoms",
         "label": "Les pronoms (COD, COI, toniques, y, en)",
         "group": "grammaire",
-        "deck": null,
+        "deck": "pronoms",
         "confidence": "certain",
         "legacy": false
        }
@@ -7673,7 +7673,7 @@ const PAPERS = [
         "key": "gr-question",
         "label": "Trouver la question",
         "group": "grammaire",
-        "deck": null,
+        "deck": "question",
         "confidence": "certain",
         "legacy": false
        }
@@ -7730,7 +7730,7 @@ const PAPERS = [
         "key": "gr-possessifs",
         "label": "Les adjectifs et pronoms possessifs",
         "group": "grammaire",
-        "deck": null,
+        "deck": "possessifs",
         "confidence": "certain",
         "legacy": false
        }
@@ -7787,7 +7787,7 @@ const PAPERS = [
         "key": "gr-subjonctif",
         "label": "Le subjonctif",
         "group": "grammaire",
-        "deck": null,
+        "deck": "subjonctif",
         "confidence": "certain",
         "legacy": false
        }
@@ -7933,7 +7933,7 @@ const PAPERS = [
         "key": "gr-discours",
         "label": "Le discours direct et indirect",
         "group": "grammaire",
-        "deck": null,
+        "deck": "discours",
         "confidence": "certain",
         "legacy": false
        }
@@ -7990,7 +7990,7 @@ const PAPERS = [
         "key": "gr-demonstratifs",
         "label": "Les adjectifs et pronoms démonstratifs",
         "group": "grammaire",
-        "deck": null,
+        "deck": "demonstratifs",
         "confidence": "certain",
         "legacy": false
        }
@@ -8047,7 +8047,7 @@ const PAPERS = [
         "key": "gr-negation",
         "label": "La négation",
         "group": "grammaire",
-        "deck": null,
+        "deck": "negation",
         "confidence": "certain",
         "legacy": false
        }
@@ -8670,7 +8670,7 @@ const PAPERS = [
         "key": "ex-letter",
         "label": "Informal letter",
         "group": "expression",
-        "deck": null,
+        "deck": "lettre",
         "confidence": "certain",
         "legacy": false
        }
@@ -8696,7 +8696,7 @@ const PAPERS = [
         "key": "ex-letter",
         "label": "Informal letter",
         "group": "expression",
-        "deck": null,
+        "deck": "lettre",
         "confidence": "certain",
         "legacy": false
        }
@@ -8722,7 +8722,7 @@ const PAPERS = [
         "key": "ex-letter",
         "label": "Informal letter",
         "group": "expression",
-        "deck": null,
+        "deck": "lettre",
         "confidence": "certain",
         "legacy": false
        }
@@ -8894,7 +8894,7 @@ const PAPERS = [
         "key": "gr-verbes",
         "label": "Les Verbes",
         "group": "grammaire",
-        "deck": null,
+        "deck": "verbes",
         "confidence": "certain",
         "legacy": false
        }
@@ -8978,7 +8978,7 @@ const PAPERS = [
         "key": "gr-discours",
         "label": "Le discours direct et indirect",
         "group": "grammaire",
-        "deck": null,
+        "deck": "discours",
         "confidence": "certain",
         "legacy": false
        }
@@ -9062,7 +9062,7 @@ const PAPERS = [
         "key": "gr-question",
         "label": "Trouver la question",
         "group": "grammaire",
-        "deck": null,
+        "deck": "question",
         "confidence": "certain",
         "legacy": false
        }
@@ -9146,7 +9146,7 @@ const PAPERS = [
         "key": "gr-possessifs",
         "label": "Les adjectifs et pronoms possessifs",
         "group": "grammaire",
-        "deck": null,
+        "deck": "possessifs",
         "confidence": "certain",
         "legacy": false
        }
@@ -9594,7 +9594,7 @@ const PAPERS = [
         "key": "ex-letter",
         "label": "Informal letter",
         "group": "expression",
-        "deck": null,
+        "deck": "lettre",
         "confidence": "certain",
         "legacy": false
        }
@@ -9623,7 +9623,7 @@ const PAPERS = [
         "key": "ex-message",
         "label": "Writing a message",
         "group": "expression",
-        "deck": null,
+        "deck": "messages",
         "confidence": "certain",
         "legacy": false
        }
@@ -9857,7 +9857,7 @@ const PAPERS = [
         "key": "gr-verbes",
         "label": "Les Verbes",
         "group": "grammaire",
-        "deck": null,
+        "deck": "verbes",
         "confidence": "certain",
         "legacy": false
        }
@@ -9963,7 +9963,7 @@ const PAPERS = [
         "key": "gr-discours",
         "label": "Le discours direct et indirect",
         "group": "grammaire",
-        "deck": null,
+        "deck": "discours",
         "confidence": "certain",
         "legacy": false
        }
@@ -10047,7 +10047,7 @@ const PAPERS = [
         "key": "gr-question",
         "label": "Trouver la question",
         "group": "grammaire",
-        "deck": null,
+        "deck": "question",
         "confidence": "certain",
         "legacy": false
        }
@@ -10131,7 +10131,7 @@ const PAPERS = [
         "key": "gr-negation",
         "label": "La négation",
         "group": "grammaire",
-        "deck": null,
+        "deck": "negation",
         "confidence": "certain",
         "legacy": false
        }
@@ -10215,7 +10215,7 @@ const PAPERS = [
         "key": "gr-possessifs",
         "label": "Les adjectifs et pronoms possessifs",
         "group": "grammaire",
-        "deck": null,
+        "deck": "possessifs",
         "confidence": "certain",
         "legacy": false
        }
@@ -10299,7 +10299,7 @@ const PAPERS = [
         "key": "gr-demonstratifs",
         "label": "Les adjectifs et pronoms démonstratifs",
         "group": "grammaire",
-        "deck": null,
+        "deck": "demonstratifs",
         "confidence": "certain",
         "legacy": false
        }
@@ -10383,7 +10383,7 @@ const PAPERS = [
         "key": "gr-relatifs",
         "label": "Les pronoms relatifs simples et composés",
         "group": "grammaire",
-        "deck": null,
+        "deck": "relatifs",
         "confidence": "certain",
         "legacy": false
        }
@@ -10467,7 +10467,7 @@ const PAPERS = [
         "key": "gr-pronoms",
         "label": "Les pronoms (COD, COI, toniques, y, en)",
         "group": "grammaire",
-        "deck": null,
+        "deck": "pronoms",
         "confidence": "certain",
         "legacy": false
        }
@@ -10573,7 +10573,7 @@ const PAPERS = [
         "key": "gr-subjonctif",
         "label": "Le subjonctif",
         "group": "grammaire",
-        "deck": null,
+        "deck": "subjonctif",
         "confidence": "certain",
         "legacy": false
        }
@@ -11280,7 +11280,7 @@ const PAPERS = [
         "key": "ex-letter",
         "label": "Informal letter",
         "group": "expression",
-        "deck": null,
+        "deck": "lettre",
         "confidence": "certain",
         "legacy": false
        }
@@ -11308,7 +11308,7 @@ const PAPERS = [
         "key": "ex-letter",
         "label": "Informal letter",
         "group": "expression",
-        "deck": null,
+        "deck": "lettre",
         "confidence": "certain",
         "legacy": false
        }
@@ -11338,7 +11338,7 @@ const PAPERS = [
         "key": "ex-letter",
         "label": "Informal letter",
         "group": "expression",
-        "deck": null,
+        "deck": "lettre",
         "confidence": "certain",
         "legacy": false
        }
@@ -11381,7 +11381,7 @@ const PAPERS = [
         "key": "ex-message",
         "label": "Writing a message",
         "group": "expression",
-        "deck": null,
+        "deck": "messages",
         "confidence": "certain",
         "legacy": false
        }
@@ -11696,7 +11696,7 @@ const PAPERS = [
         "key": "gr-verbes",
         "label": "Les Verbes",
         "group": "grammaire",
-        "deck": null,
+        "deck": "verbes",
         "confidence": "certain",
         "legacy": false
        }
@@ -11802,7 +11802,7 @@ const PAPERS = [
         "key": "gr-discours",
         "label": "Le discours direct et indirect",
         "group": "grammaire",
-        "deck": null,
+        "deck": "discours",
         "confidence": "certain",
         "legacy": false
        }
@@ -11886,7 +11886,7 @@ const PAPERS = [
         "key": "gr-question",
         "label": "Trouver la question",
         "group": "grammaire",
-        "deck": null,
+        "deck": "question",
         "confidence": "certain",
         "legacy": false
        }
@@ -11970,7 +11970,7 @@ const PAPERS = [
         "key": "gr-negation",
         "label": "La négation",
         "group": "grammaire",
-        "deck": null,
+        "deck": "negation",
         "confidence": "certain",
         "legacy": false
        }
@@ -12054,7 +12054,7 @@ const PAPERS = [
         "key": "gr-possessifs",
         "label": "Les adjectifs et pronoms possessifs",
         "group": "grammaire",
-        "deck": null,
+        "deck": "possessifs",
         "confidence": "certain",
         "legacy": false
        }
@@ -12138,7 +12138,7 @@ const PAPERS = [
         "key": "gr-demonstratifs",
         "label": "Les adjectifs et pronoms démonstratifs",
         "group": "grammaire",
-        "deck": null,
+        "deck": "demonstratifs",
         "confidence": "certain",
         "legacy": false
        }
@@ -12222,7 +12222,7 @@ const PAPERS = [
         "key": "gr-relatifs",
         "label": "Les pronoms relatifs simples et composés",
         "group": "grammaire",
-        "deck": null,
+        "deck": "relatifs",
         "confidence": "certain",
         "legacy": false
        }
@@ -12306,7 +12306,7 @@ const PAPERS = [
         "key": "gr-pronoms",
         "label": "Les pronoms (COD, COI, toniques, y, en)",
         "group": "grammaire",
-        "deck": null,
+        "deck": "pronoms",
         "confidence": "certain",
         "legacy": false
        }
@@ -12412,7 +12412,7 @@ const PAPERS = [
         "key": "gr-subjonctif",
         "label": "Le subjonctif",
         "group": "grammaire",
-        "deck": null,
+        "deck": "subjonctif",
         "confidence": "certain",
         "legacy": false
        }
@@ -13099,7 +13099,7 @@ const PAPERS = [
         "key": "ex-letter",
         "label": "Informal letter",
         "group": "expression",
-        "deck": null,
+        "deck": "lettre",
         "confidence": "certain",
         "legacy": false
        }
@@ -13125,7 +13125,7 @@ const PAPERS = [
         "key": "ex-letter",
         "label": "Informal letter",
         "group": "expression",
-        "deck": null,
+        "deck": "lettre",
         "confidence": "certain",
         "legacy": false
        }
@@ -13151,7 +13151,7 @@ const PAPERS = [
         "key": "ex-letter",
         "label": "Informal letter",
         "group": "expression",
-        "deck": null,
+        "deck": "lettre",
         "confidence": "certain",
         "legacy": false
        }
@@ -13190,7 +13190,7 @@ const PAPERS = [
         "key": "ex-message",
         "label": "Writing a message",
         "group": "expression",
-        "deck": null,
+        "deck": "messages",
         "confidence": "certain",
         "legacy": false
        }
@@ -13395,7 +13395,7 @@ const PAPERS = [
         "key": "gr-verbes",
         "label": "Les Verbes",
         "group": "grammaire",
-        "deck": null,
+        "deck": "verbes",
         "confidence": "certain",
         "legacy": false
        }
@@ -13476,7 +13476,7 @@ const PAPERS = [
         "key": "gr-discours",
         "label": "Le discours direct et indirect",
         "group": "grammaire",
-        "deck": null,
+        "deck": "discours",
         "confidence": "certain",
         "legacy": false
        }
@@ -13558,7 +13558,7 @@ const PAPERS = [
         "key": "gr-question",
         "label": "Trouver la question",
         "group": "grammaire",
-        "deck": null,
+        "deck": "question",
         "confidence": "certain",
         "legacy": false
        }
@@ -13642,7 +13642,7 @@ const PAPERS = [
         "key": "gr-negation",
         "label": "La négation",
         "group": "grammaire",
-        "deck": null,
+        "deck": "negation",
         "confidence": "certain",
         "legacy": false
        }
@@ -13709,7 +13709,7 @@ const PAPERS = [
         "key": "gr-possessifs",
         "label": "Les adjectifs et pronoms possessifs",
         "group": "grammaire",
-        "deck": null,
+        "deck": "possessifs",
         "confidence": "certain",
         "legacy": false
        }
@@ -13774,7 +13774,7 @@ const PAPERS = [
         "key": "gr-demonstratifs",
         "label": "Les adjectifs et pronoms démonstratifs",
         "group": "grammaire",
-        "deck": null,
+        "deck": "demonstratifs",
         "confidence": "certain",
         "legacy": false
        }
@@ -13856,7 +13856,7 @@ const PAPERS = [
         "key": "gr-relatifs",
         "label": "Les pronoms relatifs simples et composés",
         "group": "grammaire",
-        "deck": null,
+        "deck": "relatifs",
         "confidence": "certain",
         "legacy": false
        }
@@ -13940,7 +13940,7 @@ const PAPERS = [
         "key": "gr-pronoms",
         "label": "Les pronoms (COD, COI, toniques, y, en)",
         "group": "grammaire",
-        "deck": null,
+        "deck": "pronoms",
         "confidence": "certain",
         "legacy": false
        }
@@ -14023,7 +14023,7 @@ const PAPERS = [
         "key": "gr-subjonctif",
         "label": "Le subjonctif",
         "group": "grammaire",
-        "deck": null,
+        "deck": "subjonctif",
         "confidence": "certain",
         "legacy": false
        }
