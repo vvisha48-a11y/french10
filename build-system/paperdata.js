@@ -4449,8 +4449,8 @@ const PAPERS = [
         "page": 3,
         "topics": [
          {
-          "key": "cond",
-          "label": "Le conditionnel présent",
+          "key": "condPasse",
+          "label": "Le conditionnel passé",
           "deck": "verbes",
           "confidence": "confirmed"
          }
@@ -7487,8 +7487,8 @@ const PAPERS = [
         "flags": [],
         "topics": [
          {
-          "key": "pc",
-          "label": "Le passé composé",
+          "key": "futur",
+          "label": "Le futur simple",
           "deck": "verbes",
           "confidence": "confirmed"
          }
@@ -14696,7 +14696,7 @@ const TENSES = [
   "key": "futur",
   "label": "Le futur simple",
   "legacy": false,
-  "count": 7
+  "count": 8
  },
  {
   "key": "futurAnt",
@@ -14708,13 +14708,13 @@ const TENSES = [
   "key": "cond",
   "label": "Le conditionnel présent",
   "legacy": false,
-  "count": 5
+  "count": 4
  },
  {
   "key": "condPasse",
   "label": "Le conditionnel passé",
   "legacy": false,
-  "count": 2
+  "count": 3
  },
  {
   "key": "gerondif",

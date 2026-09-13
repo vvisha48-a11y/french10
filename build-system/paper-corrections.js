@@ -301,7 +301,7 @@ module.exports.TENSES = {
 
   /* 2018 Compartment Q IV */
   'qp2018c IV': { a: T('imperatif'), b: T('pc'), c: T('imparfait'), d: T('futurAnt'),
-                  e: T('pqp'), f: T('cond') },
+                  e: T('pqp'), f: T('condPasse') },
 
   /* 2019 Q5 */
   'qp2019 5': { a: T('futur'), b: T('imparfait'), c: T('pc'), d: T('imperatif'),
@@ -309,7 +309,7 @@ module.exports.TENSES = {
 
   /* 2020 Q4 */
   'qp2020 4': { a: T('cond'), b: T('futurAnt'), c: T('pc'), d: T('imparfait'),
-                e: T('pqp'), f: T('imperatif'), g: T('pc'), h: T('pc') },
+                e: T('pqp'), f: T('imperatif'), g: T('pc'), h: T('futur') },
 
   /* 2022 Q3 -- read from page 5 */
   'qp2022 3': { a: T('futur'), b: T('pc'), c: T('pc'), d: T('futurAnt'),
