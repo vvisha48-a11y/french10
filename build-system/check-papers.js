@@ -154,6 +154,99 @@ if (fs.existsSync(INDEX)){
   else if (wanted.size) notes.push(wanted.size + ' deck link target(s) all resolve');
 }
 
+
+/* ---- 10. answers: provenance, rubrics and coverage ---- */
+const ANS = require('./paper-answers.js');
+const UI_SRC = fs.readFileSync(path.join(SP, 'papers-ui.js'), 'utf8');
+
+/* every answer key still names a live question, and every item label a live item */
+Object.keys(ANS.ANSWERS).forEach(k => {
+  const e = ANS.ANSWERS[k];
+  if (!liveQ.has(k)){
+    problems.push('[ans] ANSWERS["' + k + '"] matches no question any more — the answer is doing nothing');
+    return;
+  }
+  Object.keys(e.items || {}).forEach(l => {
+    if (!liveItem.has(k + '(' + l + ')'))
+      problems.push('[ans] ANSWERS["' + k + '"] item (' + l + ') matches no item any more');
+  });
+});
+
+/* provenance: every answer declares a tier, official ones cite their page */
+let nOfficial = 0, nModele = 0;
+const noTier = [], noPage = [];
+PAPERS.forEach(p => p.sections.forEach(s => s.questions.forEach(q => {
+  const seen = [];
+  if (q.answer) seen.push(['', q.answerTier, q.answerPage]);
+  q.items.forEach(it => { if (it.answer) seen.push(['(' + it.label + ')', it.answerTier, it.answerPage]); });
+  seen.forEach(([lab, tier, page]) => {
+    const id = p.id + ' ' + q.num + lab;
+    if (tier === 'official'){ nOfficial++; if (!page) noPage.push(id); }
+    else if (tier === 'modele') nModele++;
+    else noTier.push(id);
+  });
+})));
+if (noTier.length)
+  problems.push('[ans] ' + noTier.length + ' answer(s) declare no tier: ' + noTier.slice(0, 5).join(', '));
+if (noPage.length)
+  problems.push('[ans] ' + noPage.length + ' official answer(s) cite no marking-scheme page: ' + noPage.slice(0, 5).join(', '));
+
+/* an open-ended task must carry the mark split that justifies its answer */
+const noRubric = [];
+PAPERS.forEach(p => p.sections.forEach(s => s.questions.forEach(q => {
+  const needs = ANS.RUBRIC_FOR[q.leaf];
+  if (!needs) return;
+  if (!q.answer && !q.items.some(i => i.answer)) return;
+  if (!q.answerRubric) noRubric.push(p.id + ' ' + q.num + ' [' + q.leaf + ']');
+})));
+if (noRubric.length)
+  problems.push('[ans] ' + noRubric.length + ' free-response answer(s) ship without their rubric: ' +
+    noRubric.slice(0, 6).join(', '));
+
+/* coverage, per section */
+const cov = {};
+PAPERS.forEach(p => p.sections.forEach(s => {
+  const c = cov[s.id] = cov[s.id] || { done: 0, total: 0 };
+  s.questions.forEach(q => {
+    if (q.isContainer) return;
+    if (q.items.length){
+      q.items.forEach(it => { c.total++; if (it.answer) c.done++; });
+    } else {
+      c.total++; if (q.answer) c.done++;
+    }
+  });
+}));
+const covTotal = Object.keys(cov).reduce((a, k) => ({ done: a.done + cov[k].done, total: a.total + cov[k].total }), { done: 0, total: 0 });
+notes.push('answers: ' + covTotal.done + '/' + covTotal.total + ' — ' +
+  Object.keys(cov).sort().map(k => k + ' ' + cov[k].done + '/' + cov[k].total).join('  ') +
+  '   (' + nOfficial + ' official, ' + nModele + ' modelled)');
+if (covTotal.done < covTotal.total)
+  problems.push('[ans] ' + (covTotal.total - covTotal.done) + ' item(s) have no answer yet');
+
+/* ---- 11. the figures ---- */
+const { PHOTOS } = require('./papers-images.js');
+const { ILLUS } = require('./papers-illustrations.js');
+const paperIds = new Set(PAPERS.map(p => p.id));
+Object.keys(PHOTOS).forEach(k => { if (!paperIds.has(k)) problems.push('[img] PHOTOS["' + k + '"] is not a paper'); });
+Object.keys(ILLUS).forEach(k => { if (!paperIds.has(k)) problems.push('[img] ILLUS["' + k + '"] is not a paper'); });
+const noFig = PAPERS.filter(p => !PHOTOS[p.id] && !ILLUS[p.id]).map(p => p.id);
+if (noFig.length) problems.push('[img] no figure for: ' + noFig.join(', '));
+else notes.push('every paper has a figure: ' + Object.keys(PHOTOS).length + ' from the PDFs, ' +
+  Object.keys(ILLUS).length + ' drawn here and labelled as added');
+/* an external <img src> would be a network fetch, which the offline gate bans */
+Object.keys(PHOTOS).forEach(k => {
+  if (PHOTOS[k].src.indexOf('data:image/') !== 0)
+    problems.push('[img] PHOTOS["' + k + '"] is not a data URI — docs/index.html must stay offline');
+});
+
+/* ---- 12. the old popover must not half-survive ---- */
+['plFilterBtn', 'plPanel', 'plDrill', 'renderDrill', 'drillLevel'].forEach(name => {
+  if (UI_SRC.indexOf(name) !== -1)
+    problems.push('[ui] papers-ui.js still mentions ' + name + ' — the dropdown was replaced, not kept');
+});
+if (UI_SRC.indexOf('function renderNav()') === -1)
+  problems.push('[ui] papers-ui.js has no renderNav() — the persistent nav is missing');
+
 /* ---- report ---- */
 const real = PAPERS.reduce((n, p) => n + p.sections.reduce((m, s) => m + s.questions.filter(q => !q.isContainer).length, 0), 0);
 const its = PAPERS.reduce((n, p) => n + p.sections.reduce((m, s) => m + s.questions.reduce((c, q) => c + q.items.length, 0), 0), 0);

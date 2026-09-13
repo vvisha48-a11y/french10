@@ -5,8 +5,12 @@
 // source and cannot drift apart.
 //
 // Design rules this obeys, because the deck enforces them:
-//   * Not one literal colour. Every shade comes from the theme tokens defined on
-//     body.theme-* in b-style.html, so all 7 themes keep working.
+//   * Colour comes from the theme tokens defined on body.theme-* in b-style.html,
+//     so all 7 themes keep working. Two deliberate exceptions, both about things
+//     that must NOT follow the theme: the banner ground (#A66200, chosen so white
+//     holds 4.81:1 -- var(--gold) would drop it to 1.7:1 on cyber), and the
+//     illustration palette in papers-illustrations.js, which is artwork rather
+//     than interface.
 //   * The existing vocabulary is reused, never re-invented: .q-tag for the year
 //     badge, .box/.gloss/.key-form for content, .sb-item for the sidebar rows.
 //   * Everything new is prefixed .pl- and scoped, so removing the module removes
@@ -37,9 +41,19 @@ module.exports.CSS = `/* ===== QUESTION PAPERS ===== */
 }
 
 .pl-page{ width:100%; max-width:1040px; margin:0 auto; padding:0 4px 120px; text-align:left; }
-.pl-hero{ padding:6px 2px 16px; text-align:center; }
-.pl-hero h1{ margin:0 0 6px; }
-.pl-hero .gloss{ margin:0 auto; max-width:64ch; }
+/* ---- the banner ----
+   A fixed amber, not var(--gold): white on a true yellow is illegible (1.6:1,
+   and 1.7:1 against the cyber theme gold). #A66200 holds white at 4.81:1 and
+   renders identically under all seven themes, which is the point of hard-coding it. */
+.pl-hero{
+  margin:2px 0 12px; padding:20px 24px; border-radius:14px;
+  background:#A66200; color:#fff;
+  display:flex; align-items:center; flex-wrap:wrap; gap:12px;
+}
+.pl-hero h1{
+  margin:0; color:#fff; text-wrap:balance; letter-spacing:-.01em;
+  font-size:clamp(1.3rem, 3.2vw, 2rem); line-height:1.14;
+}
 
 /* ---- the sticky control rail ---- */
 .pl-rail{
@@ -83,45 +97,72 @@ module.exports.CSS = `/* ===== QUESTION PAPERS ===== */
 }
 .pl-clock.is-low{ color:var(--crimson); border-color:var(--crimson); }
 
-/* ---- the syllabus panel (desktop) ---- */
-.pl-filter{ position:relative; }
-.pl-panel{
-  position:absolute; top:calc(100% + 8px); left:0; z-index:60;
-  width:min(560px, calc(100vw - 40px)); max-height:72vh; overflow-y:auto;
-  background:var(--card-bg); border:1px solid var(--card-border); border-radius:16px;
-  box-shadow:0 20px 56px rgba(0,0,0,.28); padding:8px;
+/* ---- the persistent section nav ----
+   Not a popover. It sits in the page between the banner and the rail, and
+   choosing a topic never closes it: comparing two topics is one click each,
+   which is the whole reason it stopped being a dropdown. */
+.pl-nav{
+  margin:0 0 10px; padding:10px; border-radius:14px;
+  background:var(--card-bg); border:1px solid var(--card-border);
+  box-shadow:0 6px 18px rgba(0,0,0,.06);
 }
-.pl-panel[hidden]{ display:none !important; }
-.pl-grp{ border-bottom:1px solid var(--card-border); }
-.pl-grp:last-child{ border-bottom:0; }
-.pl-grp-btn{
-  width:100%; display:flex; align-items:center; gap:8px; cursor:pointer;
+.pl-sec-row{ display:flex; flex-wrap:wrap; gap:8px; }
+.pl-sec-btn{
+  flex:1 1 190px; display:flex; align-items:center; gap:8px; cursor:pointer;
   font-family:var(--custom-heading-font); font-size:.84rem; font-weight:900;
-  padding:9px 10px; border:0; border-radius:10px;
-  background:transparent; color:var(--heading-color); text-align:left;
+  padding:10px 14px; border:1px solid var(--card-border); border-radius:11px;
+  background:var(--highlight-bg); color:var(--heading-color); text-align:left;
+  transition:background .18s ease, border-color .18s ease, color .18s ease;
 }
-.pl-grp-btn:hover{ background:var(--highlight-bg); }
-.pl-grp-btn .pl-caret{ margin-left:auto; font-size:.7rem; opacity:.7; transition:transform .2s ease; }
-.pl-grp.is-open .pl-grp-btn .pl-caret{ transform:rotate(90deg); }
-.pl-grp-body{ display:none; padding:0 4px 8px; }
-.pl-grp.is-open .pl-grp-body{ display:block; }
+.pl-sec-btn:hover{ border-color:var(--highlight-border); }
+.pl-sec-btn.is-open{ background:var(--highlight-border); border-color:var(--highlight-border); color:#fff; }
+.pl-sec-btn.is-open .pl-leaf-n{ color:#fff; }
+/* the section whose questions are currently filtered, whether or not it is the
+   expanded one -- the two states are independent and both need to be visible */
+.pl-sec-btn.is-on{ box-shadow:inset 0 0 0 2px var(--green); }
+.pl-sec-btn .pl-leaf-n{ margin-left:auto; }
+.pl-sec-btn .pl-caret{ font-size:.64rem; opacity:.75; transition:transform .2s ease; }
+.pl-sec-btn.is-open .pl-caret{ transform:rotate(90deg); }
+
+.pl-nav-body{
+  margin-top:10px; padding-top:10px; border-top:1px solid var(--card-border);
+  display:grid; grid-template-columns:repeat(auto-fill, minmax(236px, 1fr)); gap:6px;
+}
+.pl-nav-body[hidden]{ display:none !important; }
 
 .pl-leaf{
   width:100%; display:flex; align-items:baseline; gap:8px; cursor:pointer;
   font-family:inherit; font-size:.8rem; font-weight:700; text-align:left;
-  padding:6px 10px; border:0; border-radius:9px; background:transparent; color:var(--text-main);
+  padding:7px 10px; border:1px solid transparent; border-radius:9px;
+  background:var(--highlight-bg); color:var(--text-main);
 }
-.pl-leaf:hover{ background:var(--highlight-bg); }
-.pl-leaf.is-on{ background:var(--highlight-border); color:#fff; }
-.pl-leaf.is-on .pl-leaf-marks, .pl-leaf.is-on .pl-leaf-n{ color:#fff; opacity:.85; }
+.pl-leaf:hover{ border-color:var(--highlight-border); }
+.pl-leaf.is-on{ background:var(--highlight-border); color:#fff; border-color:var(--highlight-border); }
+.pl-leaf.is-on .pl-leaf-marks, .pl-leaf.is-on .pl-leaf-n, .pl-leaf.is-on .pl-leaf-hint{ color:#fff; opacity:.85; }
 .pl-leaf-n{ margin-left:auto; font-weight:800; font-size:.72rem; color:var(--text-muted); }
 .pl-leaf-marks{ font-size:.7rem; font-weight:800; color:var(--gold); white-space:nowrap; }
 .pl-leaf-hint{ display:block; font-size:.68rem; font-weight:600; color:var(--text-muted); margin-top:1px; }
 .pl-leaf.is-legacy{ font-style:italic; }
 .pl-leaf.is-empty{ opacity:.5; }
 
+/* ---- Les Verbes: the label filters, the caret expands ----
+   Two controls in one row, the way a tree widget behaves. Clicking the name
+   isolates every verb question; clicking the chevron opens the tenses without
+   touching the filter. */
+.pl-leaf-wrap{ grid-column:1 / -1; }
+.pl-verbs-row{ display:flex; align-items:stretch; border-radius:9px; background:var(--highlight-bg); }
+.pl-verbs-row .pl-leaf{ border-radius:9px 0 0 9px; }
+.pl-caret-btn{
+  cursor:pointer; border:1px solid transparent; border-left:1px solid var(--card-border);
+  background:transparent; color:var(--text-muted); padding:0 13px; border-radius:0 9px 9px 0;
+  font-size:.7rem; line-height:1;
+}
+.pl-caret-btn:hover{ background:var(--card-bg); color:var(--heading-color); }
+.pl-caret-btn .pl-caret{ display:inline-block; transition:transform .2s ease; }
+.pl-caret-btn.is-open .pl-caret{ transform:rotate(90deg); }
+
 /* the tenses, nested under Les Verbes */
-.pl-tenses{ display:none; grid-template-columns:repeat(auto-fill, minmax(158px, 1fr)); gap:4px; padding:4px 10px 8px 22px; }
+.pl-tenses{ display:none; grid-template-columns:repeat(auto-fill, minmax(168px, 1fr)); gap:4px; padding:6px 4px 2px 20px; }
 .pl-leaf-wrap.is-open .pl-tenses{ display:grid; }
 .pl-tense{
   display:flex; align-items:center; gap:6px; cursor:pointer;
@@ -137,14 +178,6 @@ module.exports.CSS = `/* ===== QUESTION PAPERS ===== */
    empty, rather than missing -- the menu is the syllabus, not the corpus. */
 .pl-tense.is-empty{ opacity:.45; }
 .pl-tense.is-empty:hover{ border-color:var(--card-border); }
-
-/* ---- the drill-down rail (narrow screens) ---- */
-.pl-drill{ display:none; align-items:center; gap:6px; flex-wrap:wrap; }
-.pl-crumb{
-  font-size:.72rem; font-weight:800; color:var(--text-muted);
-  display:inline-flex; align-items:center; gap:5px;
-}
-.pl-crumb b{ color:var(--heading-color); }
 
 /* ---- the current filter, spelled out with its marks ---- */
 .pl-active{
@@ -292,12 +325,76 @@ body.pl-focus .pl-section:not(.is-current){ opacity:.34; filter:saturate(.5); }
 }
 .pl-empty strong{ color:var(--text-main); }
 
+/* No separate narrow-screen widget any more: the button row simply wraps,
+   which is why the drill-down rail could go. One filter UI, one state. */
 @media (max-width: 820px){
   .pl-rail{ position:static; }
-  .pl-panel{ display:none !important; }
-  .pl-drill{ display:flex; }
-  .pl-filter > .pl-chip{ display:none; }
+  .pl-sec-btn{ flex:1 1 142px; font-size:.76rem; padding:8px 11px; }
+  .pl-nav-body{ grid-template-columns:1fr; }
+  .pl-tenses{ grid-template-columns:repeat(auto-fill, minmax(146px, 1fr)); padding-left:10px; }
 }
+/* ---- answers ---- */
+.pl-answer{
+  margin:10px 0 0; padding:10px 12px; border-radius:10px;
+  background:var(--sec-bg); border-left:4px solid var(--sec);
+}
+.pl-answer[hidden]{ display:none !important; }
+.pl-answer-head{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:7px; }
+.pl-answer-tag{
+  font-family:var(--custom-heading-font); font-size:.6rem; font-weight:900;
+  text-transform:uppercase; letter-spacing:.06em; padding:3px 8px; border-radius:999px;
+}
+/* the two tiers must never read alike: solid for the official scheme, outlined
+   for an answer modelled on its rules */
+.pl-answer-tag.is-official{ background:var(--green); color:#fff; }
+.pl-answer-tag.is-modele{ background:transparent; color:var(--text-muted); border:1px dashed var(--card-border); }
+.pl-answer-list{ list-style:none; margin:0; padding:0; display:grid; gap:5px; }
+.pl-answer-list li{ display:flex; gap:8px; align-items:baseline; font-size:.86rem; line-height:1.5; }
+.pl-ans-label{ font-weight:800; color:var(--sec); min-width:2.1em; }
+.pl-ans-text{ flex:1; }
+.pl-ans-src{
+  display:inline-block; margin-left:7px; font-size:.62rem; font-weight:800;
+  color:var(--green); white-space:nowrap;
+}
+.pl-answer-text{ margin:0; font-size:.86rem; line-height:1.55; }
+.pl-rubric{
+  margin-top:9px; padding-top:8px; border-top:1px dashed var(--card-border);
+  display:grid; gap:2px; font-size:.72rem; line-height:1.45; color:var(--text-muted);
+}
+.pl-rubric-head{
+  font-family:var(--custom-heading-font); font-size:.63rem; font-weight:900;
+  text-transform:uppercase; letter-spacing:.06em; color:var(--heading-color); margin-bottom:2px;
+}
+.pl-rubric-src{ margin-top:3px; font-weight:800; opacity:.75; }
+/* the master toggle, at the right end of the sticky rail. Deliberately not
+   position:fixed -- in the deck this page is a child of a scrolling .slide-card,
+   and a fixed child escapes the card to float over every other slide. */
+#plAllAns.is-on{ background:var(--green); border-color:var(--green); color:#fff; }
+#plAllAns .pl-n{ opacity:.8; }
+
+/* ---- the figure a Compréhension passage depends on ----
+   Two kinds, and they must never look alike. .is-real is cropped from the
+   original PDF and sits in a solid frame; .is-added is drawn by this app and
+   wears a dashed frame plus a caption saying so. */
+.pl-fig{ margin:0 0 16px; padding:10px; border-radius:12px; background:var(--sec-bg); }
+.pl-fig img, .pl-fig svg{ display:block; width:100%; height:auto; border-radius:8px; }
+.pl-fig.is-real{ border:1px solid var(--sec); }
+.pl-fig.is-real img{ max-width:640px; margin:0 auto; background:#fff; }
+.pl-fig.is-added{ border:2px dashed var(--sec); background:transparent; }
+.pl-fig.is-added svg{ max-width:520px; margin:0 auto; }
+.pl-fig figcaption{
+  margin-top:8px; font-size:.7rem; font-weight:700; letter-spacing:.02em;
+  color:var(--text-muted); display:flex; align-items:center; gap:6px; justify-content:center;
+  text-align:center;
+}
+.pl-fig.is-added figcaption{ font-style:italic; }
+.pl-fig-badge{
+  font-family:var(--custom-heading-font); font-size:.6rem; font-weight:900;
+  text-transform:uppercase; letter-spacing:.07em; padding:2px 7px; border-radius:999px;
+  background:var(--sec); color:#fff; font-style:normal; white-space:nowrap;
+}
+.pl-fig.is-added .pl-fig-badge{ background:transparent; color:var(--sec); border:1px solid var(--sec); }
+
 @media (prefers-reduced-motion: reduce){
   .pl-q, .pl-ring .pl-ring-fg{ transition:none !important; }
   .pl-q{ opacity:1; transform:none; }
@@ -311,9 +408,55 @@ body.pl-focus .pl-section:not(.is-current){ opacity:.34; filter:saturate(.5); }
 /* ------------------------------------------------------------------ *
  *  MARKUP
  * ------------------------------------------------------------------ */
+const { PHOTOS } = require('./papers-images.js');
+const { ILLUS, CAPTION: ILLUS_CAPTION } = require('./papers-illustrations.js');
+const { RUBRICS } = require('./paper-answers.js');
 const esc = s => String(s == null ? '' : s)
   .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
   .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+
+const hasAnswer = q => !!(q.answer || (q.items || []).some(i => i.answer));
+
+/* One answer box per question, laid out the way the marking scheme lays one out:
+   the completed sentences in order, then the mark split where the task is open
+   ended. Each answer says where it comes from -- the twelve the official scheme
+   answers outright are badged and page-cited, the rest are labelled as modelled
+   on its rules. The two must never read alike. */
+function answerHTML(q){
+  if (!hasAnswer(q)) return '';
+  const rows = (q.items || []).filter(i => i.answer);
+  /* A box can hold both tiers at once -- one item the scheme answers outright,
+     its neighbours modelled on the scheme's rules. Show a tag for each tier that
+     is actually present rather than picking one and misdescribing the other. */
+  const tiers = rows.map(i => i.answerTier).concat(q.answer ? [q.answerTier] : []);
+  const anyOfficial = tiers.indexOf('official') !== -1;
+  const anyModele   = tiers.indexOf('official') === -1 || tiers.some(t => t !== 'official');
+  const out = [];
+  out.push('<div class="pl-answer" hidden>');
+  out.push('<div class="pl-answer-head">');
+  if (anyOfficial) out.push('<span class="pl-answer-tag is-official">Réponse officielle · barème 018/20</span>');
+  if (anyModele)   out.push('<span class="pl-answer-tag is-modele">Réponse modèle (générée selon le barème CBSE)</span>');
+  out.push('</div>');
+  if (rows.length){
+    out.push('<ul class="pl-answer-list">');
+    rows.forEach(i => out.push('<li><span class="pl-ans-label">(' + esc(i.label) + ')</span>' +
+      '<span class="pl-ans-text">' + esc(i.answer) +
+      (i.answerTier === 'official' ?
+        '<span class="pl-ans-src">barème 018/20, p.' + esc(i.answerPage) + '</span>' : '') +
+      '</span></li>'));
+    out.push('</ul>');
+  }
+  if (q.answer) out.push('<p class="pl-answer-text">' + esc(q.answer) + '</p>');
+  const rub = q.answerRubric && RUBRICS[q.answerRubric];
+  if (rub){
+    out.push('<div class="pl-rubric"><span class="pl-rubric-head">Barème' +
+      (rub.total ? ' · ' + rub.total + ' marks' : '') + '</span>' +
+      rub.lines.map(l => '<span>' + esc(l) + '</span>').join('') +
+      '<span class="pl-rubric-src">' + esc(rub.src) + '</span></div>');
+  }
+  out.push('</div>');
+  return out.join('');
+}
 
 function qHTML(p, sec, q){
   /* data-topics carries the leaf AND every tense found in the question's items,
@@ -322,6 +465,9 @@ function qHTML(p, sec, q){
      not of the instruction. */
   const keys = new Set(q.topics.map(t => t.key));
   q.items.forEach(i => (i.topics || []).forEach(t => keys.add(t.key)));
+  /* the section key too, so the nav's "Tout Grammaire" row filters to the whole
+     section rather than matching nothing */
+  q.topics.forEach(t => { if (t.group) keys.add(t.group); });
 
   const out = [];
   out.push('<article class="pl-q' + (q.isContainer ? ' is-head' : '') + '"' +
@@ -359,12 +505,12 @@ function qHTML(p, sec, q){
     out.push('</ul>');
   }
 
-  if (q.answer) out.push('<div class="pl-answer" hidden><strong>Réponse :</strong> ' + esc(q.answer) + '</div>');
+  out.push(answerHTML(q));
 
   out.push('<div class="pl-q-foot">');
   q.topics.forEach(t => out.push('<span class="pl-topic">' + esc(t.label) + '</span>'));
   if (!q.isContainer && q.marks) out.push('<button type="button" class="pl-done" aria-pressed="false">✓ Done</button>');
-  if (q.answer) out.push('<button type="button" class="pl-chip pl-show-answer">Show answer</button>');
+  if (hasAnswer(q)) out.push('<button type="button" class="pl-chip pl-show-answer">Voir la réponse</button>');
   if ((q.flags || []).indexOf('read-from-pdf') !== -1)
     out.push('<span class="pl-src" title="Not in the PDF text layer — read from page ' +
       esc(q.page) + ' of the original">read from the paper, p.' + esc(q.page) + '</span>');
@@ -372,6 +518,24 @@ function qHTML(p, sec, q){
 
   out.push('</article>');
   return out.join('');
+}
+
+/* A paper either prints a figure or it does not. Both cases render something, and
+   the two are captioned in opposite directions so the difference is never subtle. */
+function figHTML(paperId){
+  const real = PHOTOS[paperId];
+  if (real){
+    return '<figure class="pl-fig is-real">' +
+      '<img src="' + real.src + '" width="' + real.w + '" height="' + real.h + '"' +
+      ' alt="' + esc(real.alt) + '" loading="lazy" decoding="async">' +
+      '<figcaption><span class="pl-fig-badge">Document</span>' + esc(real.caption) + '</figcaption>' +
+      '</figure>';
+  }
+  const add = ILLUS[paperId];
+  if (!add) return '';
+  return '<figure class="pl-fig is-added">' + add.svg +
+    '<figcaption><span class="pl-fig-badge">Ajout</span>' + esc(ILLUS_CAPTION) + '</figcaption>' +
+    '</figure>';
 }
 
 module.exports.HTML = function (papers){
@@ -388,6 +552,8 @@ module.exports.HTML = function (papers){
       out.push('<div class="pl-section" data-section="' + esc(sec.id) + '" data-paper="' + esc(p.id) + '">');
       out.push('<div class="pl-section-head"><h3>Section ' + esc(sec.id) + ' · ' + esc(sec.name) + '</h3>' +
         (sec.marks ? '<span class="pl-sec-marks">' + sec.marks + ' marks</span>' : '') + '</div>');
+      /* the Compréhension passage's picture, real or plainly labelled as added */
+      if (sec.id === 'A') out.push(figHTML(p.id));
       sec.questions.forEach(q => out.push(qHTML(p, sec, q)));
       out.push('</div>');
     });
@@ -434,7 +600,12 @@ module.exports.JS = `
   /* One filter, two ways of choosing it. state.key is a leaf or a tense; nothing
      else is ever filtered on, so the panel and the rail cannot disagree.
      (No backticks in this file's JS string -- it is itself a template literal.) */
-  const state = { key: null, papers: new Set(PAPERS.map(p => p.id)) };
+  /* One filter, one menu. state.group is which section is expanded and is never
+     cleared by choosing a topic -- that persistence is the requirement. state.key
+     is what is filtered on: a group key, a leaf key or a tense key. */
+  const CARET = '▶';
+  const state = { key: null, group: 'grammaire', verbsOpen: false,
+                  papers: new Set(PAPERS.map(p => p.id)) };
 
   /* ---------------- filtering ---------------- */
   function apply(){
@@ -464,9 +635,10 @@ module.exports.JS = `
     const c = $('#plCount');
     if (c) c.textContent = shown + (shown === 1 ? ' question' : ' questions');
     renderActive(shown);
-    renderPanel();
-    renderDrill();
+    renderNav();
     renderSidebar();
+    countAnswers();
+    paintAnswers();
     onScroll();
   }
 
@@ -501,31 +673,55 @@ module.exports.JS = `
 
   function choose(key){
     state.key = (state.key === key) ? null : key;
+    /* Deliberately does NOT close the menu. The nav is part of the page now, so
+       comparing two topics is one click each instead of reopening a popover. */
     apply();
-    const p = $('#plPanel');
-    if (p) p.hidden = true;
     page.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
-  /* ---------------- the syllabus panel ---------------- */
-  let openGroup = 'grammaire', verbsOpen = false;
-  function renderPanel(){
-    const panel = $('#plPanel');
-    if (!panel) return;
+  /* ---------------- the persistent section nav ----------------
+     One widget, always on screen. state.group is which section is expanded and
+     survives every choice; state.key is the filter. Keeping them apart is what
+     stops the menu vanishing when you use it. */
+  function renderNav(){
+    const nav = $('#plNav');
+    if (!nav) return;
     const h = [];
+    h.push('<div class="pl-sec-row">');
     TREE.forEach(g => {
       const total = g.leaves.reduce((n, l) => n + l.count, 0);
-      h.push('<div class="pl-grp' + (openGroup === g.key ? ' is-open' : '') + '" data-g="' + g.key + '">');
-      h.push('<button type="button" class="pl-grp-btn" data-g="' + g.key + '">' + g.label +
-        '<span class="pl-leaf-n">' + total + '</span><span class="pl-caret">▶</span></button>');
-      h.push('<div class="pl-grp-body">');
-      g.leaves.forEach(l => {
-        const on = state.key === l.key;
+      h.push('<button type="button" class="pl-sec-btn' +
+        (state.group === g.key ? ' is-open' : '') +
+        (state.key === g.key ? ' is-on' : '') +
+        '" data-g="' + g.key + '" aria-expanded="' + (state.group === g.key) + '">' +
+        '<span class="pl-caret">' + CARET + '</span>' + g.label +
+        '<span class="pl-leaf-n">' + total + '</span></button>');
+    });
+    h.push('</div>');
+
+    const grp = TREE.find(x => x.key === state.group);
+    h.push('<div class="pl-nav-body"' + (grp ? '' : ' hidden') + '>');
+    if (grp){
+      /* the section itself is a filter: everything in it, across all ten papers */
+      h.push('<button type="button" class="pl-leaf' + (state.key === grp.key ? ' is-on' : '') +
+        '" data-k="' + grp.key + '"><span>Tout ' + grp.label +
+        '<span class="pl-leaf-hint">Toutes les questions de la section ' + grp.section + '</span></span>' +
+        '<span class="pl-leaf-n">' + grp.leaves.reduce((n, l) => n + l.count, 0) + '</span></button>');
+      grp.leaves.forEach(l => {
         if (l.tenses){
-          h.push('<div class="pl-leaf-wrap' + (verbsOpen ? ' is-open' : '') + '">');
-          h.push('<button type="button" class="pl-leaf' + (on ? ' is-on' : '') + '" data-verbs="1" data-k="' + l.key + '">' +
-            l.label + (l.marks ? '<span class="pl-leaf-marks">' + l.marks + ' marks</span>' : '') +
-            '<span class="pl-leaf-n">' + l.count + '</span><span class="pl-caret">▶</span></button>');
+          h.push('<div class="pl-leaf-wrap' + (state.verbsOpen ? ' is-open' : '') + '">');
+          h.push('<div class="pl-verbs-row">');
+          /* the label filters ... */
+          h.push('<button type="button" class="pl-leaf' + (state.key === l.key ? ' is-on' : '') +
+            '" data-k="' + l.key + '"><span>' + l.label +
+            '<span class="pl-leaf-hint">Toutes les questions de verbes, tous temps confondus</span></span>' +
+            (l.marks ? '<span class="pl-leaf-marks">' + l.marks + ' marks</span>' : '') +
+            '<span class="pl-leaf-n">' + l.count + '</span></button>');
+          /* ... and the caret, a separate control, only expands */
+          h.push('<button type="button" class="pl-caret-btn' + (state.verbsOpen ? ' is-open' : '') +
+            '" data-verbs="1" aria-expanded="' + state.verbsOpen +
+            '" aria-label="Afficher les temps"><span class="pl-caret">' + CARET + '</span></button>');
+          h.push('</div>');
           h.push('<div class="pl-tenses">');
           TENSES.forEach(t => h.push('<button type="button" class="pl-tense' +
             (state.key === t.key ? ' is-on' : '') + (t.legacy ? ' is-legacy' : '') +
@@ -534,64 +730,27 @@ module.exports.JS = `
             '<span class="pl-n">' + (t.count || '0') + '</span></button>'));
           h.push('</div></div>');
         } else {
-          h.push('<button type="button" class="pl-leaf' + (on ? ' is-on' : '') +
+          h.push('<button type="button" class="pl-leaf' + (state.key === l.key ? ' is-on' : '') +
             (l.legacy ? ' is-legacy' : '') + (l.count ? '' : ' is-empty') + '" data-k="' + l.key + '">' +
             '<span>' + l.label + (l.hint ? '<span class="pl-leaf-hint">' + l.hint + '</span>' : '') + '</span>' +
             (l.marks ? '<span class="pl-leaf-marks">' + l.marks + ' marks</span>' : '') +
             '<span class="pl-leaf-n">' + l.count + '</span></button>');
         }
       });
-      h.push('</div></div>');
-    });
-    panel.innerHTML = h.join('');
-
-    $$('.pl-grp-btn', panel).forEach(b => b.addEventListener('click', () => {
-      openGroup = (openGroup === b.dataset.g) ? null : b.dataset.g;
-      renderPanel();
-    }));
-    $$('[data-verbs]', panel).forEach(b => b.addEventListener('click', ev => {
-      /* clicking Les Verbes expands its tenses rather than filtering to all of
-         them at once, which is the whole point of the nesting */
-      ev.stopPropagation();
-      verbsOpen = !verbsOpen;
-      renderPanel();
-    }));
-    $$('.pl-leaf[data-k]:not([data-verbs]), .pl-tense[data-k]', panel).forEach(b =>
-      b.addEventListener('click', () => choose(b.dataset.k)));
-  }
-
-  /* ---------------- the drill-down rail ---------------- */
-  let drillLevel = null;   // null | group key | 'verbs'
-  function renderDrill(){
-    const box = $('#plDrill');
-    if (!box) return;
-    const h = [];
-    if (!drillLevel){
-      h.push('<span class="pl-crumb">Filtrer</span>');
-      TREE.forEach(g => h.push('<button type="button" class="pl-chip" data-lvl="' + g.key + '">' +
-        g.label + '<span class="pl-n">' + g.leaves.reduce((n, l) => n + l.count, 0) + '</span></button>'));
-    } else if (drillLevel === 'verbs'){
-      h.push('<button type="button" class="pl-chip" data-lvl="grammaire">‹</button>');
-      h.push('<span class="pl-crumb">Grammaire › <b>Les Verbes</b></span>');
-      TENSES.forEach(t => h.push('<button type="button" class="pl-chip' +
-        (state.key === t.key ? ' is-on' : '') + (t.count ? '' : ' is-empty') +
-        '" data-k="' + t.key + '">' + t.label + '<span class="pl-n">' + (t.count || '0') + '</span></button>'));
-    } else {
-      const g = TREE.find(x => x.key === drillLevel);
-      h.push('<button type="button" class="pl-chip" data-lvl="">‹</button>');
-      h.push('<span class="pl-crumb"><b>' + (g ? g.label : '') + '</b></span>');
-      (g ? g.leaves : []).forEach(l => {
-        if (l.tenses) h.push('<button type="button" class="pl-chip" data-lvl="verbs">' + l.label + ' ▸</button>');
-        else h.push('<button type="button" class="pl-chip' + (state.key === l.key ? ' is-on' : '') +
-          (l.count ? '' : ' is-empty') + '" data-k="' + l.key + '">' + l.label +
-          '<span class="pl-n">' + l.count + '</span></button>');
-      });
     }
-    box.innerHTML = h.join('');
-    $$('[data-lvl]', box).forEach(b => b.addEventListener('click', () => {
-      drillLevel = b.dataset.lvl || null; renderDrill();
+    h.push('</div>');
+    nav.innerHTML = h.join('');
+
+    $$('.pl-sec-btn', nav).forEach(b => b.addEventListener('click', () => {
+      state.group = (state.group === b.dataset.g) ? null : b.dataset.g;
+      renderNav();
     }));
-    $$('[data-k]', box).forEach(b => b.addEventListener('click', () => choose(b.dataset.k)));
+    $$('[data-verbs]', nav).forEach(b => b.addEventListener('click', ev => {
+      ev.stopPropagation();
+      state.verbsOpen = !state.verbsOpen;
+      renderNav();
+    }));
+    $$('[data-k]', nav).forEach(b => b.addEventListener('click', () => choose(b.dataset.k)));
   }
 
   /* ---------------- the marks budget ---------------- */
@@ -747,6 +906,28 @@ module.exports.JS = `
     const el = $('#plClock'); if (el) el.classList.remove('is-low');
   }
 
+  /* ---------------- answers ---------------- */
+  let answersOpen = false;
+  function paintAnswers(){
+    const boxes = $$('.pl-q:not(.is-out) .pl-answer');
+    boxes.forEach(b => { b.hidden = !answersOpen; });
+    $$('.pl-show-answer').forEach(btn => {
+      const box = btn.closest('.pl-q').querySelector('.pl-answer');
+      btn.textContent = (box && !box.hidden) ? 'Masquer la réponse' : 'Voir la réponse';
+    });
+    const b = $('#plAllAns');
+    if (b){
+      b.classList.toggle('is-on', answersOpen);
+      b.firstChild.nodeValue = answersOpen ? '☰ Masquer les réponses' : '☰ Réponses';
+    }
+  }
+  /* how many of the questions now on screen actually carry an answer */
+  function countAnswers(){
+    const n = $$('.pl-q:not(.is-out)').filter(q => q.querySelector('.pl-answer')).length;
+    const el = $('#plAnsN');
+    if (el) el.textContent = n;
+  }
+
   /* ---------------- the rail ---------------- */
   function buildRail(){
     const rail = $('#plRail');
@@ -757,9 +938,6 @@ module.exports.JS = `
     PAPERS.forEach(p => h.push('<button type="button" class="pl-chip" data-paper="' + p.id + '">' +
       p.year + (p.variant !== 'Annual' ? ' ' + p.variant.replace(' marks', 'm') : '') + '</button>'));
     h.push('</span><span class="pl-rail-sep"></span>');
-    h.push('<span class="pl-filter"><button type="button" class="pl-chip" id="plFilterBtn">☰ Filtrer par sujet</button>' +
-           '<div class="pl-panel" id="plPanel" hidden></div>' +
-           '<span class="pl-drill" id="plDrill"></span></span>');
     h.push('<span class="pl-rail-sep"></span>');
     h.push('<div class="pl-ring"><svg viewBox="0 0 42 42" aria-hidden="true">' +
       '<circle class="pl-ring-bg" cx="21" cy="21" r="18"></circle>' +
@@ -768,6 +946,7 @@ module.exports.JS = `
     h.push('<span class="pl-clock" id="plClock">—</span>');
     h.push('<button type="button" class="pl-chip" id="plClockBtn">▶ Exam mode</button>');
     h.push('<span class="pl-rail-sep"></span><span class="pl-rail-label" id="plCount"></span>');
+    h.push('<button type="button" class="pl-chip" id="plAllAns">☰ Réponses<span class="pl-n" id="plAnsN"></span></button>');
     rail.innerHTML = h.join('');
 
     $$('[data-paper]', rail).forEach(b => b.addEventListener('click', () => {
@@ -783,15 +962,12 @@ module.exports.JS = `
       $$('.pl-chip', $('#plYears')).forEach(x => x.classList.toggle('is-on', x === all));
       apply();
     });
-    const fb = $('#plFilterBtn');
-    if (fb) fb.addEventListener('click', ev => {
-      ev.stopPropagation();
-      const p = $('#plPanel');
-      if (p) p.hidden = !p.hidden;
-    });
-    document.addEventListener('click', ev => {
-      const p = $('#plPanel');
-      if (p && !p.hidden && !ev.target.closest('.pl-filter')) p.hidden = true;
+    /* Follows the filter: it reveals answers on what is on screen, and nothing
+       that the topic filter has taken out. */
+    const aa = $('#plAllAns');
+    if (aa) aa.addEventListener('click', () => {
+      answersOpen = !answersOpen;
+      paintAnswers();
     });
     const cb = $('#plClockBtn');
     if (cb) cb.addEventListener('click', () => (clockTimer ? stopClock() : startClock()));
@@ -814,7 +990,10 @@ module.exports.JS = `
     const a = ev.target.closest && ev.target.closest('.pl-show-answer');
     if (a){
       const box = a.closest('.pl-q').querySelector('.pl-answer');
-      if (box){ box.hidden = !box.hidden; a.textContent = box.hidden ? 'Show answer' : 'Hide answer'; }
+      if (box){
+        box.hidden = !box.hidden;
+        a.textContent = box.hidden ? 'Voir la réponse' : 'Masquer la réponse';
+      }
       return;
     }
     const d = ev.target.closest && ev.target.closest('.pl-done');

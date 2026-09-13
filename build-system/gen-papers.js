@@ -22,6 +22,7 @@ const fs = require('fs');
 const path = require('path');
 const TAX = require('./papers-taxonomy.js');
 const CORR = require('./paper-corrections.js');
+const ANS  = require('./paper-answers.js');
 
 const SP  = __dirname;
 const DIR = path.join(SP, 'papers-text');
@@ -368,6 +369,42 @@ function applyCorrections(paperId, sections, stats){
     stats.used[paperId + ' ' + s.id] = true;
   });
 
+  /* Numbered blocks that only carry a reading passage. */
+  sections.forEach(s => s.questions.forEach(q => {
+    if ((CORR.CONTAINERS || []).indexOf(paperId + ' ' + q.num) !== -1) q.isContainer = true;
+  }));
+
+  /* One parsed question that is really several, transcribed from the page. Done
+     before the per-item fixes so those can address the split-out questions. */
+  sections.forEach(s => {
+    const out = [];
+    s.questions.forEach(q => {
+      /* a section-qualified key wins, so a number that repeats across sections
+         can be treated differently in each */
+      const rep = CORR.SPLIT[paperId + ' ' + s.id + ' ' + q.num] || CORR.SPLIT[paperId + ' ' + q.num];
+      /* a question number can repeat across sections (2023 has a Q10 in both A
+         and D), so an entry may pin itself to one */
+      if (!rep || (rep.section && rep.section !== s.id)){ out.push(q); return; }
+      rep.questions.forEach(r => out.push({
+        id: paperId + '-' + r.num.replace(/[^w.]/g, ''),
+        num: r.num,
+        instruction: r.instruction,
+        marks: r.marks != null ? r.marks : null,
+        choose: r.choose || null,
+        tally: r.tally || null,
+        isAlternative: !!r.isAlternative,
+        isContainer: false,
+        items: (r.items || []).map(it => ({
+          label: it[0], text: it[1], missing: false, flags: ['read-from-pdf'], page: rep.page
+        })),
+        topics: [], answer: null, flags: ['read-from-pdf'], page: rep.page
+      }));
+      stats.split = (stats.split || 0) + rep.questions.length;
+      stats.used[paperId + ' ' + q.num] = true;
+    });
+    s.questions = out;
+  });
+
   sections.forEach(s => s.questions.forEach(q => {
     /* instruction text read off the page */
     const iFix = CORR.TEXT[key(q.num)];
@@ -403,6 +440,33 @@ function applyCorrections(paperId, sections, stats){
       });
       stats.tenses++;
       stats.used[paperId + ' ' + q.num + ':' + it.label] = true;
+    });
+  }));
+}
+
+/* ------------------------------------------------------------------ *
+ *  3b. ANSWERS
+ *
+ *  Attached after the text is final, so an answer can never be filed against
+ *  a question id that the corrections have since changed. Every answer carries
+ *  its tier; an official one carries the marking-scheme page it came from.
+ * ------------------------------------------------------------------ */
+function applyAnswers(paperId, sections, stats){
+  sections.forEach(s => s.questions.forEach(q => {
+    const e = ANS.ANSWERS[paperId + ' ' + q.num];
+    if (!e) return;
+    stats.used[paperId + ' ' + q.num + ':answer'] = true;
+    const tier = e.tier || 'modele';
+    if (e.text){ q.answer = e.text; q.answerTier = tier; if (e.page) q.answerPage = e.page; }
+    if (e.rubric) q.answerRubric = e.rubric;
+    if (!e.items) return;
+    q.items.forEach(it => {
+      const v = e.items[it.label];
+      if (v == null) return;
+      if (typeof v === 'string'){ it.answer = v; it.answerTier = tier; }
+      else { it.answer = v.text; it.answerTier = v.tier || tier; if (v.page) it.answerPage = v.page; }
+      stats.answers = (stats.answers || 0) + 1;
+      if (it.answerTier === 'official') stats.official = (stats.official || 0) + 1;
     });
   }));
 }
@@ -448,6 +512,7 @@ function run(){
     stats.junk += log.junk;
     const sections = parsePaper(lines, meta);
     applyCorrections(meta.id, sections, stats);
+    applyAnswers(meta.id, sections, stats);
     classifyAll(sections, stats);
 
     sections.forEach(s => s.questions.forEach(q => {
@@ -456,7 +521,9 @@ function run(){
         leafCount[q.leaf] = (leafCount[q.leaf] || 0) + 1;
         /* the allotment a student sitting the next exam should expect: the most
            recent paper that asked it wins */
-        if (q.marks) leafMarks[q.leaf] = { marks: q.marks, year: meta.year };
+        /* the scheme states the allotment for most leaves; where it is silent
+           the most recent paper that asked the topic still supplies it */
+        if (q.marks && !ANS.MARKS[q.leaf]) leafMarks[q.leaf] = { marks: q.marks, year: meta.year };
       }
       /* Count QUESTIONS, not items. Ten futur-simple items live in seven
          questions, and the filter returns questions -- a chip reading 10 beside
@@ -483,9 +550,14 @@ function run(){
       key: l.key, label: l.label, hint: l.hint || null, legacy: !!l.legacy,
       tenses: !!l.tenses,
       count: leafCount[l.key] || 0,
-      marks: (l.marks != null ? l.marks : (leafMarks[l.key] ? leafMarks[l.key].marks : null)),
-      marksYear: (l.marks != null ? null : (leafMarks[l.key] ? leafMarks[l.key].year : null)),
-      tally: l.tally || null
+      /* the marking scheme first, then the syllabus, then the newest paper */
+      marks: (ANS.MARKS[l.key] ? ANS.MARKS[l.key].marks
+             : l.marks != null ? l.marks
+             : (leafMarks[l.key] ? leafMarks[l.key].marks : null)),
+      marksYear: (ANS.MARKS[l.key] || l.marks != null ? null
+                 : (leafMarks[l.key] ? leafMarks[l.key].year : null)),
+      marksSrc: (ANS.MARKS[l.key] ? ANS.MARKS[l.key].src : null),
+      tally: (ANS.MARKS[l.key] ? ANS.MARKS[l.key].tally : (l.tally || null))
     }))
   }));
   const tenses = TAX.TENSES.map(t => ({

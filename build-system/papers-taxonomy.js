@@ -89,21 +89,6 @@ const TAXONOMY = [
     ]
   },
   {
-    key: 'culture', label: 'Culture et Civilisation', section: 'D',
-    leaves: [
-      { key: 'cu-match', label: 'Match the following', marks: 5, tally: '5 × 1',
-        match: /faites correspondre|reliez/i },
-      { key: 'cu-tf', label: 'True or False', marks: 5, tally: '5 × 1',
-        match: /vrai.{0,10}faux/i },
-      { key: 'cu-mcq', label: 'MCQ',
-        match: /choisissez|cochez|encerclez|la bonne r.ponse/i },
-      { key: 'cu-fill', label: 'Fill in the blanks', marks: 5, tally: '5 × 1',
-        match: /compl.tez|remplissez les blancs|. l.aide des mots|aide des mots/i },
-      { key: 'cu-short', label: 'Short answers', marks: 10, tally: '5 × 2',
-        match: /r.pondez/i }
-    ]
-  },
-  {
     key: 'grammaire', label: 'Grammaire', section: 'C',
     leaves: [
       /* Before Les Verbes, deliberately. "Mettez les verbes au subjonctif" is a
@@ -133,6 +118,24 @@ const TAXONOMY = [
          see at a glance that it is no longer on their paper. */
       { key: 'gr-prepositions', label: 'Ancien programme (Prépositions)', legacy: true,
         match: /pr.position/i }
+    ]
+  },
+  {
+    key: 'culture', label: 'Culture et Civilisation', section: 'D',
+    leaves: [
+      { key: 'cu-match', label: 'Match the following', marks: 5, tally: '5 × 1',
+        match: /faites correspondre|reliez/i },
+      { key: 'cu-tf', label: 'True or False', marks: 5, tally: '5 × 1',
+        match: /vrai.{0,10}faux/i },
+      /* "Chassez l'intrus" belongs here rather than in a new row: four options,
+         pick one, which is your MCQ line in a different wording. Adding a
+         taxonomy row you did not specify would have been the bigger change. */
+      { key: 'cu-mcq', label: 'MCQ',
+        match: /choisissez|cochez|encerclez|la bonne r.ponse|chassez l.intrus/i },
+      { key: 'cu-fill', label: 'Fill in the blanks', marks: 5, tally: '5 × 1',
+        match: /compl.tez|remplissez les blancs|. l.aide des mots|aide des mots/i },
+      { key: 'cu-short', label: 'Short answers', marks: 10, tally: '5 × 2',
+        match: /r.pondez/i }
     ]
   }
 ];

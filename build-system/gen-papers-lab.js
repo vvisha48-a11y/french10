@@ -42,7 +42,7 @@ const html = `<!DOCTYPE html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Les épreuves des années précédentes - BOARD EXAM QUESTIONS</title>
+<title>CBSE Board Exam Question Papers</title>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
 ${APP_CSS}
@@ -99,11 +99,10 @@ body.sidebar-hidden .pl-shell{ margin-right:0; }
   <div class="pl-page" id="plPage">
 
     <div class="pl-hero">
-      <h1>Les épreuves des années précédentes - BOARD EXAM QUESTIONS</h1>
-      <p class="editable-field gloss">Ten real CBSE papers, ${PAPERS.reduce((n, p) => n + p.sections.reduce((m, s) => m + s.questions.filter(q => !q.isContainer).length, 0), 0)} questions.
-      Filter by topic to see how often the board asks it, and jump straight to the lesson that teaches it.</p>
+      <h1>CBSE Board Exam Question Papers</h1>
     </div>
 
+    <nav class="pl-nav" id="plNav" aria-label="Filtrer par section"></nav>
     <div class="pl-rail" id="plRail"></div>
     <div class="pl-active" id="plActive" hidden></div>
 
@@ -170,7 +169,7 @@ const body = html
   .replace(/^<body[^>]*>/, '');
 const head = html.slice(html.indexOf('<style>') + 7, html.indexOf('</style>'));
 const art = [
-  '<title>CBSE French Past Papers</title>',
+  '<title>CBSE Board Exam Question Papers</title>',
   '<style>',
   "@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap');",
   head,
