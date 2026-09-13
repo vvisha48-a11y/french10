@@ -83,7 +83,13 @@ body.sidebar-hidden .pl-shell{ margin-right:0; }
       ${THEMES.map((t, i) => '<option value="' + t + '"' + (i ? '' : ' selected') + '>' + t + '</option>').join('\n      ')}
     </select>
   </label>
-  <button class="tb-btn" id="sidebarBtn" title="Show / hide the menu">📑</button>
+  <button class="tb-btn" id="sidebarBtn" type="button" title="Show / hide sidebar" aria-label="Show / hide sidebar" aria-controls="sidebar" aria-expanded="true">
+    <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false">
+      <rect x="3" y="4" width="18" height="16" rx="3" fill="none" stroke="currentColor" stroke-width="2"/>
+      <path d="M15 4v16" stroke="currentColor" stroke-width="2"/>
+      <rect class="sb-glyph-panel" x="15" y="4" width="6" height="16" rx="1" fill="currentColor"/>
+    </svg>
+  </button>
 </header>
 
 <aside class="sidebar" id="sidebar"></aside>
@@ -123,7 +129,8 @@ ${UI.DATA(PAPERS, TAXONOMY, TENSES)}
     document.body.className = 'theme-' + sel.value;
   });
   document.getElementById('sidebarBtn').addEventListener('click', () => {
-    document.body.classList.toggle('sidebar-hidden');
+    const hidden = document.body.classList.toggle('sidebar-hidden');
+    document.getElementById('sidebarBtn').setAttribute('aria-expanded', hidden ? 'false' : 'true');
   });
 })();
 </script>

@@ -105,6 +105,26 @@ if (fs.existsSync(LECONS)){
   if (lec.indexOf('cbse_fr_lecons_') === -1)
     problems.push('[lecons] the standalone backup lost its own storage prefix');
 }
+// 4d. the topbar: no hamburger, its tools live in Settings, the sidebar toggle is top-level
+[['index', index], ['app', app]].forEach(pair => {
+  const name = pair[0], docHtml = pair[1];
+  const hs = docHtml.indexOf('<header class="topbar">');
+  const header = hs === -1 ? '' : docHtml.slice(hs, docHtml.indexOf('</header>', hs));
+  const ps = docHtml.indexOf('id="settingsPanel"');
+  const panel = ps === -1 ? '' : docHtml.slice(ps, docHtml.indexOf('id="themeSelect"', ps));
+  if (/id="utilBtn"|class="util-menu"|class="util-wrap"/.test(docHtml))
+    problems.push('[topbar] the hamburger menu is still in docs/' + name + '.html');
+  if (header.indexOf('<button class="tb-btn" id="sidebarBtn"') === -1)
+    problems.push('[topbar] #sidebarBtn is not a top-level topbar button in docs/' + name + '.html');
+  ['lightBtn', 'soundBtn', 'projectorBtn', 'shortcutsBtn'].forEach(id => {
+    if (panel.indexOf('id="' + id + '"') === -1) problems.push('[topbar] #' + id + ' is not in Settings in docs/' + name + '.html');
+    if (header.indexOf('id="' + id + '"') !== -1) problems.push('[topbar] #' + id + ' is still in the topbar in docs/' + name + '.html');
+  });
+  if (docHtml.indexOf('id="printBtn"') !== -1) problems.push('[topbar] the duplicate Print this topic button is back in docs/' + name + '.html');
+  if ((docHtml.match(/id="printTopicBtn2"/g) || []).length !== 1)
+    problems.push('[topbar] expected exactly one Print this topic control in docs/' + name + '.html');
+});
+
 // 4c. the Teacher AI assistant, and the guarantee that turning it OFF changes nothing
 
 // it must never reach the offline student deck

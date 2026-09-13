@@ -1268,12 +1268,16 @@ if ($('#leconsBtn')) $('#leconsBtn').onclick = e => { e.stopPropagation(); $('#l
 $('#searchBtn').onclick = openSearch;
 $('#modeBtn').onclick = toggleMode;
 $('#lightBtn').onclick = toggleLight;
-$('#printBtn').onclick = printTopic;
-$('#sidebarBtn').onclick = () => { document.body.classList.toggle('sidebar-hidden'); setTimeout(()=>Deck.layout(), 320); };
-$('#shortcutsBtn').onclick = e => { e.stopPropagation(); $('#shortcutsModal').classList.toggle('open'); };
+$('#sidebarBtn').onclick = () => {
+  const hidden = document.body.classList.toggle('sidebar-hidden');
+  $('#sidebarBtn').setAttribute('aria-expanded', hidden ? 'false' : 'true');
+  setTimeout(()=>Deck.layout(), 320);
+};
+/* opened from Settings, which sits in the same top-right corner: close it first */
+$('#shortcutsBtn').onclick = e => { e.stopPropagation(); $('#settingsPanel').classList.remove('open'); $('#shortcutsModal').classList.toggle('open'); };
 $('#settingsBtn').onclick = e => { e.stopPropagation(); $('#settingsPanel').classList.toggle('open'); };
 
-/* ---- top bar: Letters shortcut + hamburger utility menu ---- */
+/* ---- top bar: Letters, Messages and Papers shortcuts ---- */
 if ($('#lettersBtn')) $('#lettersBtn').onclick = () => {
   const t = topicByKey['lettre'];
   if (t && t.indices && t.indices.length) Deck.slide(t.indices[0], 0);
@@ -1286,27 +1290,6 @@ if ($('#papersBtn')) $('#papersBtn').onclick = () => {
   const t = topicByKey['papers'];
   if (t && t.indices && t.indices.length) Deck.slide(t.indices[0], 0);
 };
-if ($('#utilBtn')) $('#utilBtn').onclick = e => {
-  e.stopPropagation();
-  const m = $('#utilMenu');
-  const open = m.classList.toggle('open');
-  $('#utilBtn').setAttribute('aria-expanded', open ? 'true' : 'false');
-};
-/* these are one-shot actions, so close the menu once one is used */
-$$('#utilMenu .util-item').forEach(b => b.addEventListener('click', () => {
-  setTimeout(() => {
-    $('#utilMenu').classList.remove('open');
-    $('#utilBtn').setAttribute('aria-expanded', 'false');
-  }, 0);
-}));
-document.addEventListener('click', e => {
-  if (!e.target.closest('#utilMenu') && !e.target.closest('#utilBtn')){
-    const m = $('#utilMenu');
-    if (m) m.classList.remove('open');
-    const b = $('#utilBtn');
-    if (b) b.setAttribute('aria-expanded', 'false');
-  }
-});
 $('#soundBtn').onclick = () => { soundOn = !soundOn; ls.set('sound', soundOn ? '1':'0'); refreshSoundBtn(); playSound('pop'); };
 
 /* Clue-word Hint toggle (delegated; used by Révision Mixte) */

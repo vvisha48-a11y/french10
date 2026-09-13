@@ -67,7 +67,9 @@ body.theme-sunrise{
   --heading-color:#b45309; --subheading-color:#991b1b;
   --highlight-bg: rgba(217,119,6,0.15); --highlight-border:#b45309; --highlight-text:#92400e;
   --box-blue-bg:#eff6ff; --box-gold-bg:#fffbe3; --box-gold-border:#d97706;
-  --hud-bg: rgba(255,255,255,0.94); --hud-text:#b45309; --particle-color: rgba(217,119,6,0.35);
+  /* hud-text darkened from #b45309, which measured 3.82:1 for the topbar and HUD button
+     text over this gradient. #92400e -- this theme's own highlight-text -- is 5.40:1. */
+  --hud-bg: rgba(255,255,255,0.94); --hud-text:#92400e; --particle-color: rgba(217,119,6,0.35);
   --green:#15803d; --purple:#7e22ce; --gold:#b45309; --crimson:#991b1b;
   --ok:#15803d; --err:#991b1b;
 }
@@ -78,7 +80,9 @@ body.theme-emerald{
   --heading-color:#047857; --subheading-color:#b91c1c;
   --highlight-bg: rgba(16,185,129,0.15); --highlight-border:#059669; --highlight-text:#047857;
   --box-blue-bg:#e0f2fe; --box-gold-bg:#fefce8; --box-gold-border:#eab308;
-  --hud-bg: rgba(255,255,255,0.94); --hud-text:#047857; --particle-color: rgba(16,185,129,0.35);
+  /* hud-text darkened from #047857, which measured 4.26:1 for the topbar and HUD button
+     text over this gradient. #065f46 is 5.97:1 and still reads as this theme's green. */
+  --hud-bg: rgba(255,255,255,0.94); --hud-text:#065f46; --particle-color: rgba(16,185,129,0.35);
   --green:#047857; --purple:#7e22ce; --gold:#b45309; --crimson:#b91c1c;
   --ok:#047857; --err:#b91c1c;
 }
@@ -150,18 +154,17 @@ p{ font-size:calc(1.08rem * var(--custom-font-scale)); line-height:1.55; margin:
 .tb-btn.is-on{ background:var(--highlight-border); color:#fff; }
 .tb-spacer{ flex:1; }
 /* Room for 📝 Papers on narrower screens. Measured: without this, 1024px pushed
-   ⚙ Settings fully off-screen and cut ☰. Only spacing tightens -- font, size,
-   weight, radius, colours and labels are untouched, and every row button changes
-   alike, so Papers stays identical to Messages. The row now needs 998px at the
-   default font, less than it needed before Papers existed. 1199px, not 1110px,
-   because Cinzel (the widest Settings font) needs 1182px with Papers added; at
-   this breakpoint the bar fits in every font wherever it fit before. The `>`
-   selectors keep the ☰ and Grammar ▾ dropdown items at their own padding. */
+   ⚙ Settings fully off-screen. Only spacing tightens -- font, size, weight, radius,
+   colours and labels are untouched, and every row button changes alike, so Papers
+   stays identical to Messages. 1199px, not 1110px, because Cinzel (the widest
+   Settings font) needs 1182px with Papers added; at this breakpoint the bar fits in
+   every font wherever it fit before. The `>` selectors leave the Grammar and Lecons
+   dropdown items at their own padding. The sidebar button is a direct child, so it
+   tightens with the row. */
 @media (max-width:1199px){
   .topbar{ gap:6px; padding:0 10px; }
   .topbar > .tb-btn,
-  .topbar > .topic-menu-wrap > .tb-btn,
-  .topbar > .util-wrap > .tb-btn{ padding-left:9px; padding-right:9px; }
+  .topbar > .topic-menu-wrap > .tb-btn{ padding-left:9px; padding-right:9px; }
 }
 
 /* Topic dropdown */
@@ -432,6 +435,14 @@ body.mode-student .teacher-only{ display:none !important; }
 .save-edits-btn{ width:100%; background:var(--green) !important; color:#fff !important; border:none !important; margin-bottom:12px !important; }
 .reset-btn{ width:100%; background:var(--crimson) !important; color:#fff !important; border:none !important; }
 .check-row{ display:flex; align-items:center; gap:8px; font-size:.88rem; font-weight:600; }
+/* Display & tools, moved in from the old hamburger menu. The labels sit OUTSIDE the
+   buttons: the engine rewrites the Light / Dark and Sound buttons' text to a bare
+   emoji, which erased any label kept inside them on every theme or sound change. */
+.set-row{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin:4px 0; font-size:.88rem; font-weight:600; color:var(--text-main); }
+.settings-panel .set-row button{ margin:0; min-width:46px; }
+.settings-panel .set-wide{ width:100%; margin:4px 0 0; text-align:left; }
+/* Sound's "on" state came from .tb-btn.is-on, which the moved button no longer carries */
+.settings-panel button.is-on{ background:var(--heading-color); color:var(--card-bg); border-color:var(--heading-color); }
 .shortcuts-modal ul{ list-style:none; padding:0; margin:0; }
 .shortcuts-modal li{ display:flex; justify-content:space-between; gap:10px; padding:5px 0; font-size:.84rem; border-bottom:1px solid var(--card-border); }
 kbd{ background:var(--highlight-bg); border:1px solid var(--card-border); border-radius:5px; padding:1px 7px; font-family:inherit; font-size:.8rem; font-weight:800; }
@@ -1275,18 +1286,23 @@ body.letter-en .let-title, body.letter-en .let-sub{ display:none; }
 .brand{ display:flex; align-items:center; flex:none; }
 .brand-logo{ height:32px; width:auto; display:block; }
 
-.util-wrap{ position:relative; }
-.util-menu{
-  position:absolute; top:calc(100% + 8px); right:0; width:250px; max-height:70vh; overflow-y:auto;
-  background:var(--card-bg); border:1px solid var(--card-border); border-radius:14px;
-  box-shadow:0 18px 50px rgba(0,0,0,.3); padding:8px; z-index:50;
-  opacity:0; visibility:hidden; transform:translateY(-8px); transition:all .2s ease;
-  display:flex; flex-direction:column; gap:4px;
+/* Show / hide sidebar -- the one solid control in the topbar row, so it is found at
+   a glance. Heading-colour fill with a card-colour glyph: the pairing that turns
+   light or dark with the theme. Measured in all 7 themes: glyph lowest 4.69:1 and
+   fill against the topbar lowest 4.99:1, both sunrise; a white glyph would drop to
+   1.39:1 on cyber. Icon-only on purpose: a text label pushed the bar to 1062px at
+   1024px. The glyph's right-hand panel dims while the sidebar is hidden, so the
+   button shows its state without any script. */
+.topbar > #sidebarBtn{
+  display:inline-flex; align-items:center; justify-content:center;
+  background:var(--heading-color); color:var(--card-bg); border-color:var(--heading-color);
+  box-shadow:0 4px 12px rgba(0,0,0,.18);
 }
-.util-menu.open{ opacity:1; visibility:visible; transform:translateY(0); }
-.util-item{ width:100%; justify-content:flex-start; text-align:left; display:flex; align-items:center; gap:10px; }
-.util-item > span{ font-size:.86rem; }
-@media print{ .util-menu, .util-wrap{ display:none !important; } }
+.topbar > #sidebarBtn:hover{ box-shadow:0 6px 16px rgba(0,0,0,.26); }
+.topbar > #sidebarBtn:focus-visible{ outline:2px solid var(--heading-color); outline-offset:2px; }
+.topbar > #sidebarBtn svg{ display:block; }
+.topbar > #sidebarBtn .sb-glyph-panel{ opacity:.55; transition:opacity .2s ease; }
+body.sidebar-hidden .topbar > #sidebarBtn .sb-glyph-panel{ opacity:.12; }
 /* ===== END TOP BAR ===== */
 /* ============ PROJECTOR MODE — full-bleed layout & type ============
    The base card is width:94%; max-width:1420px, so on a 1920px projector it
@@ -2312,7 +2328,13 @@ body.sidebar-hidden .pl-shell{ margin-right:0; }
       <option value="minimal">minimal</option>
     </select>
   </label>
-  <button class="tb-btn" id="sidebarBtn" title="Show / hide the menu">📑</button>
+  <button class="tb-btn" id="sidebarBtn" type="button" title="Show / hide sidebar" aria-label="Show / hide sidebar" aria-controls="sidebar" aria-expanded="true">
+    <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false">
+      <rect x="3" y="4" width="18" height="16" rx="3" fill="none" stroke="currentColor" stroke-width="2"/>
+      <path d="M15 4v16" stroke="currentColor" stroke-width="2"/>
+      <rect class="sb-glyph-panel" x="15" y="4" width="6" height="16" rx="1" fill="currentColor"/>
+    </svg>
+  </button>
 </header>
 
 <aside class="sidebar" id="sidebar"></aside>
@@ -3073,7 +3095,8 @@ window.TENSES = [{"key":"infinitif","label":"L'infinitif","legacy":false,"count"
     document.body.className = 'theme-' + sel.value;
   });
   document.getElementById('sidebarBtn').addEventListener('click', () => {
-    document.body.classList.toggle('sidebar-hidden');
+    const hidden = document.body.classList.toggle('sidebar-hidden');
+    document.getElementById('sidebarBtn').setAttribute('aria-expanded', hidden ? 'false' : 'true');
   });
 })();
 </script>
