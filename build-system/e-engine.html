@@ -591,26 +591,65 @@ function openSearch(){
   const i = $('#searchInput'); i.value = ''; runSearch(''); setTimeout(()=>i.focus(), 30);
 }
 
-/* ---------------- Print one topic as a handout ---------------- */
-function printTopic(){
-  const t = topicOf(Deck.getIndices().h);
-  if (!t) return;
-  t.indices.forEach(h => stacks[h].classList.add('print-target'));
-  document.body.classList.add('printing-topic');
-  showToast('🖨️ Preparing worksheet…');
+/* ---------------- Print ----------------
+   "Print this topic" prints ONE horizontal <section> and its vertical children:
+   the stack you are standing in, not every stack sharing its data-topic (Les
+   Verbes alone is 15 stacks / 146 slides). b-style.html hides the siblings with
+   display:none, so they reach the spooler as no boxes at all and add no pages.
+
+   Reveal's own state is never touched: two classes go on, two come off, and
+   Deck.layout() re-measures afterwards. The @page rule is injected rather than
+   written into the stylesheet because @page takes no selectors — it cannot be
+   scoped to a body class, and editing the static one would turn the workbook
+   landscape too. Nothing scales the slides: viewport units resolve against the
+   page area when printing, so the deck's own responsive CSS fits an A4 landscape
+   page exactly as it fits a 1077x748 window. */
+const PRINT_PAGE_RULE = '@page{ size:A4 landscape; margin:6mm; }';
+let printCleanup = null;
+let printPageStyle = null;   /* the injected <style>, held by reference: it is never in the markup */
+
+function armPrint(){
+  /* attached per job and removed by endPrint(), so printing twice in a session
+     cannot stack duplicate listeners. Detach a previous job's pair first without
+     touching the state this job has just set up. */
+  if (printCleanup){ printCleanup(); printCleanup = null; }
+  const mq = window.matchMedia('print');
+  const onChange = e => { if (!e.matches) endPrint(); };
+  window.addEventListener('afterprint', endPrint, { once: true });
+  if (mq.addEventListener) mq.addEventListener('change', onChange);
+  printCleanup = () => {
+    window.removeEventListener('afterprint', endPrint);
+    if (mq.removeEventListener) mq.removeEventListener('change', onChange);
+  };
   setTimeout(() => window.print(), 250);
+}
+function endPrint(){
+  if (printCleanup){ printCleanup(); printCleanup = null; }   /* idempotent: a second call no-ops */
+  if (printPageStyle){ printPageStyle.remove(); printPageStyle = null; }
+  document.body.classList.remove('printing-topic');
+  document.body.classList.remove('printing-book');
+  $$('.print-target').forEach(s => s.classList.remove('print-target'));
+  if (window.Deck && Deck.layout) Deck.layout();
+}
+
+function printTopic(){
+  const stack = stacks[Deck.getIndices().h];
+  if (!stack) return;
+  stack.classList.add('print-target');
+  document.body.classList.add('printing-topic');
+  printPageStyle = document.createElement('style');
+  printPageStyle.id = 'printPageRule';        /* named so it is obvious in devtools */
+  printPageStyle.textContent = PRINT_PAGE_RULE;
+  document.head.appendChild(printPageStyle);
+  const n = stack.querySelectorAll(':scope > section').length || 1;
+  showToast('🖨️ Preparing ' + n + ' page' + (n === 1 ? '' : 's') + '…');
+  armPrint();
 }
 function printBook(){
   document.body.classList.add('printing-book');
   showToast('📚 Preparing complete workbook…');
-  setTimeout(() => window.print(), 250);
+  armPrint();
 }
-window.addEventListener('afterprint', () => {
-  document.body.classList.remove('printing-topic');
-  document.body.classList.remove('printing-book');
-  $$('.print-target').forEach(s => s.classList.remove('print-target'));
-  Deck.layout();
-});
 
 /* ---------------- Live edit ---------------- */
 function setLiveEdit(on){

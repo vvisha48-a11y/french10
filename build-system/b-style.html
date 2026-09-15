@@ -283,15 +283,15 @@ body.sidebar-hidden .reveal-shell{ right:0; }
 .hl-aux    { background:rgba(217,119,6,.16); color:#D97706; border-color:#D97706; }
 .hl-pronoun{ background:rgba(126,34,206,.14);color:#7e22ce; border-color:#7e22ce; }
 /* Dark themes need lighter role colours to stay legible on the card */
-body.theme-cyber .hl-subject, body.theme-slate .hl-subject{ color:#93c5fd; border-color:#60a5fa; background:rgba(96,165,250,.16); }
-body.theme-cyber .hl-neg,     body.theme-slate .hl-neg    { color:#fda4af; border-color:#fb7185; background:rgba(251,113,133,.16); }
-body.theme-cyber .hl-verb,    body.theme-slate .hl-verb   { color:#6ee7b7; border-color:#34d399; background:rgba(52,211,153,.16); }
-body.theme-cyber .hl-aux,     body.theme-slate .hl-aux    { color:#fcd34d; border-color:#fbbf24; background:rgba(251,191,36,.16); }
-body.theme-cyber .hl-pronoun, body.theme-slate .hl-pronoun{ color:#d8b4fe; border-color:#c084fc; background:rgba(192,132,252,.16); }
+body.theme-cyber:not(.printing-topic) .hl-subject, body.theme-slate:not(.printing-topic) .hl-subject{ color:#93c5fd; border-color:#60a5fa; background:rgba(96,165,250,.16); }
+body.theme-cyber:not(.printing-topic) .hl-neg, body.theme-slate:not(.printing-topic) .hl-neg    { color:#fda4af; border-color:#fb7185; background:rgba(251,113,133,.16); }
+body.theme-cyber:not(.printing-topic) .hl-verb, body.theme-slate:not(.printing-topic) .hl-verb   { color:#6ee7b7; border-color:#34d399; background:rgba(52,211,153,.16); }
+body.theme-cyber:not(.printing-topic) .hl-aux, body.theme-slate:not(.printing-topic) .hl-aux    { color:#fcd34d; border-color:#fbbf24; background:rgba(251,191,36,.16); }
+body.theme-cyber:not(.printing-topic) .hl-pronoun, body.theme-slate:not(.printing-topic) .hl-pronoun{ color:#d8b4fe; border-color:#c084fc; background:rgba(192,132,252,.16); }
 
 /* Enlarged key forms, per AGENTS.md */
 .key-form{ font-size:calc(1.35em * var(--custom-font-scale)); color:#002395; font-weight:800; }
-body.theme-cyber .key-form, body.theme-slate .key-form{ color:#7dd3fc; }
+body.theme-cyber:not(.printing-topic) .key-form, body.theme-slate:not(.printing-topic) .key-form{ color:#7dd3fc; }
 
 .example-text{ font-style:italic; font-size:calc(1.04rem * var(--custom-font-scale)); margin:4px 0; }
 .gloss{ font-style:normal; color:var(--text-muted); font-size:.9em; }
@@ -482,50 +482,152 @@ body.editing-active [contenteditable="true"]{ outline:2px dashed var(--gold); ou
   canvas.fx-layer{ display:none; }
 }
 
-/* ============ PRINT / A4 WORKSHEET EXPORT ============ */
-@page{ size:A4; margin:12mm 12mm 14mm 12mm; }
+/* ============ PRINT ============
+   Reveal's own paper.css is stripped out of the build (see patch-reveal-css.js),
+   so this is the deck's entire print stylesheet. Two jobs share it:
+
+     * 📚 Print complete workbook, and a plain Ctrl+P — the dense black-and-white
+       A4 portrait handout. Every rule below that forces white, black or a compact
+       size is scoped `body:not(.printing-topic)`, so it stays that job's alone.
+     * 🖨️ Print this topic — ONE Reveal stack, A4 landscape, one slide per page,
+       in colour. Its own section follows this block.                            */
+@page{ size:A4; margin:12mm 12mm 14mm 12mm; }   /* the workbook; the topic print injects its own */
 @media print{
+  html, body, *{ -webkit-print-color-adjust:exact; print-color-adjust:exact; }
   .topbar, .sidebar, .hud, .settings-panel, .shortcuts-modal, .search-modal,
   .pick-modal, canvas.fx-layer, #toastNotification, .topic-progress, .accent-bar,
-  .fib-actions, .retry-btn, .fc-marks, .audio-btn, .tl-controls, .step-hint{ display:none !important; }
-  html, body{ width:auto; height:auto; overflow:visible; background:#fff !important; }
-  body{ color:#000 !important; font-size:10.5pt; }
+  .fib-actions, .retry-btn, .fc-marks, .audio-btn, .tl-controls, .step-hint,
+  .reveal .backgrounds, .reveal .controls, .reveal .progress,
+  .reveal .slide-number{ display:none !important; }
+  html, body{ width:auto; height:auto; overflow:visible; }
+  html{ background:#fff !important; }
   .reveal-shell{ position:static !important; inset:auto !important; }
   .reveal, .reveal .slides{ position:static !important; width:auto !important; height:auto !important; transform:none !important; }
+  /* Reveal writes left/top/margin straight onto .slides as inline style; its own
+     print sheet used to cancel them and no longer exists, so we do it here. */
+  .reveal .slides{ left:auto !important; top:auto !important; margin:0 !important; padding:0 !important; zoom:1 !important; }
   .reveal .slides section{ display:block !important; position:static !important; transform:none !important; opacity:1 !important; visibility:visible !important; height:auto !important; }
-  .slide-card{
-    height:auto !important; max-width:100% !important; width:100% !important; overflow:visible !important;
-    box-shadow:none !important; border:1px solid #bbb !important; background:#fff !important;
-    padding:8mm 6mm !important; margin:0 0 6mm !important; border-radius:6px !important;
-    page-break-inside:avoid; break-inside:avoid;
-  }
-  /* Every fragment and both card faces print revealed — a worksheet must show answers */
+  /* Nothing is stepped through on paper, so every fragment and both faces of every
+     flip card print revealed. Reveal's screen rule hides fragments without
+     !important, so these win. */
   .reveal .fragment{ opacity:1 !important; visibility:visible !important; transform:none !important; }
   .flip-card{ height:auto !important; }
   .flip-card-inner{ transform:none !important; }
   .flip-card-front, .flip-card-back{ position:static !important; transform:none !important; backface-visibility:visible !important; }
   .mode-veil{ display:none !important; }
-  .student-only, .teacher-only{ display:block !important; }
+  /* .student-only / .teacher-only are deliberately NOT forced visible. A printout
+     follows the Teacher/Student view that is active: Teacher prints the answers,
+     Student prints the blank worksheet. */
+
+  /* ---- the workbook, and a plain Ctrl+P ---- */
+  body:not(.printing-topic){ background:#fff !important; color:#000 !important; font-size:10.5pt; }
+  body:not(.printing-topic) .slide-card{
+    height:auto !important; max-width:100% !important; width:100% !important; overflow:visible !important;
+    box-shadow:none !important; border:1px solid #bbb !important; background:#fff !important;
+    padding:8mm 6mm !important; margin:0 0 6mm !important; border-radius:6px !important;
+    page-break-inside:avoid; break-inside:avoid;
+  }
   /* Denser A4 typography */
-  h1{ font-size:18pt !important; } h2{ font-size:14pt !important; } h3{ font-size:12pt !important; }
-  p, .subj-table td, .subj-table th, .q-text{ font-size:10.5pt !important; line-height:1.35 !important; }
-  .two-columns{ grid-template-columns:1fr 1fr !important; gap:5mm !important; }
-  .three-columns{ grid-template-columns:1fr 1fr 1fr !important; gap:4mm !important; }
-  .box{ padding:3mm 4mm !important; margin:2mm auto !important; }
-  .fib-input{ border:none !important; border-bottom:1px solid #333 !important; border-radius:0 !important; min-width:120px; background:transparent !important; }
-  /* Clean page break between each sub-topic stack and between topics */
-  body.printing-book .reveal .slides > section{ page-break-after:always; break-after:page; }
+  body:not(.printing-topic) h1{ font-size:18pt !important; }
+  body:not(.printing-topic) h2{ font-size:14pt !important; }
+  body:not(.printing-topic) h3{ font-size:12pt !important; }
+  body:not(.printing-topic) p,
+  body:not(.printing-topic) .subj-table td,
+  body:not(.printing-topic) .subj-table th,
+  body:not(.printing-topic) .q-text{ font-size:10.5pt !important; line-height:1.35 !important; }
+  body:not(.printing-topic) .two-columns{ grid-template-columns:1fr 1fr !important; gap:5mm !important; }
+  body:not(.printing-topic) .three-columns{ grid-template-columns:1fr 1fr 1fr !important; gap:4mm !important; }
+  body:not(.printing-topic) .box{ padding:3mm 4mm !important; margin:2mm auto !important; }
+  body:not(.printing-topic) .fib-input{ border:none !important; border-bottom:1px solid #333 !important; border-radius:0 !important; min-width:120px; background:transparent !important; }
+  /* One slide per page, which Reveal's paper.css used to do for us; adjacent
+     forced breaks collapse, so the stack rule adds no blank sheet. */
+  body.printing-book .reveal .slides > section,
+  body.printing-book .reveal .slides > section > section{ page-break-after:always; break-after:page; }
   body.printing-book .reveal .slides > section:last-child{ page-break-after:auto; }
 }
-/* Single-topic export: only the tagged topic prints */
+
+/* ---- 🖨️ Print this topic: ONE stack, A4 landscape, one slide per page ----
+   printTopic() tags the current horizontal <section> and injects
+   an @page of size A4 landscape with a 6mm margin. These three rules sit outside @media
+   print on purpose: the siblings have to be gone from the DOM's layout before the
+   spooler reads it. The state lasts about 250ms on screen and is undone by
+   endPrint(). */
 body.printing-topic .reveal .slides > section:not(.print-target){ display:none !important; }
 body.printing-topic .reveal .slides > section.print-target,
 body.printing-topic .reveal .slides > section.print-target > section{
   display:block !important; position:static !important; transform:none !important;
-  opacity:1 !important; visibility:visible !important; height:auto !important;
+  opacity:1 !important; visibility:visible !important;
 }
-body.printing-topic .reveal .slides > section.print-target{ page-break-after:auto; }
-body.printing-topic .reveal .slides > section.print-target > section{ page-break-inside:avoid; break-inside:avoid; }
+@media print{
+  /* One page per slide. In paged media viewport units resolve against the PAGE
+     AREA, not the window — measured with headless Chrome: 100vw x 100vh printed as
+     exactly 1077 x 748 px = 285 x 198 mm, the A4-landscape content box at a 6mm
+     margin. So 100vw/100vh IS the page, to the pixel, whatever paper or margin the
+     100vw would be right too, but on screen it includes the scrollbar; in the flow
+     these sections are in, width:auto is the same page width and immune to that.
+     dialog ends up using; stating the same box in mm rounded 0.35px long and spilled
+     a hairline onto a blank twelfth sheet. It is also why nothing here scales the
+     slides: the deck's own responsive CSS fits a page exactly as it fits a window.
+
+     min-height, not height, and overflow visible: measured at the page's own size,
+     66 of the deck's 945 slides hold more than a landscape page can show (Model
+     Messages worst, by 1332px). A fixed box would cut those off, so a slide that
+     does not fit continues onto a second sheet instead. The other 879 are exactly
+     one page each, and every slide still starts on a fresh one. */
+  body.printing-topic .reveal .slides > section.print-target:not([data-topic="papers"]) > section{
+    width:auto !important; min-height:100vh !important; height:auto !important;
+    padding:0 !important; margin:0 !important; overflow:visible !important;
+    background:var(--card-bg);
+    page-break-after:always; break-after:page;
+    page-break-inside:auto; break-inside:auto;
+  }
+  /* no trailing blank sheet after the stack, or after its last slide */
+  body.printing-topic .reveal .slides > section.print-target,
+  body.printing-topic .reveal .slides > section.print-target > section:last-child{
+    page-break-after:avoid !important; break-after:avoid !important;
+  }
+  body.printing-topic .reveal .slides > section.print-target:not([data-topic="papers"]) > section > .slide-card{
+    width:100% !important; min-height:100vh !important; height:auto !important; max-width:none !important;
+    margin:0 !important; border:none !important; border-radius:0 !important;
+    box-shadow:none !important; overflow:visible !important;
+    background:var(--card-bg) !important;
+  }
+  /* Question Papers is the one stack a page box cannot hold: one card carrying 751
+     questions. It flows across as many sheets as it needs, breaking between
+     questions (papers-ui.js keeps .pl-q whole). */
+  body.printing-topic .reveal .slides > section.print-target[data-topic="papers"] > section,
+  body.printing-topic .reveal .slides > section.print-target[data-topic="papers"] .slide-card{
+    height:auto !important; max-height:none !important; overflow:visible !important;
+    border:none !important; box-shadow:none !important; border-radius:0 !important;
+    padding:0 !important; margin:0 !important; background:var(--card-bg) !important;
+  }
+  /* The fragment trap, stated again inside the targeted path so a gate can see it
+     and a later edit cannot quietly weaken it: an unstepped fragment is invisible,
+     and every slide is unstepped on paper. */
+  body.printing-topic .reveal .fragment{ opacity:1 !important; visibility:visible !important; transform:none !important; }
+
+  /* Print in a light palette whatever is on screen — nobody should spend a
+     cartridge of black because Slate Night was on. A theme here is nothing but
+     these 21 custom properties redeclared on body.theme-*, so redeclaring them,
+     inside @media print where the screen can never see them, swaps the palette
+     with no JavaScript, no flash, and nothing to restore if the dialog is
+     cancelled. `html body.printing-topic` is (0,1,2) and outranks every
+     `body.theme-*` (0,1,1), so source order cannot defeat it. The values are
+     body.theme-classic verbatim apart from the two marked. */
+  html body.printing-topic{
+    --bg-gradient:#ffffff;                 /* classic: a radial #eef4fc -> #bfdbfe flood fill */
+    --card-bg:#ffffff;                     /* classic: rgba(255,255,255,0.95) */
+    --card-border: rgba(0,35,149,0.2);
+    --custom-text-color:#0f172a;           /* beats a colour the Settings picker set inline on <html> */
+    --text-main:#0f172a; --text-muted:#475569;
+    --heading-color:#002395; --subheading-color:#ED2939;
+    --highlight-bg: rgba(0,35,149,0.12); --highlight-border:#002395; --highlight-text:#002395;
+    --box-blue-bg:#eef4fc; --box-gold-bg:#fff8eb; --box-gold-border:#f4b436;
+    --hud-bg: rgba(255,255,255,0.94); --hud-text:#002395; --particle-color: rgba(0,35,149,0.3);
+    --green:#047857; --purple:#7e22ce; --gold:#D97706; --crimson:#ED2939;
+    --ok:#047857; --err:#dc2626;
+  }
+}
 
 /* ============ PICK-A-STUDENT MODAL ============ */
 .pick-modal{
@@ -696,7 +798,7 @@ body.projector-mode .hud:hover{ opacity:1; }
 .cj-table td:first-child{ color:var(--text-muted); font-weight:700; width:110px; }
 .cj-stem{ color:var(--heading-color); font-weight:800; }
 .cj-end{ color:var(--crimson); font-weight:900; }   /* the changing ending, highlighted */
-body.theme-cyber .cj-end, body.theme-slate .cj-end{ color:#fda4af; }
+body.theme-cyber:not(.printing-topic) .cj-end, body.theme-slate:not(.printing-topic) .cj-end{ color:#fda4af; }
 .cj-legend{ font-size:.82rem; color:var(--text-muted); margin-top:8px; }
 .cj-legend .cj-stem, .cj-legend .cj-end{ padding:0 4px; }
 .cj-count{ font-size:.8rem; }
@@ -719,9 +821,9 @@ body.theme-cyber .cj-end, body.theme-slate .cj-end{ color:#fda4af; }
 /* A4 verb sheet: 2 columns, nothing split across pages */
 @media print{
   .cj-controls, .cj-verblist, .cj-legend, .cj-count{ display:none !important; }
-  .cj-allgrid{ grid-template-columns:1fr 1fr !important; gap:4mm !important; }
-  .cj-block{ background:#fff !important; border:1px solid #999 !important; page-break-inside:avoid; break-inside:avoid; }
-  .cj-block .cj-table td{ font-size:9.5pt !important; padding:1.5px 4px !important; }
+  body:not(.printing-topic) .cj-allgrid{ grid-template-columns:1fr 1fr !important; gap:4mm !important; }
+  body:not(.printing-topic) .cj-block{ background:#fff !important; border:1px solid #999 !important; page-break-inside:avoid; break-inside:avoid; }
+  body:not(.printing-topic) .cj-block .cj-table td{ font-size:9.5pt !important; padding:1.5px 4px !important; }
   .cj-head{ margin-bottom:3mm !important; }
 }
 
@@ -805,12 +907,12 @@ body.theme-cyber .cj-end, body.theme-slate .cj-end{ color:#fda4af; }
 .tv-caption .tv-credit{ display:block; font-size:.68rem; color:var(--text-muted); font-style:italic; margin-top:2px; }
 
 @media print{
-  .usage-grid{ grid-template-columns:1fr 1fr !important; gap:5mm !important; }
-  .usage-photo{ max-height:58mm !important; page-break-inside:avoid; break-inside:avoid; }
-  .memo-svg{ max-width:150mm !important; page-break-inside:avoid; break-inside:avoid; }
-  .usage-point{ background:#f4f4f4 !important; border-left:3px solid #666 !important; }
-  .stretch-note{ background:#fff !important; color:#000 !important; border:1px solid #000; }
-  .topic-visual-grid{ grid-template-columns:1fr 1fr 1fr !important; gap:4mm !important; }
+  body:not(.printing-topic) .usage-grid{ grid-template-columns:1fr 1fr !important; gap:5mm !important; }
+  body:not(.printing-topic) .usage-photo{ max-height:58mm !important; page-break-inside:avoid; break-inside:avoid; }
+  body:not(.printing-topic) .memo-svg{ max-width:150mm !important; page-break-inside:avoid; break-inside:avoid; }
+  body:not(.printing-topic) .usage-point{ background:#f4f4f4 !important; border-left:3px solid #666 !important; }
+  body:not(.printing-topic) .stretch-note{ background:#fff !important; color:#000 !important; border:1px solid #000; }
+  body:not(.printing-topic) .topic-visual-grid{ grid-template-columns:1fr 1fr 1fr !important; gap:4mm !important; }
   .tv-figure{ page-break-inside:avoid; break-inside:avoid; }
   .topic-visual{ max-height:46mm !important; page-break-inside:avoid; break-inside:avoid; }
   .tv-figure > .memo-svg{ max-height:46mm !important; max-width:none !important; background:#fff !important; }
@@ -869,7 +971,7 @@ body.projector-mode .usage-figure > img{ max-height:min(40vh,470px); }
     grid-template-columns:1fr 1fr !important; gap:5mm !important;
     page-break-inside:avoid; break-inside:avoid;
   }
-  .usage-figure > svg, .usage-figure > img{ max-height:62mm !important; }
+  body:not(.printing-topic) .usage-figure > svg, body:not(.printing-topic) .usage-figure > img{ max-height:62mm !important; }
 }
 
 /* ============ DRAG & DROP IMAGE OVERLAY (teaching aid) ============ */
@@ -991,7 +1093,7 @@ body.projector-mode .usage-figure > img{ max-height:min(40vh,470px); }
 @media print{
   .vfam-tabs, .vfam-subs, .vfam-listbar, .vfam-open{ display:none !important; }
   .vfam-verbs{ max-height:none !important; overflow:visible !important; }
-  .vfam-card{ grid-template-columns:1fr 1fr !important; page-break-inside:avoid; }
+  body:not(.printing-topic) .vfam-card{ grid-template-columns:1fr 1fr !important; page-break-inside:avoid; }
 }
 
 /* ============ LA LETTRE (Section B) — slide format ============ */
@@ -1032,8 +1134,8 @@ body.letter-en span.let-en{ display:inline; }
   .let-toggle{ display:none !important; }
   .let-en{ display:block !important; }
   .let-fig{ page-break-inside:avoid; break-inside:avoid; }
-  .let-fig > svg{ max-height:70mm !important; }
-  .let-cols{ grid-template-columns:1fr 1fr !important; }
+  body:not(.printing-topic) .let-fig > svg{ max-height:70mm !important; }
+  body:not(.printing-topic) .let-cols{ grid-template-columns:1fr 1fr !important; }
 }
 
 /* ============ NOMINALISATION — vocabulary cards ============ */
@@ -1071,7 +1173,7 @@ body.letter-en span.let-en{ display:inline; }
    the front rather than on top of it. */
 @media print{
   .nom-grid .flip-card{ height:auto !important; }
-  .nom-grid .flip-card-back{ border-top:1px dashed #999; margin-top:2px; }
+  body:not(.printing-topic) .nom-grid .flip-card-back{ border-top:1px dashed #999; margin-top:2px; }
   .nom-en{ opacity:1 !important; }
 }
 
@@ -1136,8 +1238,8 @@ body.letter-en .let-title, body.letter-en .let-sub{ display:none; }
   .let-paper .example-text{ font-size:clamp(.95rem, var(--let-fs,1.9vh), 1.25rem); }
 }
 @media print{
-  .let-paper, .let-focus{ max-width:100% !important; }
-  .let-paper .example-text, .let-paper .gloss, .let-table td, .let-note{ font-size:11pt !important; }
+  body:not(.printing-topic) .let-paper, body:not(.printing-topic) .let-focus{ max-width:100% !important; }
+  body:not(.printing-topic) .let-paper .example-text, body:not(.printing-topic) .let-paper .gloss, body:not(.printing-topic) .let-table td, body:not(.printing-topic) .let-note{ font-size:11pt !important; }
   .let-next{ display:none !important; }
 }
 /* ===== À RETENIR cards ===== */
@@ -1270,7 +1372,7 @@ body.letter-en .let-title, body.letter-en .let-sub{ display:none; }
 }
 @media print{
   .ls-call, .ls-step, .ls-phrase, .ls-tile{ break-inside:avoid; page-break-inside:avoid; }
-  .ls-fig > svg{ max-height:70mm !important; }
+  body:not(.printing-topic) .ls-fig > svg{ max-height:70mm !important; }
 }
 
 
@@ -1659,10 +1761,15 @@ body.projector-mode .lecon-slide .voc-head h3{ font-size:calc(1.12rem * var(--cu
 /* ---- print: a masked column must never print blank ---- */
 @media print{
   .voc-tools{ display:none !important; }
+  /* un-mask hidden vocabulary: the mask is a background and a shadow, so both go
+     in either job. Only the ink colour differs — black for the workbook, the
+     (light) theme colour on a colour page. */
   .voc-box.masked .voc-en,
-  .voc-box.masked .voc-en:not(.shown){
-    color:#000 !important; background:none !important; box-shadow:none !important;
-  }
+  .voc-box.masked .voc-en:not(.shown){ background:none !important; box-shadow:none !important; }
+  body:not(.printing-topic) .voc-box.masked .voc-en,
+  body:not(.printing-topic) .voc-box.masked .voc-en:not(.shown){ color:#000 !important; }
+  body.printing-topic .voc-box.masked .voc-en,
+  body.printing-topic .voc-box.masked .voc-en:not(.shown){ color:var(--text-main) !important; }
   .voc-box.masked .voc-en:not(.shown) *{ visibility:visible !important; }
   .audio-btn{ display:none !important; }
   .img-fallback{ border:1px solid #999; }
@@ -2024,7 +2131,7 @@ body.projector-mode .lecon-slide .quiz-progress-bar{ margin-bottom:4px; }
 
   <div class="settings-group">
     <label>Print</label>
-    <button class="print-topic-btn" id="printTopicBtn2">🖨️ Print this topic (A4)</button>
+    <button class="print-topic-btn" id="printTopicBtn2">🖨️ Print this topic</button>
     <button class="print-book-btn" id="printBookBtn">📚 Print complete workbook</button>
   </div>
 

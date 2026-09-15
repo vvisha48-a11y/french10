@@ -125,6 +125,119 @@ if (fs.existsSync(LECONS)){
     problems.push('[topbar] expected exactly one Print this topic control in docs/' + name + '.html');
 });
 
+// 4e. Print this topic: the label, the promise that BOTH roles keep it, and the
+//     print stylesheet the targeted job depends on.
+[['index', index], ['app', app]].forEach(pair => {
+  const name = pair[0], docHtml = pair[1];
+  const ps = docHtml.indexOf('id="settingsPanel"');
+  const panel = ps === -1 ? '' : docHtml.slice(ps, docHtml.indexOf('id="themeSelect"', ps));
+
+  /* --- the button --- */
+  const BTN = '<button class="print-topic-btn" id="printTopicBtn2">🖨️ Print this topic</button>';
+  if (docHtml.indexOf(BTN) === -1)
+    problems.push('[print] the button is not exactly "🖨️ Print this topic" in docs/' + name + '.html');
+  if (panel.indexOf('id="printTopicBtn2"') === -1)
+    problems.push('[print] #printTopicBtn2 is not inside #settingsPanel in docs/' + name + '.html');
+
+  /* --- no role gate. Students print too, so nothing may hide the control by
+         role: no role class between #settingsPanel and the button, and the
+         Firebase layer must never name it. --- */
+  const bi = docHtml.indexOf('id="printTopicBtn2"');
+  const above = (ps !== -1 && bi > ps) ? docHtml.slice(ps, bi) : '';
+  const gates = above.match(/\b(teacher-only|student-only|fb-gate|admin-only)\b/g) || [];
+  if (gates.length)
+    problems.push('[print] a role gate (' + gates.join(', ') + ') stands between #settingsPanel and ' +
+                  '#printTopicBtn2 in docs/' + name + '.html -- students must keep this button');
+
+  /* --- the print stylesheet --- */
+  if (/@media print\{html:not\(\.print-pdf\)/.test(docHtml))
+    problems.push('[print] Reveal\'s own paper.css is back in docs/' + name + '.html -- it forces 20pt black text and flattens the grids');
+  if (docHtml.indexOf('print-color-adjust:exact') === -1)
+    problems.push('[print] print-color-adjust:exact is missing from docs/' + name + '.html');
+  if (docHtml.indexOf('.student-only, .teacher-only{ display:block !important; }') !== -1)
+    problems.push('[print] the print block still forces both views visible in docs/' + name + '.html -- a student would print the answer key');
+  ['body.printing-topic .reveal .slides > section.print-target:not([data-topic="papers"]) > section{',
+   'width:auto !important; min-height:100vh !important; height:auto !important;',
+   'section.print-target[data-topic="papers"]',
+   'body.printing-topic .reveal .fragment{ opacity:1 !important; visibility:visible !important; transform:none !important; }',
+   '@page{ size:A4 landscape; margin:6mm; }'].forEach(need => {
+    if (docHtml.indexOf(need) === -1)
+      problems.push('[print] docs/' + name + '.html is missing the rule "' + need.slice(0, 56) + '..."');
+  });
+  /* the page box must stay in viewport units: they ARE the page area when printing,
+     to the pixel, and a box stated in mm rounds long and spills a blank sheet */
+  /* the workbook keeps the static portrait @page: only the topic print is landscape */
+  if ((docHtml.match(/@page{ size:A4 landscape/g) || []).length !== 1)
+    problems.push('[print] docs/' + name + '.html has more than one landscape @page');
+  if (docHtml.indexOf("PRINT_PAGE_RULE = '@page{ size:A4 landscape; margin:6mm; }'") === -1)
+    problems.push('[print] the landscape @page is not the engine-injected one in docs/' + name + '.html -- a stylesheet rule would turn the workbook landscape too');
+  if (docHtml.indexOf('@page{ size:A4; margin:12mm 12mm 14mm 12mm; }') === -1)
+    problems.push('[print] the workbook'+String.fromCharCode(39)+'s portrait @page is gone from docs/' + name + '.html');
+  const box = docHtml.slice(docHtml.indexOf('section.print-target:not([data-topic="papers"]) > section{'));
+  if (/\d+mm/.test(box.slice(0, 260)))
+    problems.push('[print] the page box in docs/' + name + '.html is stated in mm; use 100vw/100vh, which resolve against the page area');
+
+  /* --- the dark themes must not reach paper --- */
+  const darkRules = docHtml.match(/body\.theme-(cyber|slate)[^{,]*[ ,][^{]*\{/g) || [];
+  const unguarded = darkRules.filter(r => r.indexOf(':not(.printing-topic)') === -1);
+  if (unguarded.length)
+    problems.push('[print] ' + unguarded.length + ' dark-theme component rule(s) in docs/' + name +
+                  '.html lack :not(.printing-topic): ' + unguarded[0].trim());
+});
+
+/* the print palette is body.theme-classic, and may differ only where it says so */
+{
+  const grab = (src, sel) => {
+    const i = src.indexOf(sel);
+    if (i === -1) return null;
+    /* comments first: they carry ':' and would be read as declarations */
+    const body = src.slice(src.indexOf('{', i) + 1, src.indexOf('}', i)).replace(/\/\*[\s\S]*?\*\//g, '');
+    const out = {};
+    body.split(';').forEach(d => {
+      const c = d.indexOf(':');
+      if (c === -1) return;
+      const k = d.slice(0, c).trim();
+      if (k.indexOf('--') === 0) out[k] = d.slice(c + 1).trim();
+    });
+    return out;
+  };
+  const classic = grab(index, 'body.theme-classic{');
+  const print = grab(index, 'html body.printing-topic{');
+  const ALLOWED = { '--bg-gradient': 1, '--card-bg': 1, '--custom-text-color': 1, '--text-main': 1 };
+  if (!classic || !print) problems.push('[print] could not read the classic and print palettes');
+  else {
+    Object.keys(classic).forEach(k => {
+      if (!(k in print)) problems.push('[print] the print palette is missing ' + k + ' -- it would fall through to the screen theme');
+      else if (print[k] !== classic[k] && !ALLOWED[k])
+        problems.push('[print] ' + k + ' drifted from body.theme-classic: "' + print[k] + '" vs "' + classic[k] + '"');
+    });
+    Object.keys(print).forEach(k => {
+      if (!(k in classic) && !ALLOWED[k]) problems.push('[print] the print palette declares ' + k + ', which body.theme-classic does not');
+    });
+    console.log('  print palette    : ' + Object.keys(print).length + ' tokens from body.theme-classic, ' +
+                Object.keys(print).filter(k => print[k] !== classic[k]).length + ' deliberate differences');
+  }
+}
+
+/* the engine: one stack, and both listeners come off again */
+['function printTopic(){', 'stacks[Deck.getIndices().h]', "printPageStyle.id = 'printPageRule'",
+ "window.addEventListener('afterprint', endPrint, { once: true })",
+ 'window.removeEventListener(\'afterprint\', endPrint)'].forEach(need => {
+  if (index.indexOf(need) === -1) problems.push('[print] the engine lost "' + need + '"');
+});
+if (index.indexOf('t.indices.forEach(h => stacks[h].classList.add(\'print-target\'))') !== -1)
+  problems.push('[print] printTopic() still tags every stack of the topic, not the current one');
+
+/* the Firebase layer must never learn this button's name: it is what would make
+   printing an account-gated feature instead of one every student has */
+{
+  const fb = fs.readFileSync('C:/claude/10 th/build-system/firebase-layer.js', 'utf8');
+  ['printTopicBtn2', 'printing-topic', 'print-target'].forEach(t => {
+    if (fb.indexOf(t) !== -1)
+      problems.push('[print] firebase-layer.js references "' + t + '" -- printing must not depend on an account');
+  });
+}
+
 // 4c. the Teacher AI assistant, and the guarantee that turning it OFF changes nothing
 
 // it must never reach the offline student deck
