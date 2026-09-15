@@ -1,8 +1,9 @@
 // Integrity check for La Lettre (Section B), now that it ships as ordinary slides.
 //
 // Two load-bearing assertions:
-//   * the 17 model letters in letterdata.js are byte-identical to the baseline
-//     snapshot taken before any of this work (the user asked for them untouched);
+//   * every model letter in letterdata.js is byte-identical to the committed
+//     snapshot letters-baseline.json (the user asked for them untouched; a letter
+//     added or edited on purpose is re-baselined in the same commit);
 //   * every one of those letters is actually RENDERED into the slides, so a
 //     generator bug cannot quietly drop a letter while the data stays pristine.
 const fs = require('fs');
@@ -55,9 +56,27 @@ lessons.forEach(t => { if (slideIds.indexOf(sid(t.id)) === -1) problems.push(`[m
 letters.forEach(t => PARTS.forEach(p => { if (slideIds.indexOf(sid(t.id) + '-' + p) === -1) problems.push(`[missing] letter "${t.id}" has no "${p}" slide`); }));
 
 // 3. diagrams present and theme-safe
-let figs = (region.match(/class="let-fig"/g) || []).length;
+/* Counted per topic, not by wrapper class. A diagram used to arrive inside
+   <figure class="let-fig">; lessons.js now draws some lessons itself -- The Final
+   Checklist among them -- inside an .ls-slide with no figure around it, so counting
+   the class read a rendered diagram as missing. Each topic that declares a visual
+   must carry that diagram on its OWN slide, whichever renderer drew it. It is
+   matched on the SVG's aria-label: diagram()'s FR->EN pass rewrites >text< nodes
+   only, and a viewBox is shared by several diagrams. */
+const slideOf = id => {
+  const i = region.indexOf('data-slide-id="' + id + '"');
+  if (i < 0) return '';
+  const j = region.indexOf('data-slide-id=', i + 20);
+  return region.slice(i, j < 0 ? region.length : j);
+};
 const wantFigs = flat.filter(t => t.visual).length;
-if (figs !== wantFigs) problems.push(`[visual] ${figs} diagrams rendered, expected ${wantFigs}`);
+let figs = 0;
+flat.filter(t => t.visual && VISUALS[t.visual]).forEach(t => {
+  const own = VISUALS[t.visual]();
+  const mark = (own.match(/aria-label="[^"]*"/) || own.match(/viewBox="[^"]*"/) || [''])[0];
+  if (mark && slideOf(sid(t.id)).indexOf(mark) !== -1) figs++;
+  else problems.push(`[visual] "${t.id}" declares diagram "${t.visual}" but its slide does not carry it`);
+});
 flat.forEach(t => { if (t.visual && !VISUALS[t.visual]) problems.push(`[visual] "${t.id}" references unknown diagram "${t.visual}"`); });
 Object.keys(VISUALS).forEach(k => {
   const svg = VISUALS[k]();
@@ -81,9 +100,15 @@ if (html.indexOf('initLetterToggle()') === -1) problems.push('[toggle] initLette
 });
 
 // 6. THE GUARD: model letters unchanged, and actually rendered
-const BASE = process.env.LETTER_BASELINE || path.join(
-  'C:/Users/User/AppData/Local/Temp/claude/C--claude-10-th-1/62f545d8-bfc7-49be-a707-b19be96afab1/scratchpad',
-  'letters-baseline.json');
+/* The snapshot is committed beside this file. It used to live in a session's temp
+   scratchpad, which was cleaned up and left this guard unable to run at all.
+   Re-baselined 15 Sep 2026 with the user's approval: the 17 letters exactly as
+   committed (letterdata.js unchanged since the project upload) plus let-louvre.
+   Adding or editing a letter means regenerating it deliberately, in the SAME
+   commit, so the change shows up as a reviewable diff. From build-system/:
+     node -e "const f=require('fs'),s=f.readFileSync('letterdata.js','utf8'),D=JSON.parse(s.slice(s.indexOf('['),s.lastIndexOf(']')+1)),o={};D.forEach(g=>g.topics.forEach(t=>{if(t.kind==='letter')o[t.id]=JSON.stringify(t)}));f.writeFileSync('letters-baseline.json',JSON.stringify(o,null,2)+'\n')"
+   LETTER_BASELINE still overrides the path. */
+const BASE = process.env.LETTER_BASELINE || path.join(__dirname, 'letters-baseline.json');
 let drift = 0;
 if (fs.existsSync(BASE)){
   const base = JSON.parse(fs.readFileSync(BASE, 'utf8'));
@@ -116,8 +141,8 @@ letters.forEach(t => {
 // ---- report ----
 console.log('=== LA LETTRE — SLIDE FORMAT INTEGRITY ===');
 console.log('  stacks           :', marks.length, '(' + marks.map(x => x.sub).join(' · ') + ')');
-console.log('  slides           :', slideIds.length, '=', lessons.length, 'lessons +', letters.length, 'letters x 4');
-console.log('  diagrams         :', figs);
+console.log('  slides           :', slideIds.length, '=', lessons.length, 'lessons +', letters.length, 'letters x ' + PARTS.length);
+console.log('  diagrams         :', figs, '/', wantFigs, '(each on its own slide)');
 console.log('  FR/EN toggles    :', toggles);
 console.log('  model letters    :', letters.length, drift ? `(${drift} MODIFIED)` : '(byte-identical to baseline)');
 console.log('  letters rendered :', rendered, '/', letters.length);
