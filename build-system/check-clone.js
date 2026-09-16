@@ -164,16 +164,18 @@ if (fs.existsSync(LECONS)){
     if (docHtml.indexOf(need) === -1)
       problems.push('[print] docs/' + name + '.html is missing the rule "' + need.slice(0, 56) + '..."');
   });
-  /* strictly one sheet per slide. min-height let an oversized slide continue onto a
-     second sheet and break its boxes in half; the teacher chose to cut the bottom off
-     instead. Both the page box and the card inside it must be fixed and clipped. */
+  /* Strictly one sheet per slide, and the sheet is a scaled photo of the projector
+     view: the card is laid out at 1920x1334 and scaled by 0.561023 (= 1077.165/1920,
+     the measured A4-landscape page width over the layout width). Laying it out at
+     page size instead clipped text and boxes through the middle. min-height is
+     forbidden on either box -- it let an oversized slide run onto a second sheet. */
   const ruleBody = sel => {
     const i = docHtml.indexOf(sel);
     return i < 0 ? '' : docHtml.slice(i, docHtml.indexOf('}', i));
   };
   const pageBox = ruleBody('section.print-target:not([data-topic="papers"]) > section{');
   const pageCard = ruleBody('section.print-target:not([data-topic="papers"]) > section > .slide-card{');
-  [['page box', pageBox, 'height:100vh !important'], ['card', pageCard, 'height:100% !important']].forEach(([what, rule, h]) => {
+  [['page box', pageBox, 'height:100vh !important'], ['card', pageCard, 'height:1334px !important']].forEach(([what, rule, h]) => {
     if (!rule){ problems.push('[print] the ' + what + ' rule is missing from docs/' + name + '.html'); return; }
     if (/min-height/.test(rule))
       problems.push('[print] the ' + what + ' uses min-height in docs/' + name + '.html -- an oversized slide would spill onto a second sheet');
@@ -184,6 +186,17 @@ if (fs.existsSync(LECONS)){
   });
   if (pageBox && pageBox.indexOf('break-inside:avoid') === -1)
     problems.push('[print] the page box allows a break inside a slide in docs/' + name + '.html');
+  /* the three constants must stay in agreement, or the page is letterboxed or overflows */
+  [['width:1920px !important', 'the card is not laid out at the projector width'],
+   ['transform:scale(0.561023) !important', 'the card is not scaled by 1077.165/1920'],
+   ['transform-origin:top left !important', 'the card is not scaled from its top-left corner'],
+   ['position:absolute !important', 'the card is still in flow, so its 1920px box would widen the page']
+  ].forEach(([decl, why]) => {
+    if (pageCard && pageCard.indexOf(decl) === -1)
+      problems.push('[print] ' + why + ' in docs/' + name + '.html');
+  });
+  if (pageBox && pageBox.indexOf('position:relative !important') === -1)
+    problems.push('[print] the page box is not the positioning context for the scaled card in docs/' + name + '.html');
 
   /* The projector's columns must survive the page's own width. The A4-landscape
      page area is 1077px, so @media (max-width:1100px) fires on paper though never on

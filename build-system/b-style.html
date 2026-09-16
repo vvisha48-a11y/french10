@@ -559,26 +559,29 @@ body.printing-topic .reveal .slides > section.print-target > section{
   opacity:1 !important; visibility:visible !important;
 }
 @media print{
-  /* One sheet per slide, strictly -- the teacher's decision. Every slide is cut to
-     exactly one landscape page: nothing drops onto a following sheet and no box is
-     broken across two.
+  /* One sheet per slide, as a shrunk-down photo of the projector view.
+     The card is laid out at the projector's own width and then scaled onto the page,
+     so the printed slide is pixel-faithful to what the class sees. Laying it out at
+     page size instead made the taller slides overflow, and clipping them cut text
+     and boxes through the middle.
 
      The page box is 100vh tall because in paged media viewport units resolve against
      the PAGE AREA, not the window. Measured with headless Chrome: 100vw x 100vh
      printed as exactly 1077 x 748 px = 285 x 198 mm, the A4-landscape content box at
-     a 6mm margin, whatever paper or margin the dialog ends up using. The same box
-     stated in mm rounded 0.35px long and spilled a blank sheet. Width stays auto:
-     100vw is also right in print, but on screen it includes the scrollbar.
+     a 6mm margin. Hence three constants that belong together:
+       1920px          the projector width this deck is designed for
+       scale 0.561023  = 1077.165 / 1920 -- page width over layout width
+       1334px          = 748.346 / 0.561023 -- the layout height that scales to
+                         exactly one page, so the sheet is filled with no letterbox
+     Change one and all three must change; check-clone.js asserts each of them.
 
-     The card inside is fixed to the same height, overflow hidden. As a flex column
-     exactly one page tall, its contents shrink to fit the way they do on a short
-     screen, which is why most slides print whole with no scaling code at all. A
-     slide that still holds more than a page loses its bottom: an accepted trade-off,
-     chosen over min-height, which let it continue onto a second sheet and broke
-     boxes in half. */
+     The card is taken out of flow so its 1920px box cannot widen the page box, and
+     the page box keeps overflow:hidden for the two slides that hold more than even a
+     projector screen. Measured over 950 slides: 2 clipped, down from 64. */
   body.printing-topic .reveal .slides > section.print-target:not([data-topic="papers"]) > section{
     width:auto !important; height:100vh !important;
     padding:0 !important; margin:0 !important; overflow:hidden !important;
+    position:relative !important;
     background:var(--card-bg);
     page-break-after:always; break-after:page;
     page-break-inside:avoid; break-inside:avoid;
@@ -589,10 +592,13 @@ body.printing-topic .reveal .slides > section.print-target > section{
     page-break-after:avoid !important; break-after:avoid !important;
   }
   body.printing-topic .reveal .slides > section.print-target:not([data-topic="papers"]) > section > .slide-card{
-    width:100% !important; height:100% !important; max-width:none !important;
+    position:absolute !important; top:0 !important; left:0 !important;
+    width:1920px !important; height:1334px !important; max-width:none !important;
     margin:0 !important; border:none !important; border-radius:0 !important;
     box-shadow:none !important; overflow:hidden !important;
     background:var(--card-bg) !important;
+    transform-origin:top left !important;
+    transform:scale(0.561023) !important;
   }
   /* The projector's column layout, restated for the page.
      The A4-landscape page area is 1077px wide, so @media (max-width:1100px) -- 17
