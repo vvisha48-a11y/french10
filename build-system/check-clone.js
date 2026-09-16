@@ -185,6 +185,20 @@ if (fs.existsSync(LECONS)){
   if (pageBox && pageBox.indexOf('break-inside:avoid') === -1)
     problems.push('[print] the page box allows a break inside a slide in docs/' + name + '.html');
 
+  /* The projector's columns must survive the page's own width. The A4-landscape
+     page area is 1077px, so @media (max-width:1100px) fires on paper though never on
+     a 1920px projector, and would collapse every multi-column grid to one column --
+     which is what made boxes stack and slides lose their bottoms. Measured: 355
+     grids stacked before these restatements, 0 after. */
+  [['.two-columns', '1fr 1fr'],
+   ['.three-columns', '1fr 1fr 1fr'],
+   ['.usage-grid', 'minmax(0,1fr) minmax(0,1.05fr)'],
+   ['.topic-visual-grid', 'repeat(3,minmax(0,1fr))']].forEach(([sel, cols]) => {
+    if (docHtml.indexOf('body.printing-topic ' + sel + '{ grid-template-columns:' + cols + ' !important; }') === -1)
+      problems.push('[print] docs/' + name + '.html does not restate ' + sel +
+                    ' for the printed page -- at 1077px it would collapse to one column');
+  });
+
   /* the workbook keeps the static portrait @page: only the topic print is landscape */
   if ((docHtml.match(/@page{ size:A4 landscape/g) || []).length !== 1)
     problems.push('[print] docs/' + name + '.html has more than one landscape @page');

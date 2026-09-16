@@ -594,6 +594,40 @@ body.printing-topic .reveal .slides > section.print-target > section{
     box-shadow:none !important; overflow:hidden !important;
     background:var(--card-bg) !important;
   }
+  /* The projector's column layout, restated for the page.
+     The A4-landscape page area is 1077px wide, so @media (max-width:1100px) -- 17
+     blocks of it -- fires on paper although it never fires on a 1920px projector.
+     It collapses every multi-column grid to one column, which is what made boxes
+     stack on top of each other, pushed slides past their sheet and cost them their
+     bottoms. The workbook path already restates these for itself under
+     body:not(.printing-topic); this is the same thing for the topic print. Every
+     value is the class's own base declaration, not a new design. Measured over 950
+     slides: grids stacked 355 -> 0, slides clipped 282 -> 64.
+     Deliberately NOT restored: the same blocks also shrink figures (.usage-figure,
+     .let-fig, .photo-block) and .let-paper text. Those shrink content instead of
+     restructuring it, and putting them back would push more slides past the page. */
+  body.printing-topic .two-columns{ grid-template-columns:1fr 1fr !important; }
+  body.printing-topic .three-columns{ grid-template-columns:1fr 1fr 1fr !important; }
+  body.printing-topic .usage-grid{ grid-template-columns:minmax(0,1fr) minmax(0,1.05fr) !important; }
+  body.printing-topic .usage-layout{ grid-template-columns:minmax(0,1.05fr) minmax(0,1fr) !important; }
+  body.printing-topic .topic-visual-grid{ grid-template-columns:repeat(3,minmax(0,1fr)) !important; }
+  body.printing-topic .topic-visual-grid.four{ grid-template-columns:repeat(4,minmax(0,1fr)) !important; }
+  body.printing-topic .vfam-card{ grid-template-columns:minmax(0,240px) minmax(0,1fr) !important; }
+  body.printing-topic .hotspot{ grid-template-columns:minmax(0,1.25fr) minmax(0,1fr) !important; }
+  body.printing-topic .trier-buckets{ grid-template-columns:repeat(2,minmax(0,1fr)) !important; }
+  body.printing-topic .trier-buckets.three{ grid-template-columns:repeat(3,minmax(0,1fr)) !important; }
+  body.printing-topic .pm-grid{ grid-template-columns:repeat(4,minmax(0,1fr)) !important; }
+  body.printing-topic .pm-grid.three{ grid-template-columns:repeat(3,minmax(0,1fr)) !important; }
+  body.printing-topic .flip-card-grid{ grid-template-columns:repeat(4,1fr) !important; }
+  body.printing-topic .formula-pipeline{ grid-template-columns:1fr auto 1fr auto 1.2fr !important; }
+  body.printing-topic .ls-flow{ flex-direction:row !important; }
+  body.printing-topic .msg-sw-tabs{ flex-direction:row !important; }
+  body.printing-topic .msg-build-pool{ flex-direction:row !important; }
+  /* these two the breakpoint does not merely restack -- it deletes them from the page */
+  body.printing-topic .f-op{ display:block !important; }
+  body.printing-topic .rt-table th:last-child,
+  body.printing-topic .rt-table td:last-child{ display:table-cell !important; }
+
   /* Question Papers is the one stack a page box cannot hold: one card carrying 751
      questions. It flows across as many sheets as it needs, breaking between
      questions (papers-ui.js keeps .pl-q whole). */
