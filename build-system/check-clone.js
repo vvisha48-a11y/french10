@@ -157,15 +157,34 @@ if (fs.existsSync(LECONS)){
   if (docHtml.indexOf('.student-only, .teacher-only{ display:block !important; }') !== -1)
     problems.push('[print] the print block still forces both views visible in docs/' + name + '.html -- a student would print the answer key');
   ['body.printing-topic .reveal .slides > section.print-target:not([data-topic="papers"]) > section{',
-   'width:auto !important; min-height:100vh !important; height:auto !important;',
+   'width:auto !important; height:100vh !important;',
    'section.print-target[data-topic="papers"]',
    'body.printing-topic .reveal .fragment{ opacity:1 !important; visibility:visible !important; transform:none !important; }',
    '@page{ size:A4 landscape; margin:6mm; }'].forEach(need => {
     if (docHtml.indexOf(need) === -1)
       problems.push('[print] docs/' + name + '.html is missing the rule "' + need.slice(0, 56) + '..."');
   });
-  /* the page box must stay in viewport units: they ARE the page area when printing,
-     to the pixel, and a box stated in mm rounds long and spills a blank sheet */
+  /* strictly one sheet per slide. min-height let an oversized slide continue onto a
+     second sheet and break its boxes in half; the teacher chose to cut the bottom off
+     instead. Both the page box and the card inside it must be fixed and clipped. */
+  const ruleBody = sel => {
+    const i = docHtml.indexOf(sel);
+    return i < 0 ? '' : docHtml.slice(i, docHtml.indexOf('}', i));
+  };
+  const pageBox = ruleBody('section.print-target:not([data-topic="papers"]) > section{');
+  const pageCard = ruleBody('section.print-target:not([data-topic="papers"]) > section > .slide-card{');
+  [['page box', pageBox, 'height:100vh !important'], ['card', pageCard, 'height:100% !important']].forEach(([what, rule, h]) => {
+    if (!rule){ problems.push('[print] the ' + what + ' rule is missing from docs/' + name + '.html'); return; }
+    if (/min-height/.test(rule))
+      problems.push('[print] the ' + what + ' uses min-height in docs/' + name + '.html -- an oversized slide would spill onto a second sheet');
+    if (rule.indexOf(h) === -1)
+      problems.push('[print] the ' + what + ' is not fixed at ' + h + ' in docs/' + name + '.html');
+    if (rule.indexOf('overflow:hidden !important') === -1)
+      problems.push('[print] the ' + what + ' is not overflow:hidden in docs/' + name + '.html');
+  });
+  if (pageBox && pageBox.indexOf('break-inside:avoid') === -1)
+    problems.push('[print] the page box allows a break inside a slide in docs/' + name + '.html');
+
   /* the workbook keeps the static portrait @page: only the topic print is landscape */
   if ((docHtml.match(/@page{ size:A4 landscape/g) || []).length !== 1)
     problems.push('[print] docs/' + name + '.html has more than one landscape @page');
@@ -173,6 +192,8 @@ if (fs.existsSync(LECONS)){
     problems.push('[print] the landscape @page is not the engine-injected one in docs/' + name + '.html -- a stylesheet rule would turn the workbook landscape too');
   if (docHtml.indexOf('@page{ size:A4; margin:12mm 12mm 14mm 12mm; }') === -1)
     problems.push('[print] the workbook'+String.fromCharCode(39)+'s portrait @page is gone from docs/' + name + '.html');
+  /* the page box must stay in viewport units: they ARE the page area when printing,
+     to the pixel, and a box stated in mm rounds long and spills a blank sheet */
   const box = docHtml.slice(docHtml.indexOf('section.print-target:not([data-topic="papers"]) > section{'));
   if (/\d+mm/.test(box.slice(0, 260)))
     problems.push('[print] the page box in docs/' + name + '.html is stated in mm; use 100vw/100vh, which resolve against the page area');

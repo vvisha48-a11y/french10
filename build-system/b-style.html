@@ -559,27 +559,29 @@ body.printing-topic .reveal .slides > section.print-target > section{
   opacity:1 !important; visibility:visible !important;
 }
 @media print{
-  /* One page per slide. In paged media viewport units resolve against the PAGE
-     AREA, not the window — measured with headless Chrome: 100vw x 100vh printed as
-     exactly 1077 x 748 px = 285 x 198 mm, the A4-landscape content box at a 6mm
-     margin. So 100vw/100vh IS the page, to the pixel, whatever paper or margin the
-     100vw would be right too, but on screen it includes the scrollbar; in the flow
-     these sections are in, width:auto is the same page width and immune to that.
-     dialog ends up using; stating the same box in mm rounded 0.35px long and spilled
-     a hairline onto a blank twelfth sheet. It is also why nothing here scales the
-     slides: the deck's own responsive CSS fits a page exactly as it fits a window.
+  /* One sheet per slide, strictly -- the teacher's decision. Every slide is cut to
+     exactly one landscape page: nothing drops onto a following sheet and no box is
+     broken across two.
 
-     min-height, not height, and overflow visible: measured at the page's own size,
-     66 of the deck's 945 slides hold more than a landscape page can show (Model
-     Messages worst, by 1332px). A fixed box would cut those off, so a slide that
-     does not fit continues onto a second sheet instead. The other 879 are exactly
-     one page each, and every slide still starts on a fresh one. */
+     The page box is 100vh tall because in paged media viewport units resolve against
+     the PAGE AREA, not the window. Measured with headless Chrome: 100vw x 100vh
+     printed as exactly 1077 x 748 px = 285 x 198 mm, the A4-landscape content box at
+     a 6mm margin, whatever paper or margin the dialog ends up using. The same box
+     stated in mm rounded 0.35px long and spilled a blank sheet. Width stays auto:
+     100vw is also right in print, but on screen it includes the scrollbar.
+
+     The card inside is fixed to the same height, overflow hidden. As a flex column
+     exactly one page tall, its contents shrink to fit the way they do on a short
+     screen, which is why most slides print whole with no scaling code at all. A
+     slide that still holds more than a page loses its bottom: an accepted trade-off,
+     chosen over min-height, which let it continue onto a second sheet and broke
+     boxes in half. */
   body.printing-topic .reveal .slides > section.print-target:not([data-topic="papers"]) > section{
-    width:auto !important; min-height:100vh !important; height:auto !important;
-    padding:0 !important; margin:0 !important; overflow:visible !important;
+    width:auto !important; height:100vh !important;
+    padding:0 !important; margin:0 !important; overflow:hidden !important;
     background:var(--card-bg);
     page-break-after:always; break-after:page;
-    page-break-inside:auto; break-inside:auto;
+    page-break-inside:avoid; break-inside:avoid;
   }
   /* no trailing blank sheet after the stack, or after its last slide */
   body.printing-topic .reveal .slides > section.print-target,
@@ -587,9 +589,9 @@ body.printing-topic .reveal .slides > section.print-target > section{
     page-break-after:avoid !important; break-after:avoid !important;
   }
   body.printing-topic .reveal .slides > section.print-target:not([data-topic="papers"]) > section > .slide-card{
-    width:100% !important; min-height:100vh !important; height:auto !important; max-width:none !important;
+    width:100% !important; height:100% !important; max-width:none !important;
     margin:0 !important; border:none !important; border-radius:0 !important;
-    box-shadow:none !important; overflow:visible !important;
+    box-shadow:none !important; overflow:hidden !important;
     background:var(--card-bg) !important;
   }
   /* Question Papers is the one stack a page box cannot hold: one card carrying 751
