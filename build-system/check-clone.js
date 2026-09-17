@@ -156,74 +156,30 @@ if (fs.existsSync(LECONS)){
     problems.push('[print] print-color-adjust:exact is missing from docs/' + name + '.html');
   if (docHtml.indexOf('.student-only, .teacher-only{ display:block !important; }') !== -1)
     problems.push('[print] the print block still forces both views visible in docs/' + name + '.html -- a student would print the answer key');
-  ['body.printing-topic .reveal .slides > section.print-target:not([data-topic="papers"]) > section{',
-   'width:auto !important; height:100vh !important;',
-   'section.print-target[data-topic="papers"]',
-   'body.printing-topic .reveal .fragment{ opacity:1 !important; visibility:visible !important; transform:none !important; }',
-   '@page{ size:A4 landscape; margin:6mm; }'].forEach(need => {
+  ['body.printing-topic .reveal .slides > section:not(.print-target){ display:none !important; }',
+   'height:auto !important; max-width:100% !important; width:100% !important; overflow:visible !important;',
+   'body.printing-topic .slide-card{ border:1px solid var(--card-border) !important; background:var(--card-bg) !important; }',
+   'body:not(.printing-topic){ background:#fff !important; color:#000 !important; }',
+   '@page{ size:A4; margin:12mm 12mm 14mm 12mm; }'].forEach(need => {
     if (docHtml.indexOf(need) === -1)
       problems.push('[print] docs/' + name + '.html is missing the rule "' + need.slice(0, 56) + '..."');
   });
-  /* Strictly one sheet per slide, and the sheet is a scaled photo of the projector
-     view: the card is laid out at 1920x1334 and scaled by 0.561023 (= 1077.165/1920,
-     the measured A4-landscape page width over the layout width). Laying it out at
-     page size instead clipped text and boxes through the middle. min-height is
-     forbidden on either box -- it let an oversized slide run onto a second sheet. */
-  const ruleBody = sel => {
-    const i = docHtml.indexOf(sel);
-    return i < 0 ? '' : docHtml.slice(i, docHtml.indexOf('}', i));
-  };
-  const pageBox = ruleBody('section.print-target:not([data-topic="papers"]) > section{');
-  const pageCard = ruleBody('section.print-target:not([data-topic="papers"]) > section > .slide-card{');
-  [['page box', pageBox, 'height:100vh !important'], ['card', pageCard, 'height:1334px !important']].forEach(([what, rule, h]) => {
-    if (!rule){ problems.push('[print] the ' + what + ' rule is missing from docs/' + name + '.html'); return; }
-    if (/min-height/.test(rule))
-      problems.push('[print] the ' + what + ' uses min-height in docs/' + name + '.html -- an oversized slide would spill onto a second sheet');
-    if (rule.indexOf(h) === -1)
-      problems.push('[print] the ' + what + ' is not fixed at ' + h + ' in docs/' + name + '.html');
-    if (rule.indexOf('overflow:hidden !important') === -1)
-      problems.push('[print] the ' + what + ' is not overflow:hidden in docs/' + name + '.html');
+  /* The topic print flows like a plain Ctrl+P: same dense portrait layout, in colour.
+     Nothing may reimpose the strict one-sheet geometry that used to live here -- a
+     page box, a 1920px card, a transform scale or an injected landscape @page. */
+  [['width:1920px', 'the 1920px card lock is back'],
+   ['transform:scale(0.561023)', 'the projector scale transform is back'],
+   ['height:1334px', 'the scaled layout height is back'],
+   ['size:A4 landscape', 'a landscape @page is back'],
+   ['PRINT_PAGE_RULE', 'the engine injects an @page again'],
+   ['print-target:not([data-topic="papers"])', 'a per-slide page box is back']
+  ].forEach(([needle, why]) => {
+    if (docHtml.indexOf(needle) !== -1)
+      problems.push('[print] ' + why + ' in docs/' + name + '.html -- the topic print must flow, not paginate');
   });
-  if (pageBox && pageBox.indexOf('break-inside:avoid') === -1)
-    problems.push('[print] the page box allows a break inside a slide in docs/' + name + '.html');
-  /* the three constants must stay in agreement, or the page is letterboxed or overflows */
-  [['width:1920px !important', 'the card is not laid out at the projector width'],
-   ['transform:scale(0.561023) !important', 'the card is not scaled by 1077.165/1920'],
-   ['transform-origin:top left !important', 'the card is not scaled from its top-left corner'],
-   ['position:absolute !important', 'the card is still in flow, so its 1920px box would widen the page']
-  ].forEach(([decl, why]) => {
-    if (pageCard && pageCard.indexOf(decl) === -1)
-      problems.push('[print] ' + why + ' in docs/' + name + '.html');
-  });
-  if (pageBox && pageBox.indexOf('position:relative !important') === -1)
-    problems.push('[print] the page box is not the positioning context for the scaled card in docs/' + name + '.html');
-
-  /* The projector's columns must survive the page's own width. The A4-landscape
-     page area is 1077px, so @media (max-width:1100px) fires on paper though never on
-     a 1920px projector, and would collapse every multi-column grid to one column --
-     which is what made boxes stack and slides lose their bottoms. Measured: 355
-     grids stacked before these restatements, 0 after. */
-  [['.two-columns', '1fr 1fr'],
-   ['.three-columns', '1fr 1fr 1fr'],
-   ['.usage-grid', 'minmax(0,1fr) minmax(0,1.05fr)'],
-   ['.topic-visual-grid', 'repeat(3,minmax(0,1fr))']].forEach(([sel, cols]) => {
-    if (docHtml.indexOf('body.printing-topic ' + sel + '{ grid-template-columns:' + cols + ' !important; }') === -1)
-      problems.push('[print] docs/' + name + '.html does not restate ' + sel +
-                    ' for the printed page -- at 1077px it would collapse to one column');
-  });
-
-  /* the workbook keeps the static portrait @page: only the topic print is landscape */
-  if ((docHtml.match(/@page{ size:A4 landscape/g) || []).length !== 1)
-    problems.push('[print] docs/' + name + '.html has more than one landscape @page');
-  if (docHtml.indexOf("PRINT_PAGE_RULE = '@page{ size:A4 landscape; margin:6mm; }'") === -1)
-    problems.push('[print] the landscape @page is not the engine-injected one in docs/' + name + '.html -- a stylesheet rule would turn the workbook landscape too');
-  if (docHtml.indexOf('@page{ size:A4; margin:12mm 12mm 14mm 12mm; }') === -1)
-    problems.push('[print] the workbook'+String.fromCharCode(39)+'s portrait @page is gone from docs/' + name + '.html');
-  /* the page box must stay in viewport units: they ARE the page area when printing,
-     to the pixel, and a box stated in mm rounds long and spills a blank sheet */
-  const box = docHtml.slice(docHtml.indexOf('section.print-target:not([data-topic="papers"]) > section{'));
-  if (/\d+mm/.test(box.slice(0, 260)))
-    problems.push('[print] the page box in docs/' + name + '.html is stated in mm; use 100vw/100vh, which resolve against the page area');
+  /* and the workbook's ink must not leak into the colour path */
+  if (docHtml.indexOf('body:not(.printing-topic) .slide-card{ border:1px solid #bbb !important; background:#fff !important; }') === -1)
+    problems.push('[print] the workbook card ink is no longer scoped away from the topic print in docs/' + name + '.html');
 
   /* --- the dark themes must not reach paper --- */
   const darkRules = docHtml.match(/body\.theme-(cyber|slate)[^{,]*[ ,][^{]*\{/g) || [];
@@ -268,7 +224,7 @@ if (fs.existsSync(LECONS)){
 }
 
 /* the engine: one stack, and both listeners come off again */
-['function printTopic(){', 'stacks[Deck.getIndices().h]', "printPageStyle.id = 'printPageRule'",
+['function printTopic(){', 'stacks[Deck.getIndices().h]',
  "window.addEventListener('afterprint', endPrint, { once: true })",
  'window.removeEventListener(\'afterprint\', endPrint)'].forEach(need => {
   if (index.indexOf(need) === -1) problems.push('[print] the engine lost "' + need + '"');

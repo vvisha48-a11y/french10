@@ -598,15 +598,12 @@ function openSearch(){
    display:none, so they reach the spooler as no boxes at all and add no pages.
 
    Reveal's own state is never touched: two classes go on, two come off, and
-   Deck.layout() re-measures afterwards. The @page rule is injected rather than
-   written into the stylesheet because @page takes no selectors — it cannot be
-   scoped to a body class, and editing the static one would turn the workbook
-   landscape too. Nothing scales the slides: viewport units resolve against the
-   page area when printing, so the deck's own responsive CSS fits an A4 landscape
-   page exactly as it fits a 1077x748 window. */
-const PRINT_PAGE_RULE = '@page{ size:A4 landscape; margin:6mm; }';
+   Deck.layout() re-measures afterwards. This function only ISOLATES; it imposes no
+   page geometry at all. The topic flows down the portrait sheet under the static
+   @page in b-style.html, exactly as a plain Ctrl+P does, so a tall card simply
+   breaks across sheets. An earlier version injected a landscape @page and scaled
+   each slide to one sheet; that was removed deliberately. */
 let printCleanup = null;
-let printPageStyle = null;   /* the injected <style>, held by reference: it is never in the markup */
 
 function armPrint(){
   /* attached per job and removed by endPrint(), so printing twice in a session
@@ -625,7 +622,6 @@ function armPrint(){
 }
 function endPrint(){
   if (printCleanup){ printCleanup(); printCleanup = null; }   /* idempotent: a second call no-ops */
-  if (printPageStyle){ printPageStyle.remove(); printPageStyle = null; }
   document.body.classList.remove('printing-topic');
   document.body.classList.remove('printing-book');
   $$('.print-target').forEach(s => s.classList.remove('print-target'));
@@ -637,12 +633,9 @@ function printTopic(){
   if (!stack) return;
   stack.classList.add('print-target');
   document.body.classList.add('printing-topic');
-  printPageStyle = document.createElement('style');
-  printPageStyle.id = 'printPageRule';        /* named so it is obvious in devtools */
-  printPageStyle.textContent = PRINT_PAGE_RULE;
-  document.head.appendChild(printPageStyle);
+  /* slides, not pages: the stack flows, so the sheet count is the printer's to decide */
   const n = stack.querySelectorAll(':scope > section').length || 1;
-  showToast('🖨️ Preparing ' + n + ' page' + (n === 1 ? '' : 's') + '…');
+  showToast('🖨️ Preparing ' + n + ' slide' + (n === 1 ? '' : 's') + '…');
   armPrint();
 }
 function printBook(){
