@@ -233,10 +233,11 @@ const noFig = PAPERS.filter(p => !PHOTOS[p.id] && !ILLUS[p.id]).map(p => p.id);
 if (noFig.length) problems.push('[img] no figure for: ' + noFig.join(', '));
 else notes.push('every paper has a figure: ' + Object.keys(PHOTOS).length + ' from the PDFs, ' +
   Object.keys(ILLUS).length + ' drawn here and labelled as added');
-/* an external <img src> would be a network fetch, which the offline gate bans */
+/* the source figures stay data URIs so the standalone papers lab remains one
+   self-contained file; the deck build moves them out to docs/images/ */
 Object.keys(PHOTOS).forEach(k => {
   if (PHOTOS[k].src.indexOf('data:image/') !== 0)
-    problems.push('[img] PHOTOS["' + k + '"] is not a data URI — docs/index.html must stay offline');
+    problems.push('[img] PHOTOS["' + k + '"] is not a data URI — the standalone lab would lose its figure');
 });
 
 /* ---- 12. the old popover must not half-survive ---- */
@@ -255,13 +256,18 @@ if (UI_SRC.indexOf('function renderNav()') === -1)
 {
   const UI2 = require('./papers-ui.js');
   const PAGE2 = UI2.PAGE(PAPERS);
+  /* The deck's copy has been through externalize-images.js, which moves the four
+     paper figures out to docs/images/. Apply the same pure, deterministic transform
+     to the source markup, so byte-for-byte still means "no drift". The standalone
+     lab keeps its figures embedded and is compared against PAGE2 itself. */
+  const PAGE2_DECK = require('./externalize-images.js').externalize(PAGE2).html;
   const HOSTS = [['docs/index.html', INDEX], ['docs/app.html', 'C:/claude/10 th/docs/app.html']];
   HOSTS.forEach(([name, file]) => {
     if (!fs.existsSync(file)){ problems.push('[deck] ' + name + ' is missing -- run build.sh'); return; }
     const h = fs.readFileSync(file, 'utf8');
     if (h.indexOf(UI2.CSS) === -1) problems.push('[drift] ' + name + ' does not carry the papers-ui.js CSS byte-for-byte');
     if (h.indexOf(UI2.JS) === -1)  problems.push('[drift] ' + name + ' does not carry the papers-ui.js engine byte-for-byte');
-    if (h.indexOf(PAGE2) === -1)   problems.push('[drift] ' + name + ' does not carry the papers page markup byte-for-byte -- rebuild after gen-papers.js');
+    if (h.indexOf(PAGE2_DECK) === -1) problems.push('[drift] ' + name + ' does not carry the papers page markup byte-for-byte -- rebuild after gen-papers.js');
 
     /* the button: Messages' class exactly, and no dropdown caret */
     const b = h.match(/<button class="([^"]*)" id="papersBtn"[^>]*>([^<]*)<\/button>/);

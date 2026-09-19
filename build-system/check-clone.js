@@ -5,7 +5,7 @@
 // proves the Firebase work did not disturb a single slide, style or script of the
 // presentation -- a promise no amount of eyeballing can make.
 //
-// Run after build.sh. check-offline.js still guards docs/index.html separately.
+// Run after build.sh. check-images.js guards the external photos separately.
 const fs = require('fs');
 const path = require('path');
 const FB = require('./firebase-layer.js');
@@ -23,13 +23,13 @@ const master = fs.readFileSync(MASTER, 'utf8');
 const index  = fs.readFileSync(INDEX, 'utf8');
 const app    = fs.readFileSync(APP, 'utf8');
 
-// 1. the published offline deck is the built deck
-if (master !== index) problems.push('[offline] docs/index.html differs from master-grammar-app.html');
+// 1. the published deck is the built deck
+if (master !== index) problems.push('[deck] docs/index.html differs from master-grammar-app.html');
 
-// 2. the offline deck carries no trace of Firebase
+// 2. the plain deck (docs/index.html) carries no trace of Firebase
 ['firebase', 'fbGate', 'gstatic.com/firebasejs'].forEach(t => {
   if (index.toLowerCase().indexOf(t.toLowerCase()) !== -1)
-    problems.push('[offline] docs/index.html contains "' + t + '" -- it must stay Firebase-free');
+    problems.push('[deck] docs/index.html contains "' + t + '" -- it must stay Firebase-free');
 });
 
 // 3. THE GUARD: the clone is the deck plus a removable layer, nothing else
@@ -90,7 +90,7 @@ if (app.indexOf('spinPick') !== -1 && app.indexOf('stopImmediatePropagation') ==
     if (docHtml.indexOf('data-topic="' + k + '"') === -1)
       problems.push('[lecons] lesson ' + k + ' is missing from docs/' + name + '.html');
   });
-  // THE GUARD: every photo must be embedded, or the offline promise is broken
+  // THE GUARD: every photo is served from this site, never hot-linked from Wikimedia
   const wm = (docHtml.match(/upload.wikimedia.org/g) || []).length;
   if (wm) problems.push('[lecons] docs/' + name + '.html still has ' + wm + ' wikimedia reference(s)');
   // the lesson CSS must never be able to restyle a grammar slide in projector mode

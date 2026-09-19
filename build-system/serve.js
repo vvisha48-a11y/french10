@@ -1,7 +1,8 @@
 // Minimal static server for previewing the built deck locally.
 const http=require('http'),fs=require('fs'),path=require('path');
 const ROOT='C:/claude/10 th/docs';
-const MIME={'.html':'text/html; charset=utf-8','.js':'text/javascript','.css':'text/css'};
+const MIME={'.html':'text/html; charset=utf-8','.js':'text/javascript','.css':'text/css',
+  '.jpg':'image/jpeg','.jpeg':'image/jpeg','.png':'image/png','.webp':'image/webp','.gif':'image/gif','.svg':'image/svg+xml'};
 http.createServer((req,res)=>{
   const f=path.join(ROOT,(req.url.split('?')[0]==='/'?'/index.html':req.url.split('?')[0]));
   fs.readFile(f,(e,b)=>{

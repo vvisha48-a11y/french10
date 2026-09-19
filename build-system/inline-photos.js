@@ -1,6 +1,7 @@
 // Inline @@PHOTO:<id>@@ tokens in the assembled app as base64 data URIs.
 // Keeps the u-*.html source parts small and human-editable while the shipped
-// file stays fully self-contained / offline-capable (no external image hosts).
+// photos come only from local files, never an external image host.
+// (externalize-images.js later moves every embedded photo out to docs/images/.)
 // Run by build.sh after assembly.
 const fs = require('fs');
 const path = require('path');
@@ -41,10 +42,11 @@ if (missing.length) {
   process.exit(1);
 }
 
-// Offline gate: no external image host may survive into the shipped file.
-const ext = html.match(/<img[^>]+src="(?!data:)[^"]*"/g);
+// Hot-link guard: no photo may point at another host. The single-offline-file
+// rule is gone (the deck is online-only), but the photos are still ours to serve.
+const ext = html.match(/<img[^>]+src="https?:\/\/[^"]*"/g);
 if (ext) {
-  console.error('  EXTERNAL IMG SRC :', ext.length, '->', ext.slice(0, 3).join(' | '));
+  console.error('  HOT-LINKED IMG   :', ext.length, '->', ext.slice(0, 3).join(' | '));
   process.exit(1);
 }
-console.log('  offline gate     : ok (all <img> are data: URIs)');
+console.log('  hot-link guard   : ok (no photo points at another host)');

@@ -5,7 +5,8 @@ build-system/vendor/
 /1oth/
 /6 LESSON/
 /letters 10 mark questions/
-/new plan/
+/new plan/*
+!/new plan/verbs.md
 /previous year question papers/
 /syllabus plan/
 /.agents/
@@ -15,7 +16,6 @@ build-system/vendor/
 /*.md
 /*.csv
 /master-grammar-app.html.bak5
-/Les Verbes - Tous les Temps.html
 /articles-contractes.html
 /exercices-les-trois-futurs.html
 /exercices_temps_futur.html

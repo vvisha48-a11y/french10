@@ -1,5 +1,6 @@
-// Embed the 85 vocabulary photos into the built deck as data: URIs, so the
-// shipped file makes ZERO network requests and check-offline.js stays green.
+// Embed the 85 vocabulary photos into the built deck as data: URIs, from local
+// downscaled copies -- never hot-linked. externalize-images.js then moves every
+// embedded photo out to docs/images/ for lazy loading.
 //
 //   node inline-lecon-photos.js            # build step: download-if-needed, then rewrite
 //   node inline-lecon-photos.js --refresh  # re-download everything
@@ -172,7 +173,7 @@ function totalBase64(dir) {
 
   const left = (html.match(/upload\.wikimedia\.org/g) || []).length;
   if (left) {
-    console.error('  ' + left + ' wikimedia reference(s) survived — the offline gate would fail');
+    console.error('  ' + left + ' wikimedia reference(s) survived — photos are served from this site, never hot-linked');
     process.exit(1);
   }
 

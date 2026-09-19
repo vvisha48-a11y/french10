@@ -628,20 +628,61 @@ function endPrint(){
   if (window.Deck && Deck.layout) Deck.layout();
 }
 
+/* Photos are files that Reveal lazy-loads as their slide comes near, and the
+   spooler does not wait for a download -- so a print job fetches every photo it
+   will put on paper BEFORE the dialog opens. Each is promoted from data-src to src
+   exactly as Reveal does it, and forced eager, because loading="lazy" would hold
+   back photos on slides that are not on screen. The dialog opens once all have
+   loaded or failed, or when the time runs out. A loaded photo stays loaded:
+   Reveal only ever unloads video, audio and iframes. */
+function fetchPhotos(scope, timeoutMs){
+  const pending = [];
+  $$('img', scope).forEach(img => {
+    img.loading = 'eager';
+    if (img.hasAttribute('data-src')){
+      img.setAttribute('src', img.getAttribute('data-src'));
+      img.setAttribute('data-lazy-loaded', '');
+      img.removeAttribute('data-src');
+    }
+    /* complete already means loaded, or already failed: neither is worth a wait */
+    if (!img.complete) pending.push(new Promise(done => {
+      img.addEventListener('load', done, { once: true });
+      img.addEventListener('error', done, { once: true });
+    }));
+  });
+  const ready = pending.length
+    ? Promise.race([Promise.all(pending), new Promise(done => setTimeout(done, timeoutMs))])
+    : Promise.resolve();
+  return { waiting: pending.length, ready };
+}
+
 function printTopic(){
   const stack = stacks[Deck.getIndices().h];
   if (!stack) return;
-  stack.classList.add('print-target');
-  document.body.classList.add('printing-topic');
   /* slides, not pages: the stack flows, so the sheet count is the printer's to decide */
   const n = stack.querySelectorAll(':scope > section').length || 1;
-  showToast('🖨️ Preparing ' + n + ' slide' + (n === 1 ? '' : 's') + '…');
-  armPrint();
+  const photos = fetchPhotos(stack, 20000);
+  showToast(photos.waiting
+    ? '🖨️ Loading ' + photos.waiting + ' photo' + (photos.waiting === 1 ? '' : 's') + '…'
+    : '🖨️ Preparing ' + n + ' slide' + (n === 1 ? '' : 's') + '…');
+  /* isolate only once the photos are in, so the deck is not left half-hidden on
+     screen while they download */
+  photos.ready.then(() => {
+    stack.classList.add('print-target');
+    document.body.classList.add('printing-topic');
+    armPrint();
+  });
 }
 function printBook(){
-  document.body.classList.add('printing-book');
-  showToast('📚 Preparing complete workbook…');
-  armPrint();
+  /* the whole deck: every photo, so a far longer allowance */
+  const photos = fetchPhotos($('#slidesRoot'), 60000);
+  showToast(photos.waiting
+    ? '📚 Loading ' + photos.waiting + ' photos for the workbook…'
+    : '📚 Preparing complete workbook…');
+  photos.ready.then(() => {
+    document.body.classList.add('printing-book');
+    armPrint();
+  });
 }
 
 /* ---------------- Live edit ---------------- */
@@ -669,11 +710,34 @@ function addElement(kind){
   card.appendChild(el);
   showToast('➕ Element added');
 }
+/* A card's markup as it should be stored, not as it happens to look right now.
+   Photos are lazy-loaded files, so a live card carries runtime state: a src and
+   data-lazy-loaded where Reveal (or a print job) has fetched the photo, a fallback
+   caption where one failed, and the fallback system's own markers. Saving that
+   would bring it all back on every later boot -- eager downloads and stale
+   "photo unavailable" cards -- so it is put back to what the build shipped. */
+function cardForStorage(card){
+  const c = card.cloneNode(true);
+  $$('.img-fallback', c).forEach(d => d.remove());
+  $$('img', c).forEach(img => {
+    if (img.hasAttribute('data-lazy-loaded')){
+      const src = img.getAttribute('src');
+      if (src) img.setAttribute('data-src', src);
+      img.removeAttribute('src');
+      img.removeAttribute('data-lazy-loaded');
+    }
+    img.classList.remove('is-missing');
+    if (!img.classList.length) img.removeAttribute('class');
+    ['data-fb-done', 'data-fb-wired', 'data-fb-watch'].forEach(a => img.removeAttribute(a));
+    if (img.getAttribute('loading') === 'eager') img.removeAttribute('loading');
+  });
+  return c.innerHTML;
+}
 function saveEdits(){
   const edits = {};
   $$('#slidesRoot section[data-slide-id]').forEach(s => {
     const card = s.querySelector('.slide-card');
-    if (card) edits[s.dataset.slideId] = card.innerHTML;
+    if (card) edits[s.dataset.slideId] = cardForStorage(card);
   });
   ls.setJSON('slide_edits', edits);
   showToast('✅ Text saved');
@@ -1565,7 +1629,10 @@ function initPhotoFallback(){
     img.dataset.fbWired = '1';
     img.addEventListener('error', () => photoSwap(img));
     img.addEventListener('load', () => { if (img.naturalWidth > 0) photoRestore(img); });
-    if (img.complete && img.naturalWidth === 0) photoSwap(img);   /* failed before wiring */
+    /* An <img> with no src yet counts as complete with a naturalWidth of 0, and every
+       lazy photo starts that way -- data-src only, until Reveal reaches its stack.
+       Only a photo that has actually been given a src can have failed. */
+    if (img.hasAttribute('src') && img.complete && img.naturalWidth === 0) photoSwap(img);   /* failed before wiring */
   });
 
   /* A watchdog, but only for the slide actually on screen. A dead link fires
@@ -1578,6 +1645,7 @@ function initPhotoFallback(){
   if (!cur) return;
   $$('img[data-fb]', cur).forEach(img => {
     if (img.dataset.fbWatch || img.dataset.fbDone) return;
+    if (!img.hasAttribute('src')) return;   /* not requested yet: armed on a later call */
     if (img.complete && img.naturalWidth > 0) return;
     img.dataset.fbWatch = '1';
     const t = setTimeout(() => {

@@ -1,8 +1,8 @@
 // The images the papers actually print, cropped out of the original PDFs.
 //
-// Generated once and committed, so a rebuild never re-renders a PDF and the deck
-// stays offline: these are data URIs because check-offline.js bans any network
-// fetch from docs/index.html, and an external <img src> is one.
+// Generated once and committed, so a rebuild never re-renders a PDF. They stay
+// data URIs here so the standalone papers lab remains one self-contained file;
+// the deck build moves them out to docs/images/ (externalize-images.js).
 //
 // Extracted by rendering the page with pdfjs-dist + @napi-rs/canvas at 2.4x and
 // cropping the figure. Rendering rather than pulling the XObject is deliberate:

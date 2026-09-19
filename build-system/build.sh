@@ -66,19 +66,25 @@ cat "$SP/d-mid.html" >> "$OUT"
 sed -n '869p' "$SRC" >> "$OUT"
 cat "$SP/e-engine.html" >> "$OUT"
 
-# Inline @@PHOTO:id@@ tokens as base64 data URIs (keeps the output offline-capable)
+# Inline @@PHOTO:id@@ tokens as base64 data URIs (externalize-images.js moves them out later)
 # Splice Usage slides in after each Description slide (additive; sources untouched)
 node "$SP/insert-usages.js"
 
 # Lesson photos: downloaded once into vendor/, downscaled, embedded as data: URIs
-# so the shipped file still makes zero network requests.
+# (never hot-linked; externalize-images.js moves them out to docs/images/ below).
 node "$SP/inline-lecon-photos.js"
 
 node "$SP/inline-photos.js"
 
 
-# Inline the last external deps (Google Fonts, GSAP, Lucide) -> zero network requests
+# Inline the fonts and libraries (Google Fonts, GSAP, Lucide)
 node "$SP/inline-assets.js"
+
+# The deck is online-only: every embedded photo moves out to docs/images/, one
+# file per distinct image, with its width and height written onto the tag, and
+# Reveal lazy-loads each as its slide comes near. Must run after every embedding
+# step above and before the copy to docs/.
+node "$SP/externalize-images.js"
 
 # Publish the deployable artifact for GitHub Pages (docs/ publishing root)
 mkdir -p "$PROJ/docs"
