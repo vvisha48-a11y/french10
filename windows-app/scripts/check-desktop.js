@@ -119,6 +119,43 @@ ok(handout.length === 23 && missingRules.length === 0, 'the 23 handout print rul
 ok(fs.readFileSync(path.join(INJECT, 'calendar.js'), 'utf8').includes("'__FIREBASE_SDK__/firebase-app.js'"), 'calendar imports the page\'s own SDK');
 ok(/match \/daily_materials\/\{id\}/.test(fs.readFileSync(path.join(APP_DIR, 'firestore-daily-materials.rules.txt'), 'utf8')), 'daily_materials rule written for the console');
 
+/* ---------------- what the calendar accepts, and the link each file gets ----------------
+   drive.js is a main-process module, so Electron is stubbed for the length of the
+   require -- nothing here touches Google, it only reads the tables. */
+console.log('class materials: accepted files');
+const Module = require('module');
+const realLoad = Module._load;
+Module._load = function (request, ...rest){
+  if (request === 'electron') return { app: { getPath: () => APP_DIR }, dialog: {}, shell: {}, safeStorage: {} };
+  return realLoad.call(this, request, ...rest);
+};
+let drive = null;
+try { drive = require(path.join(APP_DIR, 'src', 'drive.js')); } catch (e){ console.log('  FAIL  could not load src/drive.js: ' + e.message); failed++; }
+Module._load = realLoad;
+
+if (drive){
+  ok(drive.kindOf('html') === 'Document' && drive.kindOf('htm') === 'Document',
+     'a standalone web page is accepted', '.html and .htm file as Document');
+  ok(drive.MIME.html === 'text/html' && drive.MIME.htm === 'text/html', 'and is uploaded as text/html');
+  ok(drive.kindOf('pdf') === 'PDF' && drive.kindOf('pptx') === 'Slides' && drive.kindOf('jpg') === 'Image' &&
+     drive.kindOf('mp4') === 'Video' && drive.kindOf('mp3') === 'Audio', 'the other kinds still map as before');
+  ok(drive.kindOf('exe') === null && drive.kindOf('bat') === null && drive.kindOf('ps1') === null &&
+     drive.kindOf('js') === null, 'programs are still refused');
+  /* Drive stopped serving web pages in 2016: a .html opened through the view link shows
+     its source, so it must go out as the download link instead. */
+  const DL = 'https://drive.google.com/uc?id=ID&export=download';
+  ok(drive.shareUrl('html', { id: 'ID', webContentLink: DL, webViewLink: 'https://drive.google.com/file/d/ID/view' }) === DL,
+     'a web page is published as its download link, not its preview');
+  ok(drive.shareUrl('html', { id: 'ID' }) === DL, 'and falls back to the same download address if Drive omits it');
+  ok(drive.shareUrl('pdf', { id: 'ID', webContentLink: DL, webViewLink: 'https://drive.google.com/file/d/ID/view' })
+       === 'https://drive.google.com/file/d/ID/view', 'a PDF still opens in Drive\'s viewer');
+  /* every link the calendar can publish has to satisfy the Firestore rule and main's
+     openExternal allow-list, both of which accept only drive/docs.google.com over https */
+  const rule = /^https:\/\/(drive|docs)\.google\.com\//;
+  ok(rule.test(drive.shareUrl('html', { id: 'ID' })) && rule.test(drive.shareUrl('pdf', { id: 'ID' })),
+     'both link shapes pass the Firestore rule and openExternal');
+}
+
 /* ---------------- 4. the website is untouched ---------------- */
 console.log('the website');
 const guarded = ['docs', 'build-system', 'ai-proxy', 'master-grammar-app.html', 'firestore.rules'];

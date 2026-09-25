@@ -136,7 +136,7 @@ function mount(){
             </form>
             <div class="dsk-cal-drop">
               <strong>Drop files anywhere on this side</strong>
-              <span>PowerPoint, PDF, JPEG, Word, audio or video. Each is uploaded to your Google Drive, shared as a view-only link and published to this day.</span>
+              <span>PowerPoint, PDF, JPEG, Word, web pages (.html), audio or video. Each is uploaded to your Google Drive, shared as a view-only link and published to this day.</span>
               <span class="dsk-cal-drive"></span>
             </div>
             <ul class="dsk-cal-uploads"></ul>

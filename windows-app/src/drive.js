@@ -28,7 +28,10 @@ const MAX_FILES = 50;
 const KINDS = {
   PDF: ['pdf'],
   Slides: ['ppt', 'pptx', 'pps', 'ppsx', 'odp', 'key'],
-  Document: ['doc', 'docx', 'odt', 'rtf', 'txt', 'md', 'xls', 'xlsx', 'ods', 'csv'],
+  /* html/htm are the standalone lesson pages this project exports; they are filed as
+     Documents on purpose, because the published Firestore rule accepts a fixed list of
+     type names and a new one would be refused until the rule is re-published. */
+  Document: ['doc', 'docx', 'odt', 'rtf', 'txt', 'md', 'xls', 'xlsx', 'ods', 'csv', 'html', 'htm'],
   Image: ['jpg', 'jpeg', 'png', 'gif', 'webp', 'heic', 'bmp', 'svg'],
   Video: ['mp4', 'mov', 'm4v', 'webm', 'avi', 'mkv'],
   Audio: ['mp3', 'm4a', 'wav', 'ogg', 'aac', 'flac']
@@ -43,9 +46,24 @@ const MIME = {
   jpg: 'image/jpeg', jpeg: 'image/jpeg', png: 'image/png', gif: 'image/gif', webp: 'image/webp', heic: 'image/heic',
   bmp: 'image/bmp', svg: 'image/svg+xml', mp4: 'video/mp4', mov: 'video/quicktime', m4v: 'video/x-m4v', webm: 'video/webm',
   avi: 'video/x-msvideo', mkv: 'video/x-matroska', mp3: 'audio/mpeg', m4a: 'audio/mp4', wav: 'audio/wav', ogg: 'audio/ogg',
-  aac: 'audio/aac', flac: 'audio/flac', key: 'application/octet-stream'
+  aac: 'audio/aac', flac: 'audio/flac', key: 'application/octet-stream',
+  html: 'text/html', htm: 'text/html'
 };
 const kindOf = ext => Object.keys(KINDS).find(k => KINDS[k].includes(ext)) || null;
+
+/* Which link a student gets.
+   Drive has not served web pages since 2016: opening an uploaded .html through the
+   normal view link shows Drive's own preview -- the raw source, or "no preview
+   available" -- never the page. The download link hands the file over as a file, which
+   is what a standalone lesson page needs; the student's browser then opens it locally.
+   Everything else keeps the view link, where a preview is exactly what is wanted. */
+const DOWNLOAD_AS_FILE = ['html', 'htm'];
+function shareUrl(ext, data){
+  const id = data && data.id;
+  return DOWNLOAD_AS_FILE.includes(ext)
+    ? (data.webContentLink || 'https://drive.google.com/uc?id=' + id + '&export=download')
+    : (data.webViewLink || 'https://drive.google.com/file/d/' + id + '/view');
+}
 
 const dir = () => app.getPath('userData');
 const CLIENT_FILE = () => path.join(dir(), 'drive-oauth-client.json');
@@ -272,12 +290,14 @@ async function upload(paths, progress){
       const f = await api.files.create({
         requestBody: { name, parents: [parent] },
         media: { mimeType: MIME[ext] || 'application/octet-stream', body },
-        fields: 'id,name,webViewLink'
+        fields: 'id,name,webViewLink,webContentLink'
       });
       progress({ index: i, phase: 'sharing' });
+      /* anyone with the link may read it -- the same share for every kind of file, and
+         what makes the download link work for a student who is not signed in */
       await api.permissions.create({ fileId: f.data.id, requestBody: { role: 'reader', type: 'anyone' } });
       out.push({ ok: true, name, title: name.replace(/\.[^.]+$/, ''), type: kind,
-                 url: f.data.webViewLink || ('https://drive.google.com/file/d/' + f.data.id + '/view') });
+                 url: shareUrl(ext, f.data) });
     } catch (e){
       if (isDeadGrant(e)) forget(false);
       const msg = isDeadGrant(e)
@@ -293,4 +313,6 @@ async function upload(paths, progress){
   return out;
 }
 
-module.exports = { status, connect, disconnect, upload };
+/* kindOf and shareUrl are exported for the gate, which checks the accepted types and
+   the link each one gets without needing a Google account. */
+module.exports = { status, connect, disconnect, upload, kindOf, shareUrl, MIME };
