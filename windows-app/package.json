@@ -1,0 +1,71 @@
+{
+  "name": "french-grammar-desktop",
+  "productName": "French Grammar",
+  "version": "1.0.0",
+  "description": "CBSE Class 10 French grammar deck for Windows: offline after one approved sign-in, self-updating.",
+  "author": "Visha Vincent Selvaraj",
+  "license": "UNLICENSED",
+  "private": true,
+  "main": "src/main.js",
+  "scripts": {
+    "sync": "node scripts/sync-content.js",
+    "check": "node scripts/check-desktop.js",
+    "start": "npm run sync && npm run check && electron .",
+    "dev": "electron .",
+    "dist": "npm run sync && npm run check && electron-builder --win --publish never",
+    "release": "npm run sync && npm run check && electron-builder --win --publish always"
+  },
+  "build": {
+    "appId": "io.github.vvisha48.french10",
+    "productName": "French Grammar",
+    "copyright": "Visha Vincent Selvaraj",
+    "directories": {
+      "output": "release",
+      "buildResources": "build"
+    },
+    "files": [
+      "src/**/*",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "content",
+        "to": "content"
+      }
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "build/icon.png"
+    },
+    "nsis": {
+      "oneClick": true,
+      "perMachine": false,
+      "deleteAppDataOnUninstall": false,
+      "artifactName": "French-Grammar-Setup-${version}.${ext}"
+    },
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "vvisha48-a11y",
+        "repo": "french10",
+        "releaseType": "release"
+      }
+    ]
+  },
+  "devDependencies": {
+    "electron": "^44.4.3",
+    "electron-builder": "^26.15.3"
+  },
+  "dependencies": {
+    "@googleapis/drive": "^26.0.0",
+    "electron-updater": "^6.8.9",
+    "google-auth-library": "^11.1.0"
+  }
+}

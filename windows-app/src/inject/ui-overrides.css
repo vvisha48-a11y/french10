@@ -1,0 +1,91 @@
+/* Desktop-only presentation overrides, layered over the website at page load.
+   Screen only: printing has its own layout (print-landscape.css). */
+@media screen{
+
+  /* ---- 1. Photos: no placeholder stripes ----
+     The website draws diagonal stripes behind a photo until it arrives. A photo
+     sized with object-fit:contain is letterboxed inside its box, so the stripes
+     stayed visible beside every portrait photo. Here the photos are on disk and
+     arrive at once: the ground is simply transparent. */
+  #slidesRoot img,
+  #slidesRoot .pm-photo,
+  #slidesRoot .tv-figure .topic-visual,
+  #slidesRoot .photo-block > img{
+    background-color:transparent !important;
+    background-image:none !important;
+  }
+  #slidesRoot img{ border-radius:8px; }
+  /* a ceiling, not a new size: at zero specificity, every tighter cap the deck
+     already sets (42vh, 34vh, ...) still wins; only uncapped photos meet this one */
+  :where(#slidesRoot) img{ max-height:65vh; object-fit:contain; }
+
+  /* The text size chosen in Settings also applies on a projector. The deck fixes
+     --custom-font-scale at 1.18 on body.projector-mode, which outranks the value the
+     Settings list writes on <html>; this hands the chosen size (mirrored into
+     --dsk-scale by ui-overrides.js) back, and keeps the deck's 1.18 if there is none. */
+  html body.projector-mode{ --custom-font-scale: var(--dsk-scale, 1.18); }
+
+  /* ---- 2. Overflow protection: nothing is ever cut off ----
+     At 130-150% text a card can outgrow the screen; it scrolls instead.
+     Not in Projector mode: there the deck gives the card the whole screen (measured:
+     788px of an 842px window), and a 90vh ceiling would crop 31px off the bottom of
+     every slide and hand the class a scrollbar instead. Nothing is cut off there
+     either -- the card already scrolls when it has to. */
+  body:not(.projector-mode) .slide-card{ max-height:90vh; }
+  .slide-card{ overflow-y:auto; }
+  .slide-card::-webkit-scrollbar{ width:10px; }
+  .slide-card::-webkit-scrollbar-track{ background:transparent; }
+  .slide-card::-webkit-scrollbar-thumb{
+    background:color-mix(in srgb, var(--heading-color) 38%, transparent);
+    border:2px solid transparent; background-clip:padding-box; border-radius:999px;
+  }
+  .slide-card::-webkit-scrollbar-thumb:hover{
+    background:color-mix(in srgb, var(--heading-color) 62%, transparent);
+    background-clip:padding-box;
+  }
+
+  /* ---- 3. Letters ----
+     The letter scrolls inside its own paper rather than being clipped by the slide,
+     in every mode. (This cap was briefly kept out of Projector mode, on the grounds
+     that the deck GROWS a letter there to fill the screen. It cannot: refitLetters
+     grows only when card.scrollHeight / card.clientHeight < 0.92, and scrollHeight is
+     never below clientHeight, so that branch never runs. The cap costs nothing and
+     keeps the title and ribbon in place while the letter body scrolls.) */
+  .let-slide{ overflow-y:auto; }
+  .let-paper, .let-prompt{ max-height:75vh; overflow-y:auto; overscroll-behavior:contain; }
+  .let-paper::-webkit-scrollbar, .let-prompt::-webkit-scrollbar{ width:8px; }
+  .let-paper::-webkit-scrollbar-thumb, .let-prompt::-webkit-scrollbar-thumb{
+    background:color-mix(in srgb, var(--heading-color) 35%, transparent); border-radius:999px;
+  }
+
+  /* The English line is set at exactly the French line's size, in each of the
+     deck's four letter states (English on/off x projector on/off). "html" adds the
+     one step of specificity that outranks the deck's own rule for each state. */
+  html body .let-paper .gloss{
+    font-size:clamp(1rem, var(--let-fs,1.9vh), 2rem);
+  }
+  html body.letter-en .let-paper .gloss{
+    font-size:clamp(.68rem, var(--let-fs-en,1.4vh), 2rem);
+  }
+  html body.projector-mode .let-paper .gloss{
+    font-size:clamp(1rem, calc(var(--let-fs,1.9vh) * var(--let-boost,1)), 3.2rem);
+  }
+  html body.projector-mode.letter-en .let-paper .gloss{
+    font-size:clamp(.8rem, calc(var(--let-fs-en,1.4vh) * var(--let-boost,1)), 2.6rem);
+  }
+  html body .let-prompt .gloss{ font-size:clamp(1.15rem,1.75vw,1.75rem); }
+
+  /* Slate #334155, fully opaque -- on the five light themes. On Slate Night and
+     Midnight Cyber Neon that colour would vanish into the card, so there the
+     deck's own light gloss colour stays, made fully opaque. */
+  html body:not(.theme-slate):not(.theme-cyber) .let-paper .gloss,
+  html body:not(.theme-slate):not(.theme-cyber) .let-prompt .gloss,
+  html body:not(.theme-slate):not(.theme-cyber) .let-table td.gloss{
+    color:#334155 !important; opacity:1 !important;
+  }
+  html body.theme-slate .let-paper .gloss, html body.theme-cyber .let-paper .gloss,
+  html body.theme-slate .let-prompt .gloss, html body.theme-cyber .let-prompt .gloss,
+  html body.theme-slate .let-table td.gloss, html body.theme-cyber .let-table td.gloss{
+    opacity:1 !important;
+  }
+}

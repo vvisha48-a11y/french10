@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'">
+<title>French Grammar update</title>
+<style>
+  :root{
+    --ground:#ffffff; --ink:#0f172a; --muted:#475569; --line:rgba(0,35,149,.16);
+    --navy:#002395; --red:#ED2939; --track:#e2e8f0; --shadow:rgba(2,6,23,.28);
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --ground:#111a2e; --ink:#e2e8f0; --muted:#94a3b8; --line:rgba(148,163,184,.22);
+           --navy:#7aa2ff; --track:#1e293b; --shadow:rgba(0,0,0,.6); }
+  }
+  html, body{ margin:0; height:100%; background:transparent; overflow:hidden; }
+  body{ font:14px/1.45 "Segoe UI Variable Text", "Segoe UI", system-ui, sans-serif; color:var(--ink); -webkit-user-select:none; user-select:none; }
+  .card{
+    position:absolute; top:8px; left:8px; right:8px; box-sizing:border-box; padding:16px 16px 14px 18px;
+    background:var(--ground); border:1px solid var(--line); border-radius:14px;
+    box-shadow:0 10px 26px var(--shadow); overflow:hidden;
+    display:flex; flex-direction:column; gap:10px;
+  }
+  .card::before{ content:''; position:absolute; left:0; top:0; bottom:0; width:5px;
+    background:linear-gradient(180deg, #002395 0 33.3%, #ffffff 33.3% 66.6%, #ED2939 66.6% 100%); }
+  .top{ display:flex; align-items:flex-start; gap:10px; }
+  .eyebrow{ margin:0; font-size:11px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--navy); }
+  h1{ margin:2px 0 0; font-size:15px; font-weight:650; line-height:1.35; text-wrap:balance; }
+  .x{ margin-left:auto; flex:none; width:24px; height:24px; border:0; border-radius:6px; background:transparent;
+      color:var(--muted); font-size:13px; cursor:pointer; }
+  .x:hover{ background:var(--track); color:var(--ink); }
+  .row{ display:flex; gap:8px; margin-top:auto; }
+  button.act{ font:inherit; font-weight:650; border-radius:8px; padding:7px 14px; cursor:pointer; }
+  .go{ border:1px solid var(--navy); background:var(--navy); color:#fff; }
+  @media (prefers-color-scheme: dark){ .go{ color:#0b1220; } }
+  .go:hover{ filter:brightness(1.08); }
+  .later{ border:1px solid var(--line); background:transparent; color:var(--ink); }
+  .later:hover{ background:var(--track); }
+  button:focus-visible{ outline:2px solid var(--red); outline-offset:2px; }
+  .bar{ height:6px; border-radius:99px; background:var(--track); overflow:hidden; margin-top:auto; }
+  .bar i{ display:block; height:100%; width:0; background:linear-gradient(90deg, var(--navy), var(--red)); transition:width .3s ease; }
+  .note{ margin:0; font-size:12.5px; color:var(--muted); font-variant-numeric:tabular-nums; }
+  [hidden]{ display:none !important; }
+  @media (prefers-reduced-motion: reduce){ .bar i{ transition:none; } }
+</style>
+</head>
+<body>
+  <div class="card" role="alertdialog" aria-labelledby="t" aria-describedby="n">
+    <div class="top">
+      <div>
+        <p class="eyebrow">Update available</p>
+        <h1 id="t">A new version of the French Grammar App is available.</h1>
+      </div>
+      <button class="x" id="x" type="button" aria-label="Close">✕</button>
+    </div>
+    <p class="note" id="n"></p>
+    <div class="row" id="ask">
+      <button class="act go" id="go" type="button">Download and restart</button>
+      <button class="act later" id="later" type="button">Later</button>
+    </div>
+    <div class="bar" id="bar" hidden><i id="fill"></i></div>
+  </div>
+<script>
+  const $ = id => document.getElementById(id);
+  const later = () => window.card.choose('later');
+  $('x').onclick = later;
+  $('later').onclick = later;
+  $('go').onclick = () => window.card.choose('download');
+  window.card.onState(s => {
+    if (!s) return;
+    const v = s.version ? 'Version ' + s.version : 'A new version';
+    document.querySelector('.eyebrow').textContent =
+      { available: 'Update available', downloading: 'Updating', ready: 'Updating', error: 'Update' }[s.phase] || 'Update';
+    $('ask').hidden = s.phase !== 'available';
+    $('bar').hidden = !(s.phase === 'downloading' || s.phase === 'ready');
+    if (s.phase === 'available'){
+      $('t').textContent = 'A new version of the French Grammar App is available.';
+      $('n').textContent = v + (s.current ? ' · you have ' + s.current : '') + '. The download takes a minute; your place in the lesson is kept.';
+    } else if (s.phase === 'downloading'){
+      $('t').textContent = 'Downloading the update…';
+      $('n').textContent = v + ' · ' + (s.percent || 0) + '%';
+      $('fill').style.width = (s.percent || 0) + '%';
+    } else if (s.phase === 'ready'){
+      $('t').textContent = 'Update ready — restarting.';
+      $('n').textContent = v + ' installs now and the app opens again by itself.';
+      $('fill').style.width = '100%';
+    } else if (s.phase === 'error'){
+      $('t').textContent = 'The update could not be downloaded.';
+      $('n').textContent = 'Nothing has changed. It will be offered again the next time the app starts online.';
+    }
+    /* the window is sized to the card, never the card squeezed into the window */
+    requestAnimationFrame(() => window.card.fit(Math.ceil(document.querySelector('.card').scrollHeight) + 16));
+  });
+</script>
+</body>
+</html>

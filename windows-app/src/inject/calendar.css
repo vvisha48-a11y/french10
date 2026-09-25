@@ -1,0 +1,169 @@
+/* 📅 Class materials: a glass split-screen over the deck. Every colour comes from the
+   deck's theme tokens, so it follows all seven themes; the red of the dots is the
+   tricolour's own crimson. */
+
+.dsk-cal-btn{ font-size:1.05rem; line-height:1; }
+
+#dskCal{
+  position:fixed; inset:0; z-index:9700;
+  display:grid; place-items:center; padding:clamp(12px,3vw,32px);
+  background:rgba(2,6,23,.34);
+  backdrop-filter:blur(6px);
+}
+#dskCal[hidden]{ display:none; }
+
+.dsk-cal-panel{
+  width:min(1180px,100%); height:min(780px,100%);
+  display:flex; flex-direction:column; min-height:0;
+  color:var(--text-main);
+  font-family:var(--custom-font-family, 'Plus Jakarta Sans', sans-serif);
+  background:color-mix(in srgb, var(--card-bg) 74%, transparent);
+  backdrop-filter:blur(22px) saturate(1.5);
+  border:1px solid color-mix(in srgb, #ffffff 42%, transparent);
+  border-radius:24px;
+  box-shadow:0 30px 90px rgba(2,6,23,.42), inset 0 1px 0 color-mix(in srgb, #ffffff 55%, transparent);
+  overflow:hidden;
+}
+body.theme-slate .dsk-cal-panel, body.theme-cyber .dsk-cal-panel{
+  border-color:color-mix(in srgb, #ffffff 14%, transparent);
+  box-shadow:0 30px 90px rgba(0,0,0,.6), inset 0 1px 0 color-mix(in srgb, #ffffff 10%, transparent);
+}
+
+.dsk-cal-head{
+  display:flex; align-items:flex-start; justify-content:space-between; gap:16px;
+  padding:18px 22px 14px; border-bottom:1px solid var(--card-border);
+}
+.dsk-cal-head h2{ margin:0; font-size:1.35rem; font-weight:800; color:var(--heading-color); letter-spacing:-.01em; }
+.dsk-cal-who{ margin:2px 0 0; font-size:.8rem; color:var(--text-muted); font-weight:600; }
+.dsk-cal-x{
+  flex:none; width:36px; height:36px; border-radius:50%; cursor:pointer;
+  border:1px solid var(--card-border); background:color-mix(in srgb, var(--card-bg) 80%, transparent);
+  color:var(--text-main); font-size:1rem;
+}
+.dsk-cal-x:hover{ border-color:var(--heading-color); color:var(--heading-color); }
+
+.dsk-cal-grid{ flex:1; min-height:0; display:grid; grid-template-columns:minmax(300px,400px) minmax(0,1fr); }
+
+/* ---- left: the month ---- */
+.dsk-cal-left{
+  padding:18px 20px; border-right:1px solid var(--card-border);
+  background:color-mix(in srgb, var(--box-blue-bg) 40%, transparent);
+  display:flex; flex-direction:column; gap:10px; min-height:0; overflow-y:auto;
+}
+.dsk-cal-nav{ display:flex; align-items:center; justify-content:space-between; gap:8px; }
+.dsk-cal-nav h3{ margin:0; font-size:1.05rem; font-weight:800; color:var(--heading-color); }
+.dsk-cal-nav button{
+  width:34px; height:34px; border-radius:10px; cursor:pointer; font-size:1.2rem; line-height:1;
+  border:1px solid var(--card-border); background:var(--card-bg); color:var(--heading-color);
+}
+.dsk-cal-nav button:hover{ border-color:var(--heading-color); }
+.dsk-cal-dow, .dsk-cal-days{ display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); gap:4px; }
+.dsk-cal-dow span{ text-align:center; font-size:.68rem; font-weight:800; text-transform:uppercase; letter-spacing:.07em; color:var(--text-muted); }
+.dsk-day{
+  position:relative; aspect-ratio:1; border-radius:12px; cursor:pointer;
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px;
+  border:1px solid transparent; background:transparent; color:var(--text-main);
+  font:inherit; font-size:.92rem; font-weight:700; font-variant-numeric:tabular-nums;
+}
+.dsk-day:hover{ background:color-mix(in srgb, var(--card-bg) 85%, transparent); border-color:var(--card-border); }
+.dsk-day.is-out{ color:var(--text-muted); opacity:.45; }
+.dsk-day.is-today{ border-color:var(--heading-color); }
+.dsk-day.is-picked{ background:var(--heading-color); border-color:var(--heading-color); color:#fff; }
+.dsk-day:focus-visible{ outline:2px solid var(--gold); outline-offset:2px; }
+.dsk-dot{
+  display:inline-block; width:7px; height:7px; border-radius:50%; background:#ED2939;
+  box-shadow:0 0 0 2px rgba(237,41,57,.18), 0 0 9px 2px rgba(237,41,57,.7);
+  animation:dskGlow 2.6s ease-in-out infinite;
+}
+.dsk-day.is-picked .dsk-dot{ background:#fff; box-shadow:0 0 8px 2px rgba(255,255,255,.75); }
+@keyframes dskGlow{ 50%{ box-shadow:0 0 0 3px rgba(237,41,57,.12), 0 0 14px 4px rgba(237,41,57,.45); } }
+.dsk-cal-foot{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top:4px; }
+.dsk-cal-today{
+  padding:6px 14px; border-radius:999px; cursor:pointer; font:inherit; font-size:.8rem; font-weight:700;
+  border:1px solid var(--card-border); background:var(--card-bg); color:var(--heading-color);
+}
+.dsk-cal-legend{ display:inline-flex; align-items:center; gap:8px; font-size:.76rem; color:var(--text-muted); font-weight:600; }
+
+/* ---- right: the day ---- */
+.dsk-cal-right{ position:relative; padding:18px 22px 22px; min-height:0; overflow-y:auto; display:flex; flex-direction:column; gap:12px; }
+.dsk-cal-right.is-over::after{
+  content:'Drop to upload and publish'; position:absolute; inset:10px; z-index:2;
+  display:grid; place-items:center; border-radius:18px;
+  border:2px dashed var(--heading-color); background:color-mix(in srgb, var(--highlight-bg) 85%, transparent);
+  color:var(--heading-color); font-weight:800; font-size:1.1rem; pointer-events:none;
+}
+.dsk-cal-dayhead{ display:flex; align-items:baseline; justify-content:space-between; gap:12px; }
+.dsk-cal-date{ margin:0; font-size:1.15rem; font-weight:800; color:var(--heading-color); }
+.dsk-cal-count{ font-size:.8rem; font-weight:700; color:var(--text-muted); }
+.dsk-cal-status{ margin:0; padding:12px 14px; border-radius:12px; font-size:.9rem; line-height:1.5;
+  background:color-mix(in srgb, var(--box-blue-bg) 60%, transparent); border:1px solid var(--card-border); }
+.dsk-cal-status[hidden]{ display:none; }
+
+.dsk-cal-list{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:8px; }
+.dsk-item{
+  display:grid; grid-template-columns:auto minmax(0,1fr) auto; align-items:center; gap:12px;
+  padding:12px 14px; border-radius:14px;
+  background:color-mix(in srgb, var(--card-bg) 88%, transparent); border:1px solid var(--card-border);
+}
+.dsk-item-title{ font-weight:700; overflow-wrap:anywhere; }
+.dsk-item-acts{ display:flex; gap:6px; }
+.dsk-type{
+  min-width:74px; text-align:center; padding:3px 9px; border-radius:999px;
+  font-size:.66rem; font-weight:800; text-transform:uppercase; letter-spacing:.07em;
+  color:var(--heading-color); background:var(--box-blue-bg); border:1px solid var(--card-border);
+}
+.dsk-type[data-type="PDF"]{ color:#b91c1c; background:#fef2f2; border-color:#fecaca; }
+.dsk-type[data-type="Slides"]{ color:#b45309; background:#fffbeb; border-color:#fde68a; }
+.dsk-type[data-type="Worksheet"]{ color:#047857; background:#ecfdf5; border-color:#a7f3d0; }
+.dsk-type[data-type="Image"]{ color:#7e22ce; background:#faf5ff; border-color:#e9d5ff; }
+.dsk-type[data-type="Video"], .dsk-type[data-type="Audio"]{ color:#0e7490; background:#ecfeff; border-color:#a5f3fc; }
+.dsk-open, .dsk-del, .dsk-cal-publish{
+  cursor:pointer; font:inherit; font-size:.82rem; font-weight:800; border-radius:10px; padding:8px 14px; white-space:nowrap;
+}
+.dsk-open{ border:1px solid var(--heading-color); background:var(--heading-color); color:#fff; }
+.dsk-open:hover{ filter:brightness(1.12); }
+.dsk-del{ border:1px solid var(--card-border); background:transparent; color:var(--text-muted); }
+.dsk-del:hover{ border-color:#dc2626; color:#dc2626; }
+.dsk-open:focus-visible, .dsk-del:focus-visible, .dsk-cal-publish:focus-visible, .dsk-linkbtn:focus-visible{ outline:2px solid var(--gold); outline-offset:2px; }
+
+/* ---- teacher only ---- */
+.dsk-cal-admin{ margin-top:6px; padding-top:14px; border-top:1px dashed var(--card-border); display:flex; flex-direction:column; gap:12px; }
+.dsk-cal-admin[hidden]{ display:none; }
+.dsk-cal-form h4{ margin:0 0 8px; font-size:.78rem; font-weight:800; text-transform:uppercase; letter-spacing:.08em; color:var(--text-muted); }
+.dsk-cal-fields{ display:grid; grid-template-columns:minmax(0,1.3fr) minmax(120px,.6fr); gap:10px; }
+.dsk-f-url{ grid-column:1 / -1; }
+.dsk-cal-fields label{ display:flex; flex-direction:column; gap:4px; font-size:.76rem; font-weight:700; color:var(--text-muted); }
+.dsk-cal-fields input, .dsk-cal-fields select{
+  font:inherit; font-size:.92rem; font-weight:600; color:var(--text-main);
+  padding:9px 11px; border-radius:10px; border:1px solid var(--card-border); background:var(--card-bg);
+}
+.dsk-cal-fields input:focus, .dsk-cal-fields select:focus{ outline:2px solid color-mix(in srgb, var(--heading-color) 45%, transparent); outline-offset:1px; }
+.dsk-cal-formfoot{ display:flex; align-items:center; gap:12px; margin-top:10px; flex-wrap:wrap; }
+.dsk-cal-publish{ border:1px solid var(--crimson, #ED2939); background:var(--crimson, #ED2939); color:#fff; }
+.dsk-cal-formmsg{ font-size:.82rem; color:var(--text-muted); }
+.dsk-cal-drop{
+  display:flex; flex-direction:column; gap:6px; padding:16px; border-radius:14px;
+  border:2px dashed color-mix(in srgb, var(--heading-color) 40%, transparent);
+  background:color-mix(in srgb, var(--highlight-bg) 45%, transparent);
+  font-size:.85rem; line-height:1.5;
+}
+.dsk-cal-drop strong{ color:var(--heading-color); font-size:.95rem; }
+.dsk-cal-drive{ font-size:.8rem; color:var(--text-muted); }
+.dsk-cal-note{ color:#dc2626; font-weight:700; }
+.dsk-linkbtn{ border:0; background:none; padding:0; cursor:pointer; font:inherit; font-weight:800; color:var(--heading-color); text-decoration:underline; }
+.dsk-cal-uploads{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:4px; font-size:.84rem; }
+.dsk-up{ display:flex; justify-content:space-between; gap:12px; padding:6px 10px; border-radius:8px; background:color-mix(in srgb, var(--card-bg) 80%, transparent); }
+.dsk-up-name{ overflow-wrap:anywhere; font-weight:600; }
+.dsk-up-state{ flex:none; color:var(--text-muted); font-weight:700; }
+.dsk-up.is-ok .dsk-up-state{ color:var(--green, #047857); }
+.dsk-up.is-err{ color:#dc2626; }
+.dsk-up.is-err .dsk-up-state{ color:#dc2626; flex:1 1 auto; text-align:right; }
+
+@media (max-width:860px){
+  .dsk-cal-grid{ grid-template-columns:1fr; overflow-y:auto; }
+  .dsk-cal-left{ border-right:0; border-bottom:1px solid var(--card-border); overflow:visible; }
+  .dsk-cal-right{ overflow:visible; }
+  .dsk-day{ aspect-ratio:auto; min-height:44px; }
+}
+@media (prefers-reduced-motion: reduce){ .dsk-dot{ animation:none; } }
+@media print{ #dskCal, .dsk-cal-btn{ display:none !important; } }

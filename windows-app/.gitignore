@@ -1,0 +1,18 @@
+# Everything listed here is rebuilt by npm install / npm run sync / npm run dist,
+# so none of it belongs in git -- together it is well over a gigabyte.
+# (Comments must sit on their own line: anything after a pattern becomes part of it.)
+
+# the Electron runtime and the Google Drive libraries
+node_modules/
+
+# this app's own copy of the website, rebuilt by: npm run sync
+content/
+
+# the downloaded Firebase SDK, kept between syncs
+.cache/
+
+# the installer: release/French-Grammar-Setup-<version>.exe, about 147 MB
+release/
+
+# an older build folder, same idea
+dist/

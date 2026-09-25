@@ -1,0 +1,120 @@
+/* Desktop print: ONE slide per A4 LANDSCAPE sheet, as a shrunk-down photo of the
+   projector view. Active only while print-bridge.js has put body.dsk-print on, and
+   only on paper (@media print) -- the screen never sees any of it.
+
+   This is the layout built and measured for the website in commit 9d77c11
+   ("Print the projector view, scaled to the sheet"). The website later moved to a
+   flowing portrait handout; the desktop keeps this one. Measured again here over all
+   950 slides: 8 are taller than one sheet and lose their bottom -- the two "What Was
+   Corrected" message slides and the six "Photo -> mot" games, whose photo tiles grow
+   with the width. The same 8 at every text size; the rest print whole.
+
+   Three constants that belong together, for the page print-bridge.js declares
+   (@page A4 landscape, 6mm margin, whose page area is 1077.165 x 748.346 CSS px):
+     1920px          the projector width the deck is designed for
+     zoom 0.561023   = 1077.165 / 1920 -- page width over layout width
+     1333px          ~ 748.346 / 0.561023 (1333.9) -- the layout height that fills one page
+   In paged media 100vh is the PAGE AREA height, hence the page box below.
+
+   While a desktop print runs, print-bridge.js also switches off the 23 dense-handout
+   rules of the website's print sheet that 9d77c11 kept away from this layout
+   (h1-h3 in pt, 10.5pt paragraphs, the flowing .slide-card, ...). Nothing in the
+   website is changed; they are restored the moment the job ends. */
+
+@media print{
+  /* ---- the page box: one per slide ---- */
+  body.dsk-print .reveal .slides > section:not([data-topic="papers"]) > section{
+    width:auto !important; height:100vh !important;
+    padding:0 !important; margin:0 !important; overflow:hidden !important;
+    position:relative !important;
+    background:var(--card-bg);
+    page-break-after:always; break-after:page;
+    page-break-inside:avoid; break-inside:avoid;
+  }
+  /* no trailing blank sheet */
+  body.dsk-print.printing-topic .reveal .slides > section.print-target,
+  body.dsk-print.printing-topic .reveal .slides > section.print-target > section:last-child,
+  body.dsk-print.printing-book .reveal .slides > section:last-child,
+  body.dsk-print.printing-book .reveal .slides > section:last-child > section:last-child{
+    page-break-after:avoid !important; break-after:avoid !important;
+  }
+
+  /* ---- the card: laid out at projector width, scaled onto the sheet ----
+     zoom, not transform:scale(). A transform shrinks only the picture: the card's
+     layout box stays 1334px tall, and the paginator carried the unscaled remainder
+     onto the NEXT sheet, where the card's white ground covered the top ~44% of the
+     following slide (measured in a PDF: slide 2 printed as captions only). zoom
+     shrinks the layout box itself -- 1920 x 1333 becomes 1077 x 748, one page area --
+     so nothing is left over to spill. 1333, not 1334, keeps the zoomed height a
+     fraction under the page area. */
+  body.dsk-print .reveal .slides > section:not([data-topic="papers"]) > section > .slide-card{
+    position:absolute !important; top:0 !important; left:0 !important;
+    width:1920px !important; height:1333px !important;
+    max-width:none !important; max-height:none !important;
+    margin:0 !important; border:none !important; border-radius:0 !important;
+    box-shadow:none !important; overflow:hidden !important;
+    background:var(--card-bg) !important;
+    transform:none !important;
+    zoom:0.561023 !important;
+  }
+
+  /* ---- the projector's columns, restated for the page ----
+     The page area is 1077px wide, so the deck's @media (max-width:1100px) blocks fire
+     on paper although they never fire on a 1920px projector, and collapse every
+     multi-column grid to one column. Every value is the class's own base
+     declaration. (9d77c11: grids stacked 355 -> 0.) */
+  body.dsk-print .two-columns{ grid-template-columns:1fr 1fr !important; }
+  body.dsk-print .three-columns{ grid-template-columns:1fr 1fr 1fr !important; }
+  body.dsk-print .usage-grid{ grid-template-columns:minmax(0,1fr) minmax(0,1.05fr) !important; }
+  body.dsk-print .usage-layout{ grid-template-columns:minmax(0,1.05fr) minmax(0,1fr) !important; }
+  body.dsk-print .topic-visual-grid{ grid-template-columns:repeat(3,minmax(0,1fr)) !important; }
+  body.dsk-print .topic-visual-grid.four{ grid-template-columns:repeat(4,minmax(0,1fr)) !important; }
+  body.dsk-print .vfam-card{ grid-template-columns:minmax(0,240px) minmax(0,1fr) !important; }
+  body.dsk-print .hotspot{ grid-template-columns:minmax(0,1.25fr) minmax(0,1fr) !important; }
+  body.dsk-print .trier-buckets{ grid-template-columns:repeat(2,minmax(0,1fr)) !important; }
+  body.dsk-print .trier-buckets.three{ grid-template-columns:repeat(3,minmax(0,1fr)) !important; }
+  body.dsk-print .pm-grid{ grid-template-columns:repeat(4,minmax(0,1fr)) !important; }
+  body.dsk-print .pm-grid.three{ grid-template-columns:repeat(3,minmax(0,1fr)) !important; }
+  body.dsk-print .flip-card-grid{ grid-template-columns:repeat(4,1fr) !important; }
+  body.dsk-print .formula-pipeline{ grid-template-columns:1fr auto 1fr auto 1.2fr !important; }
+  body.dsk-print .ls-flow{ flex-direction:row !important; }
+  body.dsk-print .msg-sw-tabs{ flex-direction:row !important; }
+  body.dsk-print .msg-build-pool{ flex-direction:row !important; }
+  /* the breakpoint also moves the image of an image-right layout back to the left,
+     and turns the flow arrows a quarter to point down a stacked column */
+  body.dsk-print .usage-layout.image-right .usage-figure{ order:2 !important; }
+  body.dsk-print .ls-arrow{ transform:none !important; align-self:auto !important; }
+  /* these two the breakpoint does not merely restack -- it deletes them */
+  body.dsk-print .f-op{ display:block !important; }
+  body.dsk-print .rt-table th:last-child,
+  body.dsk-print .rt-table td:last-child{ display:table-cell !important; }
+
+  /* ---- Question Papers: one card of 237 questions cannot fit a page box; it flows
+     across as many sheets as it needs, breaking between questions ---- */
+  body.dsk-print .reveal .slides > section[data-topic="papers"] > section,
+  body.dsk-print .reveal .slides > section[data-topic="papers"] .slide-card{
+    height:auto !important; max-height:none !important; overflow:visible !important;
+    border:none !important; box-shadow:none !important; border-radius:0 !important;
+    padding:0 !important; margin:0 !important; background:var(--card-bg) !important;
+  }
+
+  /* ---- the fragment trap: nothing is stepped through on paper ---- */
+  body.dsk-print .reveal .fragment{ opacity:1 !important; visibility:visible !important; transform:none !important; }
+
+  /* ---- a light palette whatever is on screen, so Slate Night never prints dark.
+     The website's own values for the topic print (body.theme-classic, two marked). */
+  html body.dsk-print{
+    --bg-gradient:#ffffff;
+    --card-bg:#ffffff;
+    --card-border: rgba(0,35,149,0.2);
+    --custom-text-color:#0f172a;
+    --text-main:#0f172a; --text-muted:#475569;
+    --heading-color:#002395; --subheading-color:#ED2939;
+    --highlight-bg: rgba(0,35,149,0.12); --highlight-border:#002395; --highlight-text:#002395;
+    --box-blue-bg:#eef4fc; --box-gold-bg:#fff8eb; --box-gold-border:#f4b436;
+    --hud-bg: rgba(255,255,255,0.94); --hud-text:#002395; --particle-color: rgba(0,35,149,0.3);
+    --green:#047857; --purple:#7e22ce; --gold:#D97706; --crimson:#ED2939;
+    --ok:#047857; --err:#dc2626;
+  }
+  html body.dsk-print{ background:#fff !important; }
+}

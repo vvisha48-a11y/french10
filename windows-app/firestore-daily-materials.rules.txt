@@ -1,0 +1,36 @@
+// Class materials (the desktop app's 📅 calendar) -- ONE block to add to your Firestore rules.
+//
+// WHERE: Firebase console -> Firestore Database -> Rules. Paste the block below inside
+// `match /databases/{database}/documents { ... }`, just ABOVE the final catch-all
+//     match /{document=**} { allow read, write: if false; }
+// then press Publish. It uses the isAdmin() and isApproved() functions your rules
+// already define (firestore.rules at the top of the repo).
+//
+// WHAT IT DOES
+//   * approved students and the teacher may READ the calendar;
+//   * only the teacher (vvisha48@gmail.com, checked on Google's servers) may add or
+//     remove anything -- the app hiding the form from students is only a convenience,
+//     this is what actually stops them;
+//   * every entry must be a well-formed date, a short title, one of the known types,
+//     and a Google Drive / Google Docs link -- nothing else can be stored.
+//
+// Until this is published the calendar shows the teacher a message saying so, and
+// shows students "not available yet". Nothing else in the app depends on it.
+
+    // ---- class materials (desktop app calendar) ----
+    match /daily_materials/{id} {
+      allow read: if isApproved() || isAdmin();
+      allow create: if isAdmin()
+                    && request.resource.data.keys().hasOnly(['date', 'title', 'type', 'url', 'by', 'createdAt'])
+                    && request.resource.data.date is string
+                    && request.resource.data.date.matches('^[0-9]{4}-[0-9]{2}-[0-9]{2}$')
+                    && request.resource.data.title is string
+                    && request.resource.data.title.size() > 0
+                    && request.resource.data.title.size() <= 120
+                    && request.resource.data.type in ['PDF', 'Slides', 'Document', 'Worksheet', 'Image', 'Video', 'Audio', 'Link']
+                    && request.resource.data.url is string
+                    && request.resource.data.url.size() <= 2000
+                    && request.resource.data.url.matches('^https://(drive|docs)[.]google[.]com/.*');
+      allow update: if false;
+      allow delete: if isAdmin();
+    }
