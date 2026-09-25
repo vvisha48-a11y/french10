@@ -16,3 +16,7 @@ release/
 
 # an older build folder, same idea
 dist/
+
+# never commit a token: electron-builder's CLI reads this file if it exists
+electron-builder.env
+.env
