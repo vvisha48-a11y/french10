@@ -11,7 +11,7 @@ content/
 # the downloaded Firebase SDK, kept between syncs
 .cache/
 
-# the installer: release/French-Grammar-Setup-<version>.exe, about 147 MB
+# the installer: release/French-Grammar-Setup.exe, about 147 MB
 release/
 
 # an older build folder, same idea

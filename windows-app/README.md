@@ -13,7 +13,7 @@ Nothing in the website changes. Everything desktop-only lives in this folder:
 | You want to… | Run in `windows-app/` |
 |---|---|
 | Try the app | `npm start` |
-| Build the installer only | `npm run dist` (→ `release/French-Grammar-Setup-<version>.exe`) |
+| Build the installer only | `npm run dist` (→ `release/French-Grammar-Setup.exe`) |
 | Publish an update to every student | `npm version patch` then `npm run release` |
 
 After changing lessons, run `bash build.sh` at the repo root first as usual. The

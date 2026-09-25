@@ -48,7 +48,7 @@
       "oneClick": true,
       "perMachine": false,
       "deleteAppDataOnUninstall": false,
-      "artifactName": "French-Grammar-Setup-${version}.${ext}"
+      "artifactName": "French-Grammar-Setup.${ext}"
     },
     "publish": [
       {

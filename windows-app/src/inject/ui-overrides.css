@@ -88,4 +88,10 @@
   html body.theme-slate .let-table td.gloss, html body.theme-cyber .let-table td.gloss{
     opacity:1 !important;
   }
+
+  /* ---- 4. No "Download for Windows" in here ----
+     The website offers the installer at the top of Settings. Inside the installer
+     there is nothing to download, so the link is taken out of the panel rather than
+     left to send the teacher to GitHub for the app they are already running. */
+  .settings-panel .dl-win{ display:none !important; }
 }
