@@ -658,6 +658,18 @@ body.mode-student .teacher-only{ display:none !important; }
 .set-row{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin:4px 0; font-size:.88rem; font-weight:600; color:var(--text-main); }
 .settings-panel .set-row button{ margin:0; min-width:46px; }
 .settings-panel .set-wide{ width:100%; margin:4px 0 0; text-align:left; }
+/* Download for Windows. `.settings-panel button` matches buttons only, so this <a>
+   restates the same chrome with the same values; flex keeps the icon and the label on
+   one line, and the bottom margin matches .settings-group so the group below it is not
+   crowded. Every colour is a theme variable, so all seven themes follow by themselves. */
+.settings-panel .dl-win{
+  display:flex; align-items:center; gap:8px; width:100%; margin:0 0 14px;
+  font-family:inherit; font-size:.84rem; font-weight:700; text-align:left; text-decoration:none;
+  padding:8px 12px; border-radius:9px; border:1px solid var(--card-border);
+  background:var(--highlight-bg); color:var(--text-main);
+}
+.settings-panel .dl-win:hover{ border-color:var(--highlight-border); }
+.settings-panel .dl-win svg{ flex:none; }
 /* Sound's "on" state came from .tb-btn.is-on, which the moved button no longer carries */
 .settings-panel button.is-on{ background:var(--heading-color); color:var(--card-bg); border-color:var(--heading-color); }
 .shortcuts-modal ul{ list-style:none; padding:0; margin:0; }
@@ -2305,6 +2317,24 @@ body.projector-mode .lecon-slide .quiz-progress-bar{ margin-bottom:4px; }
 <!-- ============ SETTINGS ============ -->
 <div class="settings-panel" id="settingsPanel">
   <h3 style="margin-top:0;">⚙️ Customization</h3>
+
+  <!-- The Windows app, offered where the students already are. A link, not a button:
+       target="_blank" opens the new tab natively, so nothing needs an engine handler
+       and check-refs.js has no id to resolve. The installer's name carries no version
+       (windows-app/package.json -> build.nsis.artifactName), which is what makes
+       /releases/latest/download/ a permanent address for the newest build. The app
+       itself hides this (windows-app/src/inject/ui-overrides.css). -->
+  <a class="dl-win" id="downloadWinBtn"
+     href="https://github.com/vvisha48-a11y/french10/releases/latest/download/French-Grammar-Setup.exe"
+     target="_blank" rel="noopener"
+     title="Zero lag. Instant loading. Works offline.">
+    <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false">
+      <path d="M12 3v10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      <path d="M8 12l4 4 4-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M5 20h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+    <span>Download for Windows</span>
+  </a>
 
   <div class="settings-group">
     <label>Display &amp; tools</label>
