@@ -108,7 +108,7 @@
     return name || ('Topic ' + (i + 1));
   }
 
-  /* The complete workbook, saved as one PDF per topic. 950 slides is more than
+  /* The complete workbook, saved as one PDF per topic. 991 slides is more than
      Windows will print in a single job, so each stack is isolated in turn -- exactly
      as "Print this topic" does -- and saved into the folder chosen in the dialog. */
   async function saveWorkbook(){
@@ -116,7 +116,7 @@
     /* The deck armed its listeners for ONE print: an afterprint handler and a
        matchMedia('print') one, both of which call endPrint() and strip the isolation.
        Print media flips back after EVERY part, so left in place they would un-isolate
-       the deck after the first topic and the next part would try to print all 950
+       the deck after the first topic and the next part would try to print all 991
        slides at once -- which fails outright. Let them fire now, once, on a job that
        is already over; endPrint() detaches them both. */
     window.dispatchEvent(new Event('afterprint'));

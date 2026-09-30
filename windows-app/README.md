@@ -38,16 +38,16 @@ next `npm start` / `npm run release` copies the new lessons in.
   130% — Projector. "150% — Maximum" is added to Text size. Photos lose the striped
   placeholder, and cards scroll instead of cutting off. In model letters the English
   line is the same size as the French, in slate `#334155` on light themes.
-- **Search everything, offline: Ctrl+Shift+F.** Full text of 950 slides and the 237
+- **Search everything, offline: Ctrl+Shift+F.** Full text of 991 slides and the 237
   exam questions, indexed in about a third of a second. Past-paper answers and
   teacher-only notes are left out of the results.
 - **Printing: Ctrl+P or 🖨️.** A choice of **Print** or **Save as PDF**, one slide
   per A4 landscape page, in colour (the projector-view layout from commit 9d77c11).
 - **📚 saves the whole workbook as one PDF per topic** into a folder you choose, in
-  that same layout — 198 files, about three and a half minutes, named
+  that same layout — 209 files, about three and a half minutes, named
   `001 Les Verbes - Le Présent.pdf` and so on, and the folder opens when it is done.
-  It cannot be one print job: 950 slides is more than Windows will take (measured —
-  both a printer and Save as PDF refuse a job that size).
+  It cannot be one print job: 991 slides is more than Windows will take (measured at
+  950 — both a printer and Save as PDF refuse a job that size).
 - **📅 Class materials: Ctrl+Shift+M.** See below.
 - **Updates.** A silent check on launch. If there is a new version, a card appears at
   the top right of the screen with **Download and restart** / **Later**. It never
@@ -111,7 +111,7 @@ Add these to the app's shortcut (*Target* field) or after `npm run dev --`:
   once per PC (**More info → Run anyway**). Updates still install normally.
 - Google may refuse **Sign in with Google** inside apps. Email/password and phone
   sign-in always work.
-- Printing keeps strictly one slide per sheet. 8 of the 950 slides are taller than
+- Printing keeps strictly one slide per sheet. 8 of the 991 slides are taller than
   a projector screen, and their bottom is cut on paper: the two *What Was Corrected*
   model-message slides, and the *Photo → mot* games of Leçons 3, 4, 5, 6, 7 and 10.
 - The Question Papers stack is the exception that flows across sheets. Printed

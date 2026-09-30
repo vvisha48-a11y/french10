@@ -179,16 +179,16 @@ function registerIpc(manifest){
     const job = req && req.job === 'book' ? 'book' : 'topic';
     const title = String((req && req.title) || 'French Grammar').replace(/[\\/:*?"<>|]+/g, ' ').trim().slice(0, 120) || 'French Grammar';
 
-    /* The complete workbook cannot be one print job: 950 slides is more than Windows
-       will take -- measured, both ways (printToPDF: "Failed to generate PDF"; a real
-       printer: "Print job canceled" after 158s). It is saved as one PDF per topic
+    /* The complete workbook cannot be one print job: 991 slides is more than Windows
+       will take -- measured at 950, both ways (printToPDF: "Failed to generate PDF"; a
+       real printer: "Print job canceled" after 158s). It is saved as one PDF per topic
        instead, in the same A4-landscape layout, ready to print. */
     if (job === 'book'){
       if (PDF_TO){ bookFolder = path.dirname(PDF_TO); return { parts: true, folder: bookFolder }; }
       const ask = await dialog.showMessageBox(win, {
         type: 'none', title: 'Save the complete workbook', noLink: true,
         message: 'Save the complete workbook',
-        detail: 'All 950 slides are too many for one print job — Windows refuses a job that size.\n\n' +
+        detail: 'All 991 slides are too many for one print job — Windows refuses a job that size.\n\n' +
                 'The workbook can be saved instead as one PDF per topic, in the same A4 landscape layout, ' +
                 'one slide per page, into a folder you choose. Print whichever topics you need from there.',
         buttons: ['Choose a folder…', 'Cancel'], defaultId: 0, cancelId: 1

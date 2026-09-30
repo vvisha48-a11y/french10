@@ -3,7 +3,7 @@
 
    The deck's own Ctrl+K search matches slide titles; this one reads the full text.
    The index is built once, from the page itself, the first time it is opened (well
-   under a second): 952 slides and the 237 questions of the Question Papers, accents
+   under a second): 991 slides and the 237 questions of the Question Papers, accents
    and case folded so "ete" finds "été". Answers are left out on purpose -- the
    hidden past-paper answers and teacher-only notes -- so a result never gives one
    away in Student view.

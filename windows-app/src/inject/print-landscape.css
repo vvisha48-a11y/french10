@@ -5,9 +5,11 @@
    This is the layout built and measured for the website in commit 9d77c11
    ("Print the projector view, scaled to the sheet"). The website later moved to a
    flowing portrait handout; the desktop keeps this one. Measured again here over all
-   950 slides: 8 are taller than one sheet and lose their bottom -- the two "What Was
-   Corrected" message slides and the six "Photo -> mot" games, whose photo tiles grow
-   with the width. The same 8 at every text size; the rest print whole.
+   950 slides of the time: 8 are taller than one sheet and lose their bottom -- the
+   two "What Was Corrected" message slides and the six "Photo -> mot" games, whose
+   photo tiles grow with the width. The same 8 at every text size; the rest print
+   whole. The 39 CBSE Subjonctif slides added since (991 in all) are well under one
+   sheet, so it is still those 8.
 
    Three constants that belong together, for the page print-bridge.js declares
    (@page A4 landscape, 6mm margin, whose page area is 1077.165 x 748.346 CSS px):
