@@ -136,6 +136,31 @@ function topicOf(h){ return topicByKey[(stackAt(h)?.dataset.topic) || 'divers'];
 
 /* ---------------- Progress ---------------- */
 let visited = ls.getJSON('visited', {});   // { topicKey: { "h.v": 1 } }
+/* One-time move of saved progress. CBSE Subjonctif was inserted right after Le
+   Subjonctif, so every later stack now sits N places further on, while progress
+   saved before that is keyed by the old positions. The first boot of this version
+   moves it once, and sets the marker before any new tick can be recorded, so
+   progress saved afterwards is never moved. */
+(function moveVisitedForCbseSubj(){
+  if (ls.get('visited_layout', '') === 'cbse-subj-1') return;
+  const t = topicByKey['subjonctif-cbse'];
+  if (t && t.indices.length){
+    const at = t.indices[0], n = t.indices.length;
+    Object.keys(visited).forEach(k => {
+      if (k === 'subjonctif-cbse' || !visited[k] || typeof visited[k] !== 'object') return;
+      const moved = {};
+      Object.keys(visited[k]).forEach(hv => {
+        const m = /^(\d+)\.(\d+)$/.exec(hv);
+        if (!m){ moved[hv] = visited[k][hv]; return; }
+        const h = +m[1];
+        moved[(h >= at ? h + n : h) + '.' + m[2]] = visited[k][hv];
+      });
+      visited[k] = moved;
+    });
+    ls.setJSON('visited', visited);
+  }
+  ls.set('visited_layout', 'cbse-subj-1');
+})();
 function markVisited(h, v){
   const t = topicOf(h); if (!t) return;
   if (!visited[t.key]) visited[t.key] = {};
@@ -731,6 +756,9 @@ function cardForStorage(card){
     ['data-fb-done', 'data-fb-wired', 'data-fb-watch'].forEach(a => img.removeAttribute(a));
     if (img.getAttribute('loading') === 'eager') img.removeAttribute('loading');
   });
+  /* CBSE Subjonctif practice: a revealed answer is screen state, never saved */
+  $$('.sbc-blank', c).forEach(b => { b.classList.remove('shown'); b.setAttribute('aria-pressed', 'false'); });
+  $$('.sbc-pq.done', c).forEach(li => li.classList.remove('done'));
   return c.innerHTML;
 }
 function saveEdits(){
@@ -1571,6 +1599,44 @@ document.addEventListener('click', e => {
   if (cell && cell.closest('.voc-box.masked')){
     cell.classList.toggle('shown');
     playSound('flip');
+  }
+});
+
+/* ---------------- CBSE Subjonctif: practice blanks + section buttons (delegated) ----------------
+   Delegated from document, like the vocabulary mask above: nothing to set up, and it
+   survives restoreEdits() replacing a card's markup. The answers are already in the
+   markup (t-subj-cbse.html); this only shows and hides them, and cardForStorage()
+   strips that state so a saved edit never stores a revealed answer. */
+function sbcSetBlank(b, on){
+  b.classList.toggle('shown', on);
+  b.setAttribute('aria-pressed', on ? 'true' : 'false');
+  const li = b.closest('.sbc-pq');
+  if (li) li.classList.toggle('done', on);
+}
+document.addEventListener('click', e => {
+  /* one blank: reveal or hide its answer */
+  const b = e.target.closest('.cbse-subj .sbc-blank');
+  if (b){
+    const on = !b.classList.contains('shown');
+    sbcSetBlank(b, on);
+    if (on) playSound('pop');
+    return;
+  }
+  /* Reveal all / Hide all, for the blanks of this slide only */
+  const all = e.target.closest('.cbse-subj [data-sbc-all]');
+  if (all){
+    const on = all.dataset.sbcAll === 'show';
+    const slide = all.closest('section[data-slide-id]');
+    if (slide) $$('.sbc-blank', slide).forEach(x => sbcSetBlank(x, on));
+    if (on) playSound('pop');
+    return;
+  }
+  /* the title slide's section buttons: n-th stack of the topic */
+  const go = e.target.closest('.cbse-subj [data-sbc-go]');
+  if (go){
+    const t = topicByKey['subjonctif-cbse'];
+    const h = t ? t.indices[parseInt(go.dataset.sbcGo, 10)] : undefined;
+    if (h !== undefined) Deck.slide(h, 0);
   }
 });
 

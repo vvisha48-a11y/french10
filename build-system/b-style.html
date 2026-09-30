@@ -1966,6 +1966,273 @@ body.projector-mode .lecon-slide .quiz-progress-bar{ margin-bottom:4px; }
 .pm-grid.three .pm-photo img{ aspect-ratio:16/10; }
 
 /* ===== END LES LEÇONS CSS ===== */
+/* ===== CBSE SUBJONCTIF ===== */
+/* Le Subjonctif Présent, the CBSE Class 10 easy guide (t-subj-cbse.html).
+   Every rule sits under .cbse-subj (the topic's stacks) and every class is sbc-.
+   Colours are theme tokens only, so all seven themes and the topic print follow;
+   sizes go through --custom-font-scale, so Text size and Projector Mode apply.
+   Grids size themselves (auto-fit), so no width breakpoint fires on paper or in
+   the desktop app's print. */
+.cbse-subj .sbc-body{ width:100%; margin-block:auto; display:flex; flex-direction:column; align-items:center; gap:18px; padding:4px 0; }
+.cbse-subj .sbc-sub{ margin:0 0 6px; font-size:calc(1.1rem * var(--custom-font-scale)); font-weight:700; color:var(--subheading-color); }
+.cbse-subj .sbc-lead{ margin:0; max-width:52rem; font-size:calc(1.25rem * var(--custom-font-scale)); line-height:1.5; }
+.cbse-subj .sbc-lead-s{ font-size:calc(1.08rem * var(--custom-font-scale)); }
+
+/* --- the colour code: stem, ending, learn by heart --- */
+.cbse-subj .sbc-st{ color:var(--heading-color); font-weight:800; }
+.cbse-subj .sbc-en{ color:var(--crimson); font-weight:800; }
+.cbse-subj .sbc-irr{ color:var(--gold); font-weight:800; }
+.cbse-subj .sbc-cut{ color:var(--crimson); text-decoration:line-through; text-decoration-thickness:3px; }
+.cbse-subj .sbc-trap{ text-decoration:underline; text-decoration-color:var(--crimson); text-decoration-thickness:4px; text-underline-offset:5px; }
+.cbse-subj .sbc-silent{ color:var(--text-muted); opacity:.6; }
+.cbse-subj .sbc-none{ color:var(--text-muted); }
+.cbse-subj .sbc-que{ display:inline-block; padding:0 .35em; border-radius:6px; font-weight:900;
+  color:var(--highlight-text); background:var(--highlight-bg); border:1px solid var(--highlight-border); }
+.cbse-subj .sbc-fr{ margin:0; font-weight:700; }
+.cbse-subj .sbc-gloss{ margin:0; color:var(--text-muted); font-style:italic; }
+.cbse-subj .sbc-ok{ color:var(--ok); font-weight:900; }
+.cbse-subj .sbc-no{ color:var(--err); font-weight:900; }
+.cbse-subj .sbc-c-blue{ color:var(--heading-color); }
+.cbse-subj .sbc-c-red{ color:var(--crimson); }
+.cbse-subj .sbc-f13{ font-size:calc(1.3rem * var(--custom-font-scale)); font-weight:700; }
+.cbse-subj .sbc-f14{ font-size:calc(1.4rem * var(--custom-font-scale)); font-weight:800; }
+.cbse-subj .sbc-f16{ font-size:calc(1.6rem * var(--custom-font-scale)); font-weight:800; }
+.cbse-subj .sbc-f17{ font-size:calc(1.7rem * var(--custom-font-scale)); font-weight:800; }
+.cbse-subj .sbc-f18{ font-size:calc(1.8rem * var(--custom-font-scale)); font-weight:800; }
+.cbse-subj .sbc-f20{ font-size:calc(2rem * var(--custom-font-scale)); font-weight:800; }
+
+/* --- boxes (the deck's own .box, labelled), rows, grids, cards, chips --- */
+.cbse-subj .sbc-box{ max-width:62rem; margin:0 auto; }
+.cbse-subj .sbc-box p{ margin:0; }
+.cbse-subj .sbc-lab{ display:block; margin-bottom:4px; font-size:calc(.78rem * var(--custom-font-scale)); font-weight:900;
+  text-transform:uppercase; letter-spacing:.07em; color:var(--heading-color); }
+.cbse-subj .box.gold .sbc-lab{ color:var(--gold); }
+.cbse-subj .box.green .sbc-lab{ color:var(--green); }
+.cbse-subj .box.red .sbc-lab{ color:var(--crimson); }
+.cbse-subj .sbc-row{ display:flex; flex-wrap:wrap; justify-content:center; gap:22px; width:100%; }
+.cbse-subj .sbc-duo{ gap:40px; }
+.cbse-subj .sbc-grid{ display:grid; gap:18px; width:100%; margin:0 auto; }
+.cbse-subj .sbc-g2{ grid-template-columns:repeat(auto-fit, minmax(min(100%, 22rem), 1fr)); max-width:74rem; }
+.cbse-subj .sbc-g3{ grid-template-columns:repeat(auto-fit, minmax(min(100%, 17rem), 1fr)); max-width:84rem; }
+.cbse-subj .sbc-g4{ grid-template-columns:repeat(auto-fit, minmax(min(100%, 13.5rem), 1fr)); max-width:84rem; }
+.cbse-subj .sbc-narrow{ max-width:56rem; }
+.cbse-subj .sbc-card{ min-width:0; display:flex; flex-direction:column; gap:8px; padding:16px 18px; text-align:left;
+  border-radius:18px; background:var(--card-bg); border:1.5px solid var(--card-border); box-shadow:0 6px 18px rgba(0,0,0,.06); }
+.cbse-subj .sbc-card h3{ margin:0; font-size:calc(1.25rem * var(--custom-font-scale)); }
+.cbse-subj .sbc-card p{ margin:0; }
+.cbse-subj .sbc-card-c{ align-items:center; text-align:center; }
+.cbse-subj .sbc-card-boot{ background:var(--box-blue-bg); border:2.5px solid var(--heading-color); }
+.cbse-subj .sbc-card-dashed{ border:2.5px dashed var(--text-muted); }
+.cbse-subj .sbc-card-yes{ background:var(--box-blue-bg); border:2.5px solid var(--ok); }
+.cbse-subj .sbc-card-yes h3{ color:var(--ok); }
+.cbse-subj .sbc-card-no{ background:var(--box-gold-bg); border:2.5px solid var(--err); }
+.cbse-subj .sbc-card-no h3{ color:var(--err); }
+.cbse-subj .sbc-icon{ width:2.6rem; height:2.6rem; flex:none; }
+.cbse-subj .sbc-chips{ display:flex; flex-wrap:wrap; gap:7px; }
+.cbse-subj .sbc-chip{ display:inline-block; padding:4px 11px; border-radius:999px; white-space:nowrap;
+  font-size:calc(1rem * var(--custom-font-scale)); font-weight:700; color:var(--text-main);
+  background:var(--card-bg); border:1.5px solid var(--card-border); }
+.cbse-subj .sbc-chip b{ color:var(--highlight-text); }
+.cbse-subj .sbc-chip-end{ font-size:calc(1.2rem * var(--custom-font-scale)); font-weight:900; color:var(--crimson); border-color:var(--crimson); }
+
+/* --- the title slide --- */
+.cbse-subj .sbc-title{ gap:22px; }
+.cbse-subj .sbc-eyebrow{ margin:0; font-size:calc(.95rem * var(--custom-font-scale)); font-weight:800; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--text-muted); }
+.cbse-subj .sbc-title h1{ margin:0; font-size:calc(4rem * var(--custom-font-scale)); }
+.cbse-subj .sbc-title h1 span{ color:var(--subheading-color); }
+.cbse-subj .sbc-formula{ display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:8px;
+  font-size:calc(1.25rem * var(--custom-font-scale)); font-weight:700; }
+.cbse-subj .sbc-piece{ padding:7px 14px; border-radius:12px; background:var(--card-bg); border:2px solid var(--card-border); }
+.cbse-subj .sbc-piece-q{ font-weight:900; color:var(--highlight-text); background:var(--highlight-bg); border-color:var(--highlight-border); }
+.cbse-subj .sbc-piece-v{ border-color:var(--heading-color); }
+.cbse-subj .sbc-plus{ font-weight:900; color:var(--text-muted); }
+.cbse-subj .sbc-roadmap{ display:grid; grid-template-columns:repeat(auto-fit, minmax(min(100%, 12.5rem), 1fr)); gap:9px; width:100%; max-width:66rem; }
+.cbse-subj .sbc-road{ display:flex; align-items:center; gap:9px; padding:9px 11px; text-align:left; cursor:pointer;
+  font-family:inherit; font-size:calc(.9rem * var(--custom-font-scale)); font-weight:700; line-height:1.2; color:var(--text-main);
+  background:var(--card-bg); border:1.5px solid var(--card-border); border-radius:12px; transition:border-color .15s ease, transform .15s ease; }
+.cbse-subj .sbc-road:hover{ border-color:var(--highlight-border); transform:translateY(-2px); }
+.cbse-subj .sbc-rn{ flex:none; width:1.6rem; height:1.6rem; border-radius:50%; display:grid; place-items:center;
+  font-size:.78rem; font-weight:900; color:var(--card-bg); background:var(--heading-color); }
+.cbse-subj .sbc-road:nth-child(even) .sbc-rn{ background:var(--crimson); }
+.cbse-subj .sbc-legend{ margin:0; display:flex; gap:8px; justify-content:center; font-size:calc(.85rem * var(--custom-font-scale)); }
+.cbse-subj .sbc-legend span{ padding:3px 10px; border-radius:999px; background:var(--card-bg); border:1px solid var(--card-border); }
+
+/* --- the sentence diagram --- */
+.cbse-subj .sbc-ex{ display:flex; flex-direction:column; align-items:center; gap:8px; }
+.cbse-subj .sbc-sentence{ display:flex; flex-wrap:wrap; align-items:flex-start; justify-content:center; gap:8px; }
+.cbse-subj .sbc-w{ display:flex; flex-direction:column; align-items:center; gap:5px; }
+.cbse-subj .sbc-w > span{ padding:5px 12px; border-radius:12px; font-size:calc(1.6rem * var(--custom-font-scale)); font-weight:800;
+  background:var(--card-bg); border:2px solid var(--card-border); }
+.cbse-subj .sbc-w-trig > span{ border-color:var(--heading-color); }
+.cbse-subj .sbc-w-q > span{ color:var(--highlight-text); background:var(--highlight-bg); border-color:var(--highlight-border); }
+.cbse-subj .sbc-w-v > span{ border-color:var(--crimson); }
+.cbse-subj .sbc-w small{ font-size:.72rem; font-weight:800; text-transform:uppercase; letter-spacing:.06em; color:var(--text-muted); }
+
+/* --- the three steps, and the endings board --- */
+.cbse-subj .sbc-flow{ display:flex; flex-wrap:wrap; align-items:stretch; justify-content:center; gap:10px; width:100%; max-width:80rem; }
+.cbse-subj .sbc-step{ flex:1 1 15rem; display:flex; flex-direction:column; align-items:center; gap:10px; padding:18px 16px;
+  border-radius:18px; background:var(--card-bg); border:1.5px solid var(--card-border); box-shadow:0 6px 18px rgba(0,0,0,.06); }
+.cbse-subj .sbc-step p{ margin:0; font-weight:600; }
+.cbse-subj .sbc-num{ width:2.2rem; height:2.2rem; border-radius:50%; display:grid; place-items:center;
+  font:900 calc(1.1rem * var(--custom-font-scale))/1 var(--custom-heading-font); color:var(--card-bg); background:var(--heading-color); }
+.cbse-subj .sbc-num-red{ background:var(--crimson); }
+.cbse-subj .sbc-big{ margin-top:auto; padding:6px 14px; border-radius:12px; font-size:calc(2rem * var(--custom-font-scale)); font-weight:800; background:var(--box-blue-bg); }
+.cbse-subj .sbc-arrow{ align-self:center; font-size:2rem; font-weight:900; color:var(--text-muted); }
+.cbse-subj .sbc-endings{ display:grid; grid-template-columns:repeat(auto-fit, minmax(min(100%, 22rem), 24rem)); justify-content:center; gap:11px 32px; width:100%; }
+.cbse-subj .sbc-end-row{ display:grid; grid-template-columns:minmax(9.5rem, auto) auto auto; align-items:center; justify-content:start; gap:8px;
+  padding:9px 13px; border-radius:14px; background:var(--card-bg); border:1.5px solid var(--card-border); }
+.cbse-subj .sbc-p{ text-align:right; font-size:calc(1rem * var(--custom-font-scale)); font-weight:700; color:var(--text-muted); }
+.cbse-subj .sbc-slot{ padding:4px 10px; border-radius:9px; font-size:calc(1.05rem * var(--custom-font-scale)); font-weight:800;
+  color:var(--heading-color); background:var(--box-blue-bg); border:2px dashed var(--heading-color); }
+.cbse-subj .sbc-e{ min-width:3.4rem; font-size:calc(1.9rem * var(--custom-font-scale)); font-weight:900; color:var(--crimson); }
+
+/* --- conjugation figures: one stem, the boot, learn by heart ---
+   The boot is an SVG in a 0-100 box stretched over the grid. The grid's rows and
+   columns are equal and its padding is half its gap, so x=50 and y=66.67 fall in the
+   middle of the gaps: the outline runs between the cells at any size, with no script. */
+.cbse-subj .sbc-cj{ margin:0; display:flex; flex-direction:column; align-items:center; gap:10px; }
+.cbse-subj .sbc-cj figcaption{ display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:8px; }
+.cbse-subj .sbc-vname{ font-family:var(--custom-heading-font); font-size:calc(1.65rem * var(--custom-font-scale)); font-weight:800; color:var(--heading-color); }
+.cbse-subj .sbc-ils{ margin:0; font-size:calc(1rem * var(--custom-font-scale)); font-weight:700; color:var(--text-muted); }
+.cbse-subj .sbc-tag{ padding:3px 10px; border-radius:999px; white-space:nowrap; font-size:calc(1rem * var(--custom-font-scale)); font-weight:800;
+  color:var(--heading-color); background:var(--box-blue-bg); border:2px solid var(--heading-color); }
+.cbse-subj .sbc-tag-out{ background:var(--card-bg); border:2px dashed var(--text-muted); }
+.cbse-subj .sbc-tag-gold{ color:var(--gold); background:var(--box-gold-bg); border-color:var(--box-gold-border); }
+.cbse-subj .sbc-who{ margin-left:4px; font-size:.8em; font-weight:700; color:var(--text-muted); }
+.cbse-subj .sbc-cj-grid{ position:relative; display:grid; grid-template-columns:1fr 1fr; grid-template-rows:repeat(3, 1fr);
+  grid-template-areas:"je nous" "tu vous" "il ils"; gap:14px 28px; padding:7px 14px; }
+.cbse-subj .sbc-cell{ position:relative; z-index:1; min-width:9.8rem; display:flex; flex-direction:column; align-items:flex-start; gap:1px;
+  padding:6px 12px; border-radius:12px; text-align:left; }
+.cbse-subj .sbc-cell[data-p="je"]{ grid-area:je; }
+.cbse-subj .sbc-cell[data-p="tu"]{ grid-area:tu; }
+.cbse-subj .sbc-cell[data-p="il"]{ grid-area:il; }
+.cbse-subj .sbc-cell[data-p="nous"]{ grid-area:nous; }
+.cbse-subj .sbc-cell[data-p="vous"]{ grid-area:vous; }
+.cbse-subj .sbc-cell[data-p="ils"]{ grid-area:ils; }
+.cbse-subj .sbc-pr{ font-size:calc(.78rem * var(--custom-font-scale)); font-weight:700; color:var(--text-muted); }
+.cbse-subj .sbc-fm{ font-size:calc(1.5rem * var(--custom-font-scale)); font-weight:800; line-height:1.15; white-space:nowrap; }
+.cbse-subj .sbc-kind-one .sbc-cj-grid::before,
+.cbse-subj .sbc-kind-irr .sbc-cj-grid::before{ content:''; position:absolute; inset:0; border-radius:18px;
+  background:var(--box-blue-bg); border:2.5px solid var(--heading-color); }
+.cbse-subj .sbc-kind-irr .sbc-cj-grid::before{ background:var(--box-gold-bg); border-color:var(--box-gold-border); }
+.cbse-subj .sbc-kind-boot .sbc-out{ background:var(--card-bg); border:2.5px dashed var(--text-muted); }
+.cbse-subj .sbc-boot-svg{ position:absolute; inset:0; z-index:0; width:100%; height:100%; overflow:visible; pointer-events:none; }
+.cbse-subj .sbc-boot-svg path{ fill:var(--box-blue-bg); stroke:var(--heading-color); stroke-width:2.5; stroke-linejoin:round; }
+.cbse-subj .sbc-concept .sbc-cj-grid{ gap:16px 48px; padding:8px 24px; }
+.cbse-subj .sbc-concept .sbc-cell{ min-width:12rem; align-items:center; padding:11px 22px; }
+.cbse-subj .sbc-concept .sbc-fm{ font-size:calc(2rem * var(--custom-font-scale)); }
+/* two verbs to a slide: room for the forms to be read from the back of the class */
+.cbse-subj .sbc-duo .sbc-vname{ font-size:calc(2.05rem * var(--custom-font-scale)); }
+.cbse-subj .sbc-duo .sbc-tag{ font-size:calc(1.12rem * var(--custom-font-scale)); }
+.cbse-subj .sbc-duo .sbc-cj-grid{ gap:15px 32px; padding:7.5px 15px; }
+.cbse-subj .sbc-duo .sbc-cell{ min-width:12rem; padding:8px 15px; }
+.cbse-subj .sbc-duo .sbc-pr{ font-size:calc(.92rem * var(--custom-font-scale)); }
+.cbse-subj .sbc-duo .sbc-fm{ font-size:calc(2.05rem * var(--custom-font-scale)); }
+
+/* --- tables and type badges --- */
+.cbse-subj .sbc-tbl{ width:100%; max-width:72rem; margin:0 auto; border-collapse:separate; border-spacing:0; text-align:left;
+  font-size:calc(1.08rem * var(--custom-font-scale)); background:var(--card-bg); border:1.5px solid var(--card-border); border-radius:16px; overflow:hidden; }
+.cbse-subj .sbc-tbl-narrow{ max-width:46rem; }
+.cbse-subj .sbc-tbl th{ padding:8px 14px; font-size:calc(.86rem * var(--custom-font-scale)); font-weight:800; text-transform:uppercase; letter-spacing:.05em;
+  color:var(--card-bg); background:var(--heading-color); }
+.cbse-subj .sbc-tbl td{ padding:7px 14px; border-top:1px solid var(--card-border); }
+.cbse-subj .sbc-tbl tbody tr:nth-child(even) td{ background:var(--box-blue-bg); }
+.cbse-subj .sbc-v{ font-family:var(--custom-heading-font); font-size:calc(1.15rem * var(--custom-font-scale)); font-weight:800; color:var(--heading-color); }
+.cbse-subj .sbc-arr{ width:2rem; text-align:center; font-weight:900; color:var(--text-muted); }
+.cbse-subj .sbc-type{ display:inline-block; padding:3px 10px; border-radius:999px; white-space:nowrap; border:1.5px solid;
+  font-size:calc(.8rem * var(--custom-font-scale)); font-weight:800; }
+.cbse-subj .sbc-type-reg{ color:var(--ok); border-color:var(--ok); background:var(--card-bg); }
+.cbse-subj .sbc-type-two{ color:var(--heading-color); border-color:var(--heading-color); background:var(--box-blue-bg); }
+.cbse-subj .sbc-type-sp1,
+.cbse-subj .sbc-type-sp2{ color:var(--gold); border-color:var(--box-gold-border); background:var(--box-gold-bg); }
+.cbse-subj .sbc-type-sp2{ border-style:dashed; }
+.cbse-subj .sbc-type-irrt{ color:var(--card-bg); border-color:var(--crimson); background:var(--crimson); }
+.cbse-subj .sbc-type-imp{ color:var(--text-muted); border-color:var(--text-muted); background:var(--card-bg); }
+.cbse-subj .sbc-type-lead{ align-self:flex-start; }
+
+/* --- y + i --- */
+.cbse-subj .sbc-yi{ display:flex; flex-direction:column; align-items:center; gap:12px; }
+.cbse-subj .sbc-word{ display:flex; align-items:baseline; gap:2px; font-size:calc(2.5rem * var(--custom-font-scale)); font-weight:800; }
+.cbse-subj .sbc-word .sbc-pr{ margin-right:8px; font-size:calc(1.3rem * var(--custom-font-scale)); }
+.cbse-subj .sbc-tile{ display:inline-grid; place-items:center; min-width:2.3rem; padding:0 4px; border-radius:10px; border:3px solid; line-height:1.2; }
+.cbse-subj .sbc-y{ color:var(--heading-color); border-color:var(--heading-color); background:var(--box-blue-bg); }
+.cbse-subj .sbc-i{ color:var(--crimson); border-color:var(--crimson); background:var(--box-gold-bg); }
+
+/* --- WEIRDO: the acronym reads down the tiles --- */
+.cbse-subj .sbc-weirdo{ display:grid; gap:7px; width:100%; max-width:78rem; }
+.cbse-subj .sbc-w-row{ display:grid; grid-template-columns:3.6rem minmax(9rem, 11.5rem) 1fr; align-items:center; gap:14px; text-align:left;
+  padding:6px 13px 6px 6px; border-radius:16px; background:var(--card-bg); border:1.5px solid var(--card-border); }
+.cbse-subj .sbc-w-letter{ width:3.6rem; height:3.6rem; border-radius:13px; display:grid; place-items:center;
+  font:900 calc(2.45rem * var(--custom-font-scale))/1 var(--custom-heading-font); color:var(--card-bg); box-shadow:0 6px 14px rgba(0,0,0,.15); }
+.cbse-subj .sbc-c-blue .sbc-w-letter{ background:var(--heading-color); }
+.cbse-subj .sbc-c-red .sbc-w-letter{ background:var(--crimson); }
+.cbse-subj .sbc-w-mean{ font:800 calc(1.3rem * var(--custom-font-scale))/1.15 var(--custom-heading-font); color:var(--heading-color); }
+.cbse-subj .sbc-w-mean b{ font-size:1.15em; }
+.cbse-subj .sbc-c-blue .sbc-w-mean b{ color:var(--heading-color); }
+.cbse-subj .sbc-c-red .sbc-w-mean b{ color:var(--crimson); }
+.cbse-subj .sbc-w-row .sbc-chip{ font-size:calc(.96rem * var(--custom-font-scale)); }
+
+/* --- same person / different person --- */
+.cbse-subj .sbc-people{ display:flex; justify-content:center; gap:6px; }
+.cbse-subj .sbc-person{ width:3.2rem; height:3.2rem; }
+
+/* --- practice: click a blank to reveal its answer (engine: CBSE SUBJONCTIF) --- */
+.cbse-subj .sbc-practice{ list-style:none; margin:0; padding:0; width:100%; max-width:66rem; display:flex; flex-direction:column; gap:12px; }
+.cbse-subj .sbc-pq{ margin:0; display:grid; grid-template-columns:2.4rem 1fr; align-items:center; gap:14px; text-align:left;
+  padding:10px 16px 10px 10px; border-radius:16px; background:var(--card-bg); border:1.5px solid var(--card-border);
+  transition:border-color .3s ease, background .3s ease; }
+.cbse-subj .sbc-pq.done{ border-color:var(--ok); background:var(--box-blue-bg); }
+.cbse-subj .sbc-n{ width:2.4rem; height:2.4rem; border-radius:50%; display:grid; place-items:center;
+  font:900 calc(1.05rem * var(--custom-font-scale))/1 var(--custom-heading-font); color:var(--card-bg); background:var(--heading-color); }
+.cbse-subj .sbc-pq p{ margin:0; font-size:calc(1.3rem * var(--custom-font-scale)); font-weight:600; line-height:1.7; }
+.cbse-subj .sbc-verb{ font-size:.9em; font-weight:700; color:var(--text-muted); }
+.cbse-subj .sbc-blank{ display:inline-grid; vertical-align:baseline; margin:0 2px; padding:0 6px; cursor:pointer;
+  font:inherit; font-weight:800; line-height:1.35; color:inherit; background:var(--highlight-bg);
+  border:none; border-bottom:3px solid var(--highlight-border); border-radius:8px 8px 2px 2px; transition:background .3s ease, transform .15s ease; }
+.cbse-subj .sbc-blank:hover{ transform:translateY(-1px); }
+.cbse-subj .sbc-blank:focus-visible{ outline:3px solid var(--gold); outline-offset:2px; }
+.cbse-subj .sbc-blank > span{ grid-area:1 / 1; transition:opacity .45s ease, transform .45s ease, filter .45s ease; }
+.cbse-subj .sbc-ph{ color:var(--text-muted); }
+.cbse-subj .sbc-ans{ opacity:0; transform:translateY(.45em) scale(.9); filter:blur(4px); }
+.cbse-subj .sbc-blank.shown{ background:var(--card-bg); border-bottom-color:var(--ok); }
+.cbse-subj .sbc-blank.shown .sbc-ph{ opacity:0; transform:translateY(-.45em); }
+.cbse-subj .sbc-blank.shown .sbc-ans{ opacity:1; transform:none; filter:none; }
+.cbse-subj .sbc-hint{ display:inline-block; margin-left:6px; padding:2px 9px; vertical-align:middle; border-radius:999px;
+  font-size:calc(.8rem * var(--custom-font-scale)); font-weight:800; line-height:1.3; color:var(--ok);
+  background:var(--card-bg); border:1.5px solid var(--ok); opacity:0; transform:translateX(-6px);
+  transition:opacity .4s ease .15s, transform .4s ease .15s; }
+.cbse-subj .sbc-pq.done .sbc-hint{ opacity:1; transform:none; }
+.cbse-subj .sbc-tools{ display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:10px; }
+.cbse-subj .sbc-how{ font-size:calc(.95rem * var(--custom-font-scale)); font-weight:700; color:var(--text-muted); }
+.cbse-subj .sbc-act{ padding:8px 16px; cursor:pointer; font-family:inherit; font-size:calc(.9rem * var(--custom-font-scale)); font-weight:800;
+  color:var(--highlight-text); background:var(--highlight-bg); border:1.5px solid var(--highlight-border); border-radius:10px; }
+.cbse-subj .sbc-act:hover{ color:var(--card-bg); background:var(--highlight-border); }
+.cbse-subj .sbc-keys{ display:grid; grid-template-columns:repeat(auto-fit, minmax(min(100%, 11rem), 1fr)); gap:11px; width:100%; max-width:70rem; }
+.cbse-subj .sbc-keys > div{ display:flex; align-items:center; gap:10px; padding:11px 14px; border-radius:14px;
+  font-size:calc(1.4rem * var(--custom-font-scale)); font-weight:800; background:var(--card-bg); border:1.5px solid var(--card-border); }
+.cbse-subj .sbc-keys .sbc-n{ flex:none; width:1.9rem; height:1.9rem; font-size:calc(.9rem * var(--custom-font-scale)); }
+
+@media (prefers-reduced-motion: reduce){
+  .cbse-subj .sbc-blank > span, .cbse-subj .sbc-hint, .cbse-subj .sbc-pq, .cbse-subj .sbc-road{ transition:none; }
+}
+/* Paper: blocks stay whole, the buttons go, and the blanks follow the deck's rule --
+   Teacher mode prints the answers, Student mode prints the blank sheet. */
+@media print{
+  .cbse-subj .sbc-tools{ display:none !important; }
+  .cbse-subj .sbc-cj, .cbse-subj .sbc-card, .cbse-subj .sbc-pq, .cbse-subj .sbc-w-row,
+  .cbse-subj .sbc-step, .cbse-subj .sbc-end-row, .cbse-subj .sbc-tbl tr{ break-inside:avoid; }
+  .cbse-subj .sbc-blank > span, .cbse-subj .sbc-hint{ transition:none !important; }
+  body.mode-teacher .cbse-subj .sbc-ans{ opacity:1 !important; transform:none !important; filter:none !important; }
+  body.mode-teacher .cbse-subj .sbc-ph{ opacity:0 !important; }
+  body.mode-teacher .cbse-subj .sbc-hint{ opacity:1 !important; transform:none !important; }
+  body.mode-student .cbse-subj .sbc-ans,
+  body.mode-student .cbse-subj .sbc-hint{ opacity:0 !important; }
+  body.mode-student .cbse-subj .sbc-ph{ opacity:1 !important; transform:none !important; }
+  body.mode-student .cbse-subj .sbc-pq{ background:var(--card-bg) !important; border-color:var(--card-border) !important; }
+  body.mode-student .cbse-subj .sbc-keys{ display:none !important; }
+}
+/* ===== END CBSE SUBJONCTIF ===== */
 </style>
 </head>
 <body class="theme-classic mode-teacher">

@@ -12,7 +12,7 @@ PARTS=(
   t0-timeline.html
   c1-verbes.html c2-verbes.html c3-verbes.html c4-verbes.html t-nom.html c5-verbes.html
   u-verbes-usage.html u-verbes-filmscene.html
-  t2-subjonctif.html t2b-subjonctif.html u-subjonctif-usage.html
+  t2-subjonctif.html t2b-subjonctif.html u-subjonctif-usage.html t-subj-cbse.html
   t3a-negation.html t3b-negation.html u-negation-usage.html
   t4-pronoms.html t4b-pronoms.html u-pronoms-usage.html
   t5-relatifs.html t5b-relatifs.html u-relatifs-usage.html
